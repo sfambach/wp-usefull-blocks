@@ -37,16 +37,15 @@ conditional asset loading. Details in `conventions.md` / `timeline-block.md`.
 
 | # | Item | Plan doc | Notes |
 |---|------|----------|-------|
-| 1 | **`ub-timeline`** block | `timeline-block.md` | Start here; self-contained. Also stand up the **Block Showcase + pre-test pipeline** with it. |
-| 2 | **Block Showcase + pre-tests** | `block-showcase-and-pretests.md` | Auto-updating test page; standing pre-handover test routine. |
-| 3 | **`ub-gallery`** block | `ub-gallery-block.md` | eBay-style single-focus gallery. |
-| 4 | **Link data layer** → `ub-link`, `ub-link-list` | `link-blocks.md` | CPT `ub_link` + taxonomy `ub_link_category`, then the two blocks. |
-| 5 | **Link Checker** | `link-checker.md` | Provides the shared URL **verifier** + status table. |
-| 6 | **`ub-file`** block | `ub-file-block.md` | Reuses the Link Checker verifier for the traffic light. |
-| 7 | **Admin menu + Settings** | `admin-settings-and-headings.md` | Own top-level menu (work pages first, Settings last); per-block sections + general section. |
-| 8 | **Heading tools + Headings Converter** | `admin-settings-and-headings.md` | Inherit-level setting, ± toolbar buttons, bulk converter. |
+| 1 | **`ub-timeline`** block | `timeline-block.md` | Start here; self-contained. |
+| 2 | **`ub-gallery`** block | `ub-gallery-block.md` | eBay-style single-focus gallery. |
+| 3 | **Link data layer** → `ub-link`, `ub-link-list` | `link-blocks.md` | CPT `ub_link` + taxonomy `ub_link_category`, then the two blocks. |
+| 4 | **Link Checker** | `link-checker.md` | Provides the shared URL **verifier** + status table. |
+| 5 | **`ub-file`** block | `ub-file-block.md` | Reuses the Link Checker verifier for the traffic light. |
+| 6 | **Admin menu + Settings** | `admin-settings-and-headings.md` | Own top-level menu (work pages first, Settings last); per-block sections + general section. |
+| 7 | **Heading tools + Headings Converter** | `admin-settings-and-headings.md` | Inherit-level setting, ± toolbar buttons, bulk converter. |
 
-Notes: the admin menu (item 7) is a dependency for per-block settings sections and general
+Notes: the admin menu (item 6) is a dependency for per-block settings sections and general
 settings; work pages (Headings Converter, Links, Link Categories, Link Checker) can be added to
 it incrementally, with **Settings always last**.
 
@@ -65,12 +64,10 @@ it incrementally, with **Settings always last**.
   custom table.  (`link-checker.md`)
 - **File block:** mirror timing, link/fallback behaviour, traffic-light states, MIME/size limits,
   default link text.  (`ub-file-block.md`)
-- **Showcase:** Page + private + on-demand.  (`block-showcase-and-pretests.md`)
 
 ## Testing & release
 
-- Every block/feature: build + lint + unit tests + `wp-now` E2E + design/a11y pass, and refresh
-  the Block Showcase (see `block-showcase-and-pretests.md`).
+- Every block/feature: build + lint + unit tests + design/a11y pass.
 - Versioning: each feature → next `*.*.0`; bundled i18n pass (POT/PO/MO/JSON) before release;
   release ZIP via `git archive` with the `wp-usefull-blocks/` prefix.
 
