@@ -38,6 +38,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		mirroredFromUrl = '',
 		linkBehavior = 'original-fallback-local',
 		lastStatus = 'unknown',
+		lastChecked = 0,
 	} = attributes;
 
 	const settings = usePluginSettings();
@@ -56,6 +57,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		url: sourceUrl,
 		enabled: autoCheck && !! sourceUrl,
 		initialStatus: lastStatus,
+		lastChecked,
 		onStatus: ( { status, checkedAt } ) => {
 			setAttributes( {
 				lastStatus: status,

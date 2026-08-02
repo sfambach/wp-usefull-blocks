@@ -55,6 +55,7 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 		url,
 		enabled: autoCheck && !! url,
 		initialStatus: lastStatus,
+		lastChecked,
 		onStatus: ( { status, checkedAt } ) => {
 			setAttributes( {
 				lastStatus: status,
@@ -138,6 +139,15 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 					>
 						{ __( 'Check URL now', 'wp-usefull-blocks' ) }
 					</Button>
+					{ error && (
+						<Notice
+							status="error"
+							isDismissible={ false }
+							className="ub-link-editor__notice"
+						>
+							{ error }
+						</Notice>
+					) }
 				</PanelBody>
 			</InspectorControls>
 
@@ -203,12 +213,6 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 					</Popover>
 				) }
 			</div>
-
-			{ error && (
-				<Notice status="error" isDismissible={ false }>
-					{ error }
-				</Notice>
-			) }
 		</>
 	);
 }
