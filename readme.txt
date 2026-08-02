@@ -14,8 +14,9 @@ WP Usefull Blocks provides practical Gutenberg blocks. This release includes **U
 (eBay-style focus image + thumbnails), **UB Link** (URL with live status), and **UB File**
 (file URL with optional local media mirror via “Download now”).
 
-Broken links are shown struck through on the front end. Status is checked on page render
-(cached) and refreshed in the background via WP-Cron.
+UB Link works like a normal WordPress link. A traffic-light status and front-end
+strike-through for broken URLs can be toggled under Settings → Usefull Blocks.
+Status is checked on page render (cached) and refreshed in the background via WP-Cron.
 
 The plugin is provided as is under GPL-2.0-or-later. Use at your own risk and keep backups
 before major updates.
@@ -40,12 +41,18 @@ file” or “None”.
 
 = How are broken links detected and shown? =
 
-UB Link and UB File resolve URL status when the page is rendered. The first visitor (or a
-cache miss) triggers a lightweight remote check; the result is cached (default 12 hours) and
-the URL is added to a watchlist. An hourly WP-Cron job rechecks watched URLs in the
-background. Links with status “broken” are rendered with a strike-through so visitors see
-immediately that the target has been unavailable. Full-page caches may delay the visual
-update until that HTML is regenerated.
+Go to Settings → Usefull Blocks to enable/disable the traffic-light status, strike-through
+for broken links, and automatic URL checks. When enabled, UB Link and UB File resolve URL
+status when the page is rendered. The first visitor (or a cache miss) triggers a lightweight
+remote check; the result is cached (default 12 hours) and the URL is added to a watchlist.
+An hourly WP-Cron job rechecks watched URLs in the background. Broken links are struck
+through on the front end. Full-page caches may delay the visual update until that HTML is
+regenerated.
+
+= Where are the link status settings? =
+
+Settings → Usefull Blocks. There is no separate top-level admin menu while the plugin only
+needs settings (no extra work pages yet).
 
 = Why does UB File not download automatically? =
 
@@ -63,8 +70,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 == Changelog ==
 
 = 0.3.0 =
-* Add UB Link block (URL + traffic-light status check).
+* Add UB Link block — WordPress-style link (RichText + link UI) with traffic-light status.
 * Add UB File block with manual “Download now” media mirror (refresh when URL changes).
+* Global settings under Settings → Usefull Blocks: show status, strike-through, auto-check.
 * Broken links are struck through on the front end; status auto-checks on page load (cached) and via hourly WP-Cron.
 
 = 0.2.0 =

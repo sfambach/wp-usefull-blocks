@@ -28,13 +28,22 @@ readme.txt                     # WordPress.org plugin readme
 | Block | Name | Notes |
 | --- | --- | --- |
 | **UB Gallery** | `wp-usefull-blocks/ub-gallery` | Focus image + thumbnail strip; click = lightbox / media link / none |
-| **UB Link** | `wp-usefull-blocks/ub-link` | URL + traffic light; broken links struck through; auto-check on render + cron |
-| **UB File** | `wp-usefull-blocks/ub-file` | File URL + manual “Download now” mirror; same status / strike-through behaviour |
+| **UB Link** | `wp-usefull-blocks/ub-link` | Normal WP-style link + traffic light; strike-through when broken (global settings) |
+| **UB File** | `wp-usefull-blocks/ub-file` | File URL + manual “Download now” mirror; same status behaviour via global settings |
 | WP Usefull Blocks | `wp-usefull-blocks/wp-usefull-blocks` | Scaffold sample; will be removed later |
 
 Each block lives in its own folder under `src/` with a `block.json`. `npm run build`
 compiles every block into `build/` and generates `build/blocks-manifest.php`, which the
 plugin uses to register all blocks efficiently.
+
+## Settings
+
+While the plugin only needs configuration (no extra admin work pages), options live under
+**Settings → Usefull Blocks**:
+
+- Show traffic-light status (editor + front end)
+- Strike through broken links (front end)
+- Auto-check URLs (page render cache + WP-Cron + editor)
 
 ## Development
 

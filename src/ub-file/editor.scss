@@ -2,6 +2,8 @@
  * Editor-only styles for UB File.
  */
 
+@use "../shared/status";
+
 .ub-file-editor {
 	display: grid;
 	gap: 0.75rem;

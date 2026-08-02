@@ -4,10 +4,10 @@
 	"name": "wp-usefull-blocks/ub-link",
 	"version": "0.3.0",
 	"title": "UB Link",
-	"category": "widgets",
+	"category": "text",
 	"icon": "admin-links",
-	"description": "A single URL/link with optional open-in-new-tab and traffic-light status.",
-	"keywords": [ "link", "url", "href" ],
+	"description": "A normal WordPress-style link with optional traffic-light status (global setting).",
+	"keywords": [ "link", "url", "href", "anchor" ],
 	"textdomain": "wp-usefull-blocks",
 	"attributes": {
 		"url": {
@@ -21,10 +21,6 @@
 		"openInNewTab": {
 			"type": "boolean",
 			"default": false
-		},
-		"showStatus": {
-			"type": "boolean",
-			"default": true
 		},
 		"lastStatus": {
 			"type": "string",
@@ -42,6 +38,15 @@
 		"spacing": {
 			"margin": true,
 			"padding": true
+		},
+		"color": {
+			"link": true,
+			"text": true,
+			"background": false
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
 		}
 	},
 	"editorScript": "file:./index.js",

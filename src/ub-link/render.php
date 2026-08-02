@@ -2,6 +2,8 @@
 /**
  * Server-side render for the UB Link block.
  *
+ * Outputs a normal WordPress-style link plus optional traffic-light status.
+ *
  * @package WpUsefullBlocks
  *
  * @var array $attributes Block attributes.
@@ -14,28 +16,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $url             = isset( $attributes['url'] ) ? esc_url( (string) $attributes['url'] ) : '';
-$label           = isset( $attributes['label'] ) ? sanitize_text_field( (string) $attributes['label'] ) : '';
+$label_raw       = isset( $attributes['label'] ) ? (string) $attributes['label'] : '';
+$label           = wp_strip_all_tags( $label_raw );
 $open_in_new_tab = ! empty( $attributes['openInNewTab'] );
-$show_status     = ! isset( $attributes['showStatus'] ) || (bool) $attributes['showStatus'];
 $stored_status   = isset( $attributes['lastStatus'] ) ? sanitize_key( (string) $attributes['lastStatus'] ) : 'unknown';
+
+$show_status = class_exists( 'WP_Usefull_Blocks_Settings' )
+	? WP_Usefull_Blocks_Settings::is_enabled( 'show_link_status' )
+	: true;
+$strike_broken = class_exists( 'WP_Usefull_Blocks_Settings' )
+	? WP_Usefull_Blocks_Settings::is_enabled( 'strike_broken_links' )
+	: true;
+$auto_check = class_exists( 'WP_Usefull_Blocks_Settings' )
+	? WP_Usefull_Blocks_Settings::is_enabled( 'auto_check_urls' )
+	: true;
 
 if ( '' === $url ) {
 	return;
 }
 
-if ( '' === $label ) {
+if ( '' === trim( $label ) ) {
 	$label = $url;
 }
 
-$status_payload = array( 'status' => $stored_status );
+$status = $stored_status;
 if ( class_exists( 'WP_Usefull_Blocks_Url_Status' ) ) {
-	// Page load: use cached status, or check now and cache (background cron also refreshes).
-	$status_payload = WP_Usefull_Blocks_Url_Status::resolve_for_render( $url, $stored_status );
+	if ( $auto_check ) {
+		$status_payload = WP_Usefull_Blocks_Url_Status::resolve_for_render( $url, $stored_status );
+	} else {
+		$cached         = WP_Usefull_Blocks_Url_Status::get_cached( $url );
+		$status_payload = null !== $cached ? $cached : array( 'status' => $stored_status );
+	}
+	$status = isset( $status_payload['status'] ) ? sanitize_key( (string) $status_payload['status'] ) : 'unknown';
 }
-$status = isset( $status_payload['status'] ) ? sanitize_key( (string) $status_payload['status'] ) : 'unknown';
 
 $classes = array( 'ub-link', 'ub-link--' . $status );
-if ( 'broken' === $status ) {
+if ( $strike_broken && 'broken' === $status ) {
 	$classes[] = 'is-broken';
 }
 
@@ -47,7 +63,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 
 $rel          = $open_in_new_tab ? 'noopener noreferrer' : '';
 $anchor_title = '';
-if ( 'broken' === $status ) {
+if ( $strike_broken && 'broken' === $status ) {
 	$anchor_title = __( 'This link appears to be broken.', 'wp-usefull-blocks' );
 }
 ?>

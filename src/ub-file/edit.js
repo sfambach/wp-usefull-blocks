@@ -2,7 +2,7 @@
  * Editor UI for the UB File block.
  *
  * Mirroring is manual: the author presses "Download now".
- * If the source URL changes afterwards, they must download again.
+ * Traffic-light status follows global plugin settings.
  */
 
 import { __ } from '@wordpress/i18n';
@@ -13,11 +13,14 @@ import {
 	PanelBody,
 	SelectControl,
 	TextControl,
-	ToggleControl,
 } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import ServerSideRender from '@wordpress/server-side-render';
+
+import StatusIndicator from '../shared/status-indicator';
+import usePluginSettings from '../shared/use-plugin-settings';
+import useUrlStatus from '../shared/use-url-status';
 
 import './editor.scss';
 
@@ -34,13 +37,32 @@ export default function Edit( { attributes, setAttributes } ) {
 		attachmentId = 0,
 		mirroredFromUrl = '',
 		linkBehavior = 'original-fallback-local',
-		showStatus = true,
 		lastStatus = 'unknown',
 	} = attributes;
+
+	const settings = usePluginSettings();
+	const showStatus = !! settings.show_link_status;
+	const autoCheck = !! settings.auto_check_urls;
 
 	const [ busy, setBusy ] = useState( '' );
 	const [ message, setMessage ] = useState( '' );
 	const [ error, setError ] = useState( '' );
+
+	const {
+		checking,
+		error: checkError,
+		checkNow,
+	} = useUrlStatus( {
+		url: sourceUrl,
+		enabled: autoCheck && !! sourceUrl,
+		initialStatus: lastStatus,
+		onStatus: ( { status, checkedAt } ) => {
+			setAttributes( {
+				lastStatus: status,
+				lastChecked: checkedAt,
+			} );
+		},
+	} );
 
 	const needsRedownload =
 		!! attachmentId &&
@@ -51,39 +73,6 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps( {
 		className: 'ub-file-editor',
 	} );
-
-	const checkUrl = async () => {
-		setError( '' );
-		setMessage( '' );
-
-		if ( ! sourceUrl ) {
-			setError( __( 'Enter a file URL first.', 'wp-usefull-blocks' ) );
-			return;
-		}
-
-		setBusy( 'check' );
-
-		try {
-			const result = await apiFetch( {
-				path: '/wp-usefull-blocks/v1/check-url',
-				method: 'POST',
-				data: { url: sourceUrl },
-			} );
-
-			setAttributes( {
-				lastStatus: result?.status || 'unknown',
-				lastChecked: Date.now(),
-			} );
-			setMessage( sprintfStatus( result?.status, result?.code ) );
-		} catch ( err ) {
-			setError(
-				err?.message ||
-					__( 'Could not check this URL.', 'wp-usefull-blocks' )
-			);
-		} finally {
-			setBusy( '' );
-		}
-	};
 
 	const downloadNow = async () => {
 		setError( '' );
@@ -126,6 +115,15 @@ export default function Edit( { attributes, setAttributes } ) {
 		}
 	};
 
+	const runCheck = async () => {
+		setError( '' );
+		setMessage( '' );
+		const result = await checkNow( sourceUrl );
+		if ( result ) {
+			setMessage( sprintfStatus( result?.status, result?.code ) );
+		}
+	};
+
 	return (
 		<>
 			<InspectorControls>
@@ -165,25 +163,28 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { linkBehavior: value } )
 						}
 					/>
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={ __(
-							'Show traffic-light status',
+					<p>
+						{ __(
+							'Status indicators and strike-through are controlled under Settings → Usefull Blocks.',
 							'wp-usefull-blocks'
 						) }
-						checked={ !! showStatus }
-						onChange={ ( value ) =>
-							setAttributes( { showStatus: value } )
-						}
-					/>
+					</p>
 					<p>
 						{ __( 'Media attachment ID:', 'wp-usefull-blocks' ) }{ ' ' }
 						<strong>{ attachmentId || '—' }</strong>
 					</p>
-					<p>
-						{ __( 'Last status:', 'wp-usefull-blocks' ) }{ ' ' }
-						<strong>{ lastStatus }</strong>
-					</p>
+					{ showStatus && (
+						<p>
+							{ __( 'Last status:', 'wp-usefull-blocks' ) }{ ' ' }
+							<strong>{ lastStatus }</strong>
+							{ checking
+								? ` (${ __(
+										'checking…',
+										'wp-usefull-blocks'
+								  ) })`
+								: '' }
+						</p>
+					) }
 				</PanelBody>
 			</InspectorControls>
 
@@ -244,12 +245,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					</Button>
 					<Button
 						variant="secondary"
-						onClick={ checkUrl }
-						isBusy={ 'check' === busy }
-						disabled={ !! busy || ! sourceUrl }
+						onClick={ runCheck }
+						isBusy={ checking }
+						disabled={ !! busy || checking || ! sourceUrl }
 					>
 						{ __( 'Check URL now', 'wp-usefull-blocks' ) }
 					</Button>
+					{ showStatus && sourceUrl && (
+						<StatusIndicator status={ lastStatus } />
+					) }
 				</div>
 
 				{ message && (
@@ -257,9 +261,9 @@ export default function Edit( { attributes, setAttributes } ) {
 						{ message }
 					</Notice>
 				) }
-				{ error && (
+				{ ( error || checkError ) && (
 					<Notice status="error" isDismissible={ false }>
-						{ error }
+						{ error || checkError }
 					</Notice>
 				) }
 

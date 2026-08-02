@@ -31,10 +31,6 @@
 			"default": "original-fallback-local",
 			"enum": [ "original-fallback-local", "original-only", "local-only" ]
 		},
-		"showStatus": {
-			"type": "boolean",
-			"default": true
-		},
 		"lastStatus": {
 			"type": "string",
 			"default": "unknown"

@@ -1,19 +1,31 @@
 /**
  * Editor UI for the UB Link block.
+ *
+ * Behaves like a normal WordPress link (RichText + LinkControl).
+ * Traffic-light status is controlled by global plugin settings.
  */
 
 import { __ } from '@wordpress/i18n';
-import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
+import {
+	BlockControls,
+	InspectorControls,
+	LinkControl,
+	RichText,
+	useBlockProps,
+} from '@wordpress/block-editor';
 import {
 	Button,
 	Notice,
 	PanelBody,
-	TextControl,
-	ToggleControl,
+	Popover,
+	ToolbarButton,
 } from '@wordpress/components';
-import { useState } from '@wordpress/element';
-import apiFetch from '@wordpress/api-fetch';
-import ServerSideRender from '@wordpress/server-side-render';
+import { useEffect, useState } from '@wordpress/element';
+import { link as linkIcon, linkOff } from '@wordpress/icons';
+
+import StatusIndicator from '../shared/status-indicator';
+import usePluginSettings from '../shared/use-plugin-settings';
+import useUrlStatus from '../shared/use-url-status';
 
 import './editor.scss';
 
@@ -21,90 +33,106 @@ import './editor.scss';
  * @param {Object}   props
  * @param {Object}   props.attributes
  * @param {Function} props.setAttributes
+ * @param {boolean}  props.isSelected
  * @return {Element} Editor element.
  */
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, isSelected } ) {
 	const {
 		url = '',
 		label = '',
 		openInNewTab = false,
-		showStatus = true,
 		lastStatus = 'unknown',
+		lastChecked = 0,
 	} = attributes;
 
-	const [ checking, setChecking ] = useState( false );
-	const [ error, setError ] = useState( '' );
+	const settings = usePluginSettings();
+	const showStatus = !! settings.show_link_status;
+	const autoCheck = !! settings.auto_check_urls;
 
-	const blockProps = useBlockProps( {
-		className: 'ub-link-editor',
+	const [ isEditingURL, setIsEditingURL ] = useState( false );
+
+	const { checking, error, checkNow } = useUrlStatus( {
+		url,
+		enabled: autoCheck && !! url,
+		initialStatus: lastStatus,
+		onStatus: ( { status, checkedAt } ) => {
+			setAttributes( {
+				lastStatus: status,
+				lastChecked: checkedAt,
+			} );
+		},
 	} );
 
-	const checkUrl = async () => {
-		setError( '' );
-
-		if ( ! url ) {
-			setError(
-				__( 'Enter a URL before checking.', 'wp-usefull-blocks' )
-			);
-			return;
+	// Open the link UI when a fresh empty block is inserted.
+	useEffect( () => {
+		if ( isSelected && ! url ) {
+			setIsEditingURL( true );
 		}
+	}, [ isSelected, url ] );
 
-		setChecking( true );
+	const blockProps = useBlockProps( {
+		className: [
+			'ub-link',
+			`ub-link--${ lastStatus }`,
+			showStatus && lastStatus === 'broken' ? 'is-broken' : '',
+		]
+			.filter( Boolean )
+			.join( ' ' ),
+	} );
 
-		try {
-			const result = await apiFetch( {
-				path: '/wp-usefull-blocks/v1/check-url',
-				method: 'POST',
-				data: { url },
-			} );
-
-			setAttributes( {
-				lastStatus: result?.status || 'unknown',
-				lastChecked: Date.now(),
-			} );
-		} catch ( err ) {
-			setError(
-				err?.message ||
-					__( 'Could not check this URL.', 'wp-usefull-blocks' )
-			);
-		} finally {
-			setChecking( false );
-		}
+	const unlink = () => {
+		setAttributes( {
+			url: '',
+			lastStatus: 'unknown',
+			lastChecked: 0,
+		} );
+		setIsEditingURL( true );
 	};
 
 	return (
 		<>
+			<BlockControls group="block">
+				<ToolbarButton
+					icon={ linkIcon }
+					label={ __( 'Edit link', 'wp-usefull-blocks' ) }
+					onClick={ () => setIsEditingURL( true ) }
+					isActive={ !! url }
+				/>
+				{ url && (
+					<ToolbarButton
+						icon={ linkOff }
+						label={ __( 'Unlink', 'wp-usefull-blocks' ) }
+						onClick={ unlink }
+					/>
+				) }
+			</BlockControls>
+
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Link settings', 'wp-usefull-blocks' ) }
+					title={ __( 'Link', 'wp-usefull-blocks' ) }
 					initialOpen
 				>
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={ __( 'Open in new tab', 'wp-usefull-blocks' ) }
-						checked={ !! openInNewTab }
-						onChange={ ( value ) =>
-							setAttributes( { openInNewTab: value } )
-						}
-					/>
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={ __(
-							'Show traffic-light status',
+					<p>
+						{ __(
+							'Status indicators and strike-through are controlled under Settings → Usefull Blocks.',
 							'wp-usefull-blocks'
 						) }
-						checked={ !! showStatus }
-						onChange={ ( value ) =>
-							setAttributes( { showStatus: value } )
-						}
-					/>
-					<p>
-						{ __( 'Last status:', 'wp-usefull-blocks' ) }{ ' ' }
-						<strong>{ lastStatus }</strong>
 					</p>
+					{ showStatus && (
+						<p>
+							{ __( 'Last status:', 'wp-usefull-blocks' ) }{ ' ' }
+							<strong>{ lastStatus }</strong>
+							{ checking
+								? ` (${ __(
+										'checking…',
+										'wp-usefull-blocks'
+								  ) })`
+								: '' }
+						</p>
+					) }
 					<Button
 						variant="secondary"
-						onClick={ checkUrl }
+						onClick={ () => checkNow( url ) }
 						isBusy={ checking }
 						disabled={ checking || ! url }
 					>
@@ -114,60 +142,73 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				<TextControl
-					__nextHasNoMarginBottom
-					__next40pxDefaultSize
-					label={ __( 'URL', 'wp-usefull-blocks' ) }
-					type="url"
-					value={ url }
-					onChange={ ( value ) =>
-						setAttributes( {
-							url: value,
-							lastStatus: 'unknown',
-							lastChecked: 0,
-						} )
-					}
-					placeholder="https://"
-				/>
-				<TextControl
-					__nextHasNoMarginBottom
-					__next40pxDefaultSize
-					label={ __( 'Label', 'wp-usefull-blocks' ) }
+				<RichText
+					tagName="a"
+					className="ub-link__anchor"
 					value={ label }
+					allowedFormats={ [] }
+					withoutInteractiveFormatting
+					placeholder={ __( 'Link text…', 'wp-usefull-blocks' ) }
 					onChange={ ( value ) => setAttributes( { label: value } ) }
-					placeholder={ __( 'Link text', 'wp-usefull-blocks' ) }
-					help={ __(
-						'Leave empty to use the URL as the label.',
-						'wp-usefull-blocks'
-					) }
+					href={ url || undefined }
+					rel={ openInNewTab ? 'noopener noreferrer' : undefined }
+					target={ openInNewTab ? '_blank' : undefined }
+					onClick={ ( event ) => {
+						// Keep editing in the canvas; do not navigate away.
+						event.preventDefault();
+					} }
 				/>
-				<div className="ub-link-editor__actions">
-					<Button
-						variant="primary"
-						onClick={ checkUrl }
-						isBusy={ checking }
-						disabled={ checking || ! url }
-					>
-						{ __( 'Check URL now', 'wp-usefull-blocks' ) }
-					</Button>
-				</div>
-				{ error && (
-					<Notice status="error" isDismissible={ false }>
-						{ error }
-					</Notice>
+				{ showStatus && url && (
+					<StatusIndicator status={ lastStatus } />
 				) }
-				{ url && (
-					<>
-						<div className="ub-link-editor__preview-label">
-							{ __( 'Preview', 'wp-usefull-blocks' ) }
-						</div>
-						<ServerSideRender
-							block="wp-usefull-blocks/ub-link"
-							attributes={ attributes }
+				{ isEditingURL && (
+					<Popover
+						placement="bottom-start"
+						onClose={ () => setIsEditingURL( false ) }
+						focusOnMount={ url ? undefined : 'firstElement' }
+					>
+						<LinkControl
+							value={ {
+								url,
+								opensInNewTab: openInNewTab,
+							} }
+							onChange={ ( next ) => {
+								const nextUrl = next?.url || '';
+								setAttributes( {
+									url: nextUrl,
+									openInNewTab: !! next?.opensInNewTab,
+									lastStatus:
+										nextUrl === url
+											? lastStatus
+											: 'unknown',
+									lastChecked:
+										nextUrl === url ? lastChecked : 0,
+								} );
+								if ( nextUrl ) {
+									setIsEditingURL( false );
+								}
+							} }
+							onRemove={ unlink }
+							hasRichPreviews
+							settings={ [
+								{
+									id: 'opensInNewTab',
+									title: __(
+										'Open in new tab',
+										'wp-usefull-blocks'
+									),
+								},
+							] }
 						/>
-					</>
+					</Popover>
 				) }
 			</div>
+
+			{ error && (
+				<Notice status="error" isDismissible={ false }>
+					{ error }
+				</Notice>
+			) }
 		</>
 	);
 }
