@@ -31,13 +31,11 @@ All blocks and admin screens must follow the **UX & UI Design Guidelines**
 progressive disclosure, sensible defaults, clear feedback/empty/loading states, and **WCAG 2.2
 AA** accessibility (keyboard, focus, ARIA, never colour-alone, reduced motion).
 
-## Definition of done for every block (standing rule)
+## Definition of done for every block
 
 Whenever a block is added or changed, before handing it over for testing:
 
 - Follow the **Design & UX rules** above (incl. a keyboard/screen-reader pass).
-- Add/refresh it on the **Block Showcase** test page (auto-synced) and run the **pre-handover
-  tests** — see `docs/plans/block-showcase-and-pretests.md`.
 
 ## Default block architecture (recap)
 

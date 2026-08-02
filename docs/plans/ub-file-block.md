@@ -85,9 +85,9 @@ includes/
   - *Note:* real downloads/checks need outbound network; the cloud dev VM may restrict egress —
     tests use local/mocked endpoints.
 
-## 10. i18n / release / showcase
+## 10. i18n / release
 - i18n from the start; bundled translation pass before release (per rules).
-- New feature ⇒ next `*.*.0`. Added to the Block Showcase page and pre-handover tests.
+- New feature ⇒ next `*.*.0`.
 
 ## 11. Open questions / assumptions
 Defaults I'll use unless you say otherwise:
