@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-link",
+	"version": "0.3.0",
+	"title": "UB Link",
+	"category": "widgets",
+	"icon": "admin-links",
+	"description": "A single URL/link with optional open-in-new-tab and traffic-light status.",
+	"keywords": [ "link", "url", "href" ],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"url": {
+			"type": "string",
+			"default": ""
+		},
+		"label": {
+			"type": "string",
+			"default": ""
+		},
+		"openInNewTab": {
+			"type": "boolean",
+			"default": false
+		},
+		"showStatus": {
+			"type": "boolean",
+			"default": true
+		},
+		"lastStatus": {
+			"type": "string",
+			"default": "unknown"
+		},
+		"lastChecked": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

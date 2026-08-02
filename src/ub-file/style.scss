@@ -1,0 +1,19 @@
+/**
+ * Shared styles for UB File.
+ */
+
+.wp-block-wp-usefull-blocks-ub-file {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+
+	.ub-file__anchor {
+		word-break: break-word;
+	}
+
+	.ub-file__local-note {
+		font-size: 0.85em;
+		opacity: 0.75;
+	}
+}
