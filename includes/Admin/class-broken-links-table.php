@@ -46,15 +46,47 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Prepare items from scanner index.
+	 * Prepare items from scanner index (broken first, then unknown, then OK).
 	 */
 	public function prepare_items(): void {
-		$items = WP_Usefull_Blocks_Link_Scanner::get_broken_items();
+		$index = WP_Usefull_Blocks_Link_Scanner::get_index();
+		$items = array_values(
+			array_filter(
+				$index['items'],
+				static fn( $item ): bool => is_array( $item )
+			)
+		);
+
+		usort(
+			$items,
+			static function ( array $a, array $b ): int {
+				// Newest checks first so a just-fixed (green) URL stays visible after Update.
+				$ca = isset( $a['checked_at'] ) ? (int) $a['checked_at'] : 0;
+				$cb = isset( $b['checked_at'] ) ? (int) $b['checked_at'] : 0;
+				if ( $ca !== $cb ) {
+					return $cb <=> $ca;
+				}
+
+				$order = array(
+					'broken'  => 0,
+					'unknown' => 1,
+					'ok'      => 2,
+				);
+				$sa  = isset( $a['status'] ) ? (string) $a['status'] : 'unknown';
+				$sb  = isset( $b['status'] ) ? (string) $b['status'] : 'unknown';
+				$cmp = ( $order[ $sa ] ?? 1 ) <=> ( $order[ $sb ] ?? 1 );
+				if ( 0 !== $cmp ) {
+					return $cmp;
+				}
+				return strcmp( (string) ( $a['url'] ?? '' ), (string) ( $b['url'] ?? '' ) );
+			}
+		);
+
 		$per_page = 20;
 		$current  = $this->get_pagenum();
 		$total    = count( $items );
 
-		$this->items = array_slice( $items, ( $current - 1 ) * $per_page, $per_page );
+		$this->items           = array_slice( $items, ( $current - 1 ) * $per_page, $per_page );
 		$this->_column_headers = array( $this->get_columns(), array(), array() );
 
 		$this->set_pagination_args(
@@ -83,9 +115,25 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	 * @return string
 	 */
 	protected function column_status( array $item ): string {
+		$status  = isset( $item['status'] ) ? sanitize_key( (string) $item['status'] ) : 'unknown';
 		$code    = isset( $item['code'] ) ? (int) $item['code'] : 0;
 		$message = isset( $item['message'] ) ? (string) $item['message'] : '';
-		$out     = '<strong>' . esc_html__( 'Broken', 'wp-usefull-blocks' ) . '</strong>';
+
+		if ( ! in_array( $status, array( 'ok', 'broken', 'unknown' ), true ) ) {
+			$status = 'unknown';
+		}
+
+		$labels = array(
+			'ok'      => __( 'OK', 'wp-usefull-blocks' ),
+			'broken'  => __( 'Broken', 'wp-usefull-blocks' ),
+			'unknown' => __( 'Unknown', 'wp-usefull-blocks' ),
+		);
+
+		$ampel = class_exists( 'WP_Usefull_Blocks_Status_Render' )
+			? WP_Usefull_Blocks_Status_Render::indicator( $status )
+			: '';
+
+		$out = $ampel . ' <strong>' . esc_html( $labels[ $status ] ) . '</strong>';
 		if ( $code > 0 ) {
 			$out .= ' <span class="description">(' . esc_html( (string) $code ) . ')</span>';
 		}
@@ -195,6 +243,6 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	 * Message when empty.
 	 */
 	public function no_items(): void {
-		esc_html_e( 'No broken links found. Run a scan to refresh.', 'wp-usefull-blocks' );
+		esc_html_e( 'No links indexed yet. Run a scan to refresh.', 'wp-usefull-blocks' );
 	}
 }

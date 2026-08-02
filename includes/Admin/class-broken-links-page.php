@@ -25,6 +25,25 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 		add_action( 'admin_post_wp_usefull_blocks_scan_links', array( self::class, 'handle_scan' ) );
 		add_action( 'admin_post_wp_usefull_blocks_replace_url', array( self::class, 'handle_replace' ) );
 		add_action( 'admin_post_wp_usefull_blocks_recheck_url', array( self::class, 'handle_recheck' ) );
+		add_action( 'admin_enqueue_scripts', array( self::class, 'enqueue_assets' ) );
+	}
+
+	/**
+	 * Traffic-light styles on the Broken Links screen.
+	 *
+	 * @param string $hook_suffix Current admin page hook.
+	 */
+	public static function enqueue_assets( string $hook_suffix ): void {
+		if ( ! str_ends_with( $hook_suffix, '_page_useful' ) && 'toplevel_page_useful' !== $hook_suffix ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'wp-usefull-blocks-content-links',
+			WP_USEFULL_BLOCKS_URL . 'assets/content-links.css',
+			array(),
+			WP_USEFULL_BLOCKS_VERSION
+		);
 	}
 
 	/**
@@ -50,7 +69,7 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 			<p>
 				<?php
 				echo esc_html__(
-					'Lists broken links found in published posts and pages. Update a URL to replace it everywhere it appears.',
+					'Lists links found in published posts and pages with a traffic-light status. Update a URL to replace it everywhere it appears; the new link is rechecked automatically.',
 					'wp-usefull-blocks'
 				);
 				?>
@@ -69,13 +88,36 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 					?>
 				</p></div>
 			<?php elseif ( 'replaced' === $notice ) : ?>
-				<div class="notice notice-success is-dismissible"><p>
+				<?php
+				$new_status = isset( $_GET['ub_status'] ) ? sanitize_key( (string) wp_unslash( $_GET['ub_status'] ) ) : 'unknown'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( ! in_array( $new_status, array( 'ok', 'broken', 'unknown' ), true ) ) {
+					$new_status = 'unknown';
+				}
+				$ampel         = class_exists( 'WP_Usefull_Blocks_Status_Render' )
+					? WP_Usefull_Blocks_Status_Render::indicator( $new_status )
+					: '';
+				$status_labels = array(
+					'ok'      => __( 'OK', 'wp-usefull-blocks' ),
+					'broken'  => __( 'Broken', 'wp-usefull-blocks' ),
+					'unknown' => __( 'Unknown', 'wp-usefull-blocks' ),
+				);
+				$notice_class  = ( 'ok' === $new_status ) ? 'notice-success' : 'notice-warning';
+				?>
+				<div class="notice <?php echo esc_attr( $notice_class ); ?> is-dismissible"><p>
 					<?php
-					printf(
-						/* translators: %d: number of posts updated */
-						esc_html__( 'Updated the URL in %d post(s).', 'wp-usefull-blocks' ),
-						$count
+					echo esc_html(
+						sprintf(
+							/* translators: %d: number of posts updated */
+							__( 'Updated the URL in %d post(s).', 'wp-usefull-blocks' ),
+							$count
+						)
 					);
+					echo ' ';
+					echo esc_html__( 'New link status:', 'wp-usefull-blocks' );
+					echo ' ';
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- indicator() returns escaped HTML.
+					echo $ampel;
+					echo ' ' . esc_html( $status_labels[ $new_status ] );
 					?>
 				</p></div>
 			<?php elseif ( 'rechecked' === $notice ) : ?>
@@ -179,13 +221,23 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 
 		$result = WP_Usefull_Blocks_Url_Replacer::replace_in_posts( $post_ids, $old_url, $new_url, $hrefs );
 
-		// Refresh status cache for the new URL and rescan lightly.
+		// Recheck the new URL and move the index row so the traffic light can turn green.
+		$check = array(
+			'status'  => 'unknown',
+			'code'    => 0,
+			'message' => '',
+		);
 		if ( class_exists( 'WP_Usefull_Blocks_Url_Status' ) ) {
 			$check = WP_Usefull_Blocks_Url_Status::check( $new_url );
 			WP_Usefull_Blocks_Url_Status::store( $new_url, $check );
 			delete_transient( 'ub_url_status_' . md5( $old_url ) );
 		}
-		WP_Usefull_Blocks_Link_Scanner::scan( 20 );
+		WP_Usefull_Blocks_Link_Scanner::replace_url_entry( $old_url, $new_url, $check );
+
+		$new_status = sanitize_key( (string) ( $check['status'] ?? 'unknown' ) );
+		if ( ! in_array( $new_status, array( 'ok', 'broken', 'unknown' ), true ) ) {
+			$new_status = 'unknown';
+		}
 
 		wp_safe_redirect(
 			add_query_arg(
@@ -193,6 +245,7 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 					'page'      => self::PAGE_SLUG,
 					'ub_notice' => 'replaced',
 					'ub_count'  => (int) $result['updated'],
+					'ub_status' => $new_status,
 				),
 				admin_url( 'admin.php' )
 			)

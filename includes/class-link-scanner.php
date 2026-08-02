@@ -225,6 +225,109 @@ final class WP_Usefull_Blocks_Link_Scanner {
 	}
 
 	/**
+	 * After a URL was replaced in content: move/merge the index row and set the new status.
+	 *
+	 * @param string               $old_url Previous URL.
+	 * @param string               $new_url Replacement URL.
+	 * @param array<string, mixed> $result  Status payload for the new URL.
+	 */
+	public static function replace_url_entry( string $old_url, string $new_url, array $result ): void {
+		$old = class_exists( 'WP_Usefull_Blocks_Url_Status' )
+			? WP_Usefull_Blocks_Url_Status::normalize_url( $old_url )
+			: esc_url_raw( $old_url );
+		$new = class_exists( 'WP_Usefull_Blocks_Url_Status' )
+			? WP_Usefull_Blocks_Url_Status::normalize_url( $new_url )
+			: esc_url_raw( $new_url );
+
+		if ( '' === $old ) {
+			$old = $old_url;
+		}
+		if ( '' === $new ) {
+			$new = $new_url;
+		}
+		if ( '' === $new ) {
+			return;
+		}
+
+		$index       = self::get_index();
+		$items       = $index['items'];
+		$old_row     = null;
+		$new_row     = null;
+		$old_index   = null;
+		$new_index   = null;
+
+		foreach ( $items as $i => $item ) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+			$item_url = isset( $item['url'] ) ? (string) $item['url'] : '';
+			if ( $item_url === $old ) {
+				$old_row   = $item;
+				$old_index = $i;
+			}
+			if ( $item_url === $new ) {
+				$new_row   = $item;
+				$new_index = $i;
+			}
+		}
+
+		$status = sanitize_key( (string) ( $result['status'] ?? 'unknown' ) );
+		if ( ! in_array( $status, array( 'ok', 'broken', 'unknown' ), true ) ) {
+			$status = 'unknown';
+		}
+
+		$merged_posts = array();
+		if ( is_array( $old_row ) && isset( $old_row['posts'] ) && is_array( $old_row['posts'] ) ) {
+			foreach ( $old_row['posts'] as $post ) {
+				if ( is_array( $post ) && ! empty( $post['id'] ) ) {
+					$merged_posts[ (int) $post['id'] ] = $post;
+				}
+			}
+		}
+		if ( is_array( $new_row ) && isset( $new_row['posts'] ) && is_array( $new_row['posts'] ) ) {
+			foreach ( $new_row['posts'] as $post ) {
+				if ( is_array( $post ) && ! empty( $post['id'] ) ) {
+					$merged_posts[ (int) $post['id'] ] = $post;
+				}
+			}
+		}
+
+		$merged_hrefs = array( $new_url, $new );
+		if ( is_array( $new_row ) && isset( $new_row['hrefs'] ) && is_array( $new_row['hrefs'] ) ) {
+			$merged_hrefs = array_merge( $merged_hrefs, array_map( 'strval', $new_row['hrefs'] ) );
+		}
+		$merged_hrefs = array_values( array_unique( array_filter( $merged_hrefs ) ) );
+
+		$row = array(
+			'url'        => $new,
+			'hrefs'      => $merged_hrefs,
+			'posts'      => array_values( $merged_posts ),
+			'status'     => $status,
+			'code'       => isset( $result['code'] ) ? (int) $result['code'] : 0,
+			'message'    => isset( $result['message'] ) ? (string) $result['message'] : '',
+			'checked_at' => isset( $result['checkedAt'] ) ? (int) $result['checkedAt'] : time(),
+		);
+
+		// Remove old row; upsert new row.
+		if ( null !== $old_index ) {
+			unset( $items[ $old_index ] );
+		}
+		if ( null !== $new_index && ( null === $old_index || $new_index !== $old_index ) ) {
+			unset( $items[ $new_index ] );
+		}
+		$items[] = $row;
+
+		update_option(
+			self::INDEX_OPTION,
+			array(
+				'scanned_at' => time(),
+				'items'      => array_values( $items ),
+			),
+			false
+		);
+	}
+
+	/**
 	 * Patch a single URL's status into the stored index (no live re-scan of other URLs).
 	 *
 	 * @param string               $url    URL that was checked.
