@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.2.0
+Stable tag:        0.3.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,6 +43,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.3.0 =
+* Add UB Link block (URL + traffic-light status check).
+* Add UB File block with manual “Download now” media mirror (refresh when URL changes).
 
 = 0.2.0 =
 * Add UB Gallery block (focus image + thumbnail strip, lightbox/media/none click modes).
