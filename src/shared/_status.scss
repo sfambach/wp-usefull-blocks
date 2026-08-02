@@ -1,0 +1,33 @@
+/**
+ * Shared traffic-light + broken-link styles for UB Link / UB File.
+ */
+
+.ub-status {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 0.85em;
+	height: 0.85em;
+	line-height: 1;
+	font-size: 0.9em;
+}
+
+.ub-status--ok {
+	color: #1a7f37;
+}
+
+.ub-status--broken {
+	color: #cf222e;
+}
+
+.ub-status--unknown {
+	color: #9a6700;
+}
+
+/* Broken URLs: strike through (override theme link underlines). */
+.wp-block-wp-usefull-blocks-ub-link.is-broken a.ub-link__anchor,
+.wp-block-wp-usefull-blocks-ub-file.is-broken a.ub-file__anchor {
+	/* stylelint-disable-next-line declaration-no-important -- beat theme */
+	text-decoration: line-through solid currentcolor !important;
+	opacity: 0.75;
+}

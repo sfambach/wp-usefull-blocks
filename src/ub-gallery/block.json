@@ -1,0 +1,101 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-gallery",
+	"version": "0.2.0",
+	"title": "UB Gallery",
+	"category": "media",
+	"icon": "format-gallery",
+	"description": "eBay-style gallery with one large focus image and a selectable thumbnail strip.",
+	"keywords": [ "gallery", "images", "photos", "lightbox" ],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"images": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		},
+		"selectedIndex": {
+			"type": "number",
+			"default": 0
+		},
+		"linkTo": {
+			"type": "string",
+			"default": "lightbox"
+		},
+		"linkTarget": {
+			"type": "string",
+			"default": ""
+		},
+		"sizeSlug": {
+			"type": "string",
+			"default": "large"
+		},
+		"imageCrop": {
+			"type": "boolean",
+			"default": true
+		},
+		"randomOrder": {
+			"type": "boolean",
+			"default": false
+		},
+		"caption": {
+			"type": "string",
+			"default": ""
+		},
+		"onImageClick": {
+			"type": "string",
+			"default": "lightbox"
+		}
+	},
+	"supports": {
+		"anchor": true,
+		"align": [ "wide", "full" ],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"blockGap": true
+		},
+		"color": {
+			"text": false,
+			"background": true,
+			"gradients": true
+		},
+		"__experimentalBorder": {
+			"radius": true,
+			"color": true,
+			"width": true,
+			"style": true,
+			"__experimentalDefaultControls": {
+				"color": true,
+				"radius": true
+			}
+		},
+		"interactivity": true
+	},
+	"example": {
+		"attributes": {
+			"images": [
+				{
+					"id": 0,
+					"url": "https://s.w.org/images/core/5.3/Windbuchencom.jpg",
+					"alt": "Sample gallery image",
+					"caption": "",
+					"fullUrl": "https://s.w.org/images/core/5.3/Windbuchencom.jpg"
+				}
+			],
+			"selectedIndex": 0,
+			"linkTo": "lightbox",
+			"imageCrop": true,
+			"sizeSlug": "large"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

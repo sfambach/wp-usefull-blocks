@@ -1,0 +1,21 @@
+/**
+ * Editor-only styles for UB Link.
+ */
+
+@use "../shared/status";
+
+.ub-link {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+
+	.ub-link__anchor {
+		word-break: break-word;
+	}
+
+	&.is-broken .ub-link__anchor {
+		text-decoration: line-through solid currentcolor;
+		opacity: 0.75;
+	}
+}
