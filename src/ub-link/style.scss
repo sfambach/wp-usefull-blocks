@@ -1,0 +1,16 @@
+/**
+ * Shared styles for UB Link.
+ */
+
+@use "../shared/status";
+
+.wp-block-wp-usefull-blocks-ub-link {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+
+	.ub-link__anchor {
+		word-break: break-word;
+	}
+}

@@ -1,0 +1,74 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-timeline",
+	"version": "0.4.0",
+	"title": "UB Timeline",
+	"category": "widgets",
+	"icon": "backup",
+	"description": "A timeline of titled entries with expandable descriptions.",
+	"keywords": [
+		"timeline",
+		"history",
+		"chronology",
+		"zeitstrahl",
+		"verlauf"
+	],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"orientation": {
+			"type": "string",
+			"default": "vertical",
+			"enum": [ "vertical", "horizontal" ]
+		},
+		"items": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		},
+		"initiallyOpen": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"supports": {
+		"anchor": true,
+		"align": [ "wide", "full" ],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"color": {
+			"text": true,
+			"background": true,
+			"link": false
+		},
+		"interactivity": true
+	},
+	"example": {
+		"attributes": {
+			"orientation": "vertical",
+			"initiallyOpen": true,
+			"items": [
+				{
+					"id": "example-1",
+					"title": "Start",
+					"description": "The first milestone on the timeline."
+				},
+				{
+					"id": "example-2",
+					"title": "Next step",
+					"description": "What happened after that."
+				}
+			]
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}
