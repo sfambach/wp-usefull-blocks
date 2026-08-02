@@ -24,6 +24,14 @@ All blocks in this plugin use the **`ub-`** prefix ("UB" = Usefull Blocks) on th
 - The scaffold sample block `wp-usefull-blocks/wp-usefull-blocks` (from `@wordpress/create-block`)
   is a placeholder and will be removed/replaced by the real `ub-*` blocks.
 
+## License & liability (binding)
+
+- Plugin license: **GPL-2.0-or-later** (LICENSE file + plugin header + `readme.txt`).
+- **No** install/activation confirmation, click-to-accept, or feature gate for legal text.
+- Warranty/liability are covered by the GPL (“AS IS”); document a short disclaimer in
+  README/FAQ and feature-specific caveats where needed.
+- Details: `docs/plans/legal-disclaimer.md`.
+
 ## Design & UX rules (binding)
 
 All blocks and admin screens must follow the **UX & UI Design Guidelines**
