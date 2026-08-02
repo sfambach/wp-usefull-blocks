@@ -58,16 +58,6 @@
 		const data = new FormData( form );
 		data.set( 'action', action );
 
-		// Textarea may live outside the form (HTML form= attribute).
-		if ( ! data.get( 'new_url' ) && form.id ) {
-			const external = document.querySelector(
-				'textarea[name="new_url"][form="' + CSS.escape( form.id ) + '"]'
-			);
-			if ( external && external.value ) {
-				data.set( 'new_url', external.value );
-			}
-		}
-
 		if ( ! data.get( 'new_url' ) ) {
 			showNotice(
 				'error',

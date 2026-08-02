@@ -42,7 +42,6 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 			'old_url' => __( 'Old URL', 'wp-usefull-blocks' ),
 			'copy'    => '',
 			'new_url' => __( 'New URL', 'wp-usefull-blocks' ),
-			'actions' => __( 'Actions', 'wp-usefull-blocks' ),
 		);
 	}
 
@@ -105,6 +104,8 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Compact traffic light (label + optional HTTP code, no multi-line message).
+	 *
 	 * @param array<string,mixed> $item Item.
 	 * @return string
 	 */
@@ -114,14 +115,20 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 		$message = isset( $item['message'] ) ? (string) $item['message'] : '';
 
 		$inner = class_exists( 'WP_Usefull_Blocks_Status_Render' )
-			? WP_Usefull_Blocks_Status_Render::admin_cell( $status, $code, $message )
+			? WP_Usefull_Blocks_Status_Render::admin_cell( $status, $code, '' )
 			: esc_html( $status );
 
-		return '<div class="ub-row-status">' . $inner . '</div>';
+		// Keep detail available on hover without adding row height.
+		$title = '' !== $message ? $message : '';
+		$wrap  = '' !== $title
+			? '<div class="ub-row-status" title="' . esc_attr( $title ) . '">'
+			: '<div class="ub-row-status">';
+
+		return $wrap . $inner . '</div>';
 	}
 
 	/**
-	 * Old URL as clickable link, with "Found in" under it.
+	 * Old URL link + Recheck, with "Found in" under it.
 	 *
 	 * @param array<string,mixed> $item Item.
 	 * @return string
@@ -132,19 +139,39 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 			return '&mdash;';
 		}
 
-		$out = sprintf(
-			'<a class="ub-old-url" href="%1$s" target="_blank" rel="noopener noreferrer" data-ub-old-url="%2$s">%3$s</a>',
-			esc_url( $url ),
-			esc_attr( $url ),
-			esc_html( $url )
-		);
-
+		$action_url = admin_url( 'admin-post.php' );
+		ob_start();
+		?>
+		<div class="ub-old-url-row">
+			<a
+				class="ub-old-url"
+				href="<?php echo esc_url( $url ); ?>"
+				target="_blank"
+				rel="noopener noreferrer"
+				data-ub-old-url="<?php echo esc_attr( $url ); ?>"
+			><?php echo esc_html( $url ); ?></a>
+			<form method="post" action="<?php echo esc_url( $action_url ); ?>" class="ub-broken-links-recheck">
+				<?php wp_nonce_field( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' ); ?>
+				<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
+				<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
+				<?php
+				submit_button(
+					__( 'Recheck', 'wp-usefull-blocks' ),
+					'link',
+					'submit',
+					false,
+					array( 'class' => 'button-link ub-recheck-button' )
+				);
+				?>
+			</form>
+		</div>
+		<?php
 		$posts_html = $this->render_found_in( $item );
 		if ( '' !== $posts_html ) {
-			$out .= '<div class="ub-found-in description">' . $posts_html . '</div>';
+			echo '<div class="ub-found-in description">' . $posts_html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from escaped parts.
 		}
 
-		return $out;
+		return (string) ob_get_clean();
 	}
 
 	/**
@@ -166,29 +193,12 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	}
 
 	/**
-	 * New URL textarea (associated to the row form via HTML form attribute).
+	 * New URL field + Save beside it.
 	 *
 	 * @param array<string,mixed> $item Item.
 	 * @return string
 	 */
 	protected function column_new_url( array $item ): string {
-		$url      = isset( $item['url'] ) ? (string) $item['url'] : '';
-		$form_id  = 'ub-replace-form-' . md5( $url );
-		$field_id = 'ub-new-url-' . md5( $url );
-
-		return sprintf(
-			'<label class="screen-reader-text" for="%1$s">%2$s</label><textarea class="ub-new-url large-text" rows="2" id="%1$s" name="new_url" form="%3$s" placeholder="https://" required></textarea>',
-			esc_attr( $field_id ),
-			esc_html__( 'New URL', 'wp-usefull-blocks' ),
-			esc_attr( $form_id )
-		);
-	}
-
-	/**
-	 * @param array<string,mixed> $item Item.
-	 * @return string
-	 */
-	protected function column_actions( array $item ): string {
 		$url   = isset( $item['url'] ) ? (string) $item['url'] : '';
 		$hrefs = isset( $item['hrefs'] ) && is_array( $item['hrefs'] ) ? $item['hrefs'] : array();
 		$posts = isset( $item['posts'] ) && is_array( $item['posts'] ) ? $item['posts'] : array();
@@ -200,6 +210,7 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 		}
 
 		$form_id    = 'ub-replace-form-' . md5( $url );
+		$field_id   = 'ub-new-url-' . md5( $url );
 		$action_url = admin_url( 'admin-post.php' );
 		ob_start();
 		?>
@@ -214,13 +225,28 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 			<input type="hidden" name="old_url" value="<?php echo esc_attr( $url ); ?>" />
 			<input type="hidden" name="post_ids" value="<?php echo esc_attr( implode( ',', $ids ) ); ?>" />
 			<input type="hidden" name="hrefs" value="<?php echo esc_attr( wp_json_encode( array_values( $hrefs ) ) ); ?>" />
-			<?php submit_button( __( 'Update URL', 'wp-usefull-blocks' ), 'secondary', 'submit', false ); ?>
-		</form>
-		<form method="post" action="<?php echo esc_url( $action_url ); ?>" class="ub-broken-links-recheck">
-			<?php wp_nonce_field( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' ); ?>
-			<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
-			<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
-			<?php submit_button( __( 'Recheck', 'wp-usefull-blocks' ), 'link', 'submit', false ); ?>
+			<div class="ub-new-url-row">
+				<label class="screen-reader-text" for="<?php echo esc_attr( $field_id ); ?>">
+					<?php esc_html_e( 'New URL', 'wp-usefull-blocks' ); ?>
+				</label>
+				<textarea
+					class="ub-new-url"
+					rows="1"
+					id="<?php echo esc_attr( $field_id ); ?>"
+					name="new_url"
+					placeholder="https://"
+					required
+				></textarea>
+				<?php
+				submit_button(
+					__( 'Save', 'wp-usefull-blocks' ),
+					'secondary small',
+					'submit',
+					false,
+					array( 'class' => 'button button-secondary button-small ub-save-button' )
+				);
+				?>
+			</div>
 		</form>
 		<?php
 		return (string) ob_get_clean();
