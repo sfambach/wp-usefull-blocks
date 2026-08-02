@@ -27,6 +27,16 @@ const { state } = store( 'wp-usefull-blocks/ub-gallery', {
 		get focusFullUrl() {
 			return state.focusImage.fullUrl || state.focusImage.url || '';
 		},
+		get focusHref() {
+			const context = getContext();
+			const image = state.focusImage;
+
+			if ( 'attachment' === context.linkTo ) {
+				return image.attachmentUrl || image.fullUrl || image.url || '';
+			}
+
+			return image.fullUrl || image.url || '';
+		},
 		get focusCaption() {
 			return state.focusImage.caption || '';
 		},
@@ -54,7 +64,7 @@ const { state } = store( 'wp-usefull-blocks/ub-gallery', {
 		openLightbox() {
 			const context = getContext();
 
-			if ( 'lightbox' !== context.onImageClick ) {
+			if ( 'lightbox' !== context.linkTo ) {
 				return;
 			}
 

@@ -18,4 +18,11 @@
 	.ub-gallery__thumb {
 		pointer-events: none;
 	}
+
+	.ub-gallery-editor__caption {
+		display: block;
+		margin: 0.75rem 0 0;
+		text-align: center;
+		font-size: 0.9em;
+	}
 }

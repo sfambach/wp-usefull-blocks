@@ -14,17 +14,17 @@ describe( 'ub-gallery block metadata', () => {
 		expect( metadata.apiVersion ).toBe( 3 );
 	} );
 
-	it( 'declares a dynamic interactive block with gallery attributes', () => {
+	it( 'declares core-gallery-aligned settings attributes', () => {
 		expect( metadata.render ).toBe( 'file:./render.php' );
 		expect( metadata.viewScriptModule ).toBe( 'file:./view.js' );
 		expect( metadata.supports.interactivity ).toBe( true );
 		expect( metadata.attributes.images.type ).toBe( 'array' );
-		expect( metadata.attributes.onImageClick.default ).toBe( 'lightbox' );
-		expect( metadata.attributes.onImageClick.enum ).toEqual( [
-			'lightbox',
-			'media',
-			'none',
-		] );
+		expect( metadata.attributes.linkTo.default ).toBe( 'lightbox' );
+		expect( metadata.attributes.sizeSlug.default ).toBe( 'large' );
+		expect( metadata.attributes.imageCrop.default ).toBe( true );
+		expect( metadata.attributes.randomOrder.default ).toBe( false );
+		expect( metadata.supports.spacing ).toBeTruthy();
+		expect( metadata.supports.anchor ).toBe( true );
 	} );
 
 	it( 'registers as a dynamic block (save returns null)', () => {
