@@ -1,0 +1,38 @@
+/**
+ * Site-wide styles for enhanced standard WordPress content links.
+ */
+
+.ub-status {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 0.85em;
+	height: 0.85em;
+	line-height: 1;
+	font-size: 0.9em;
+	vertical-align: middle;
+	margin-inline: 0.2em;
+}
+
+.ub-status--ok {
+	color: #1a7f37;
+}
+
+.ub-status--broken {
+	color: #cf222e;
+}
+
+.ub-status--unknown {
+	color: #9a6700;
+}
+
+.ub-content-link {
+	display: inline;
+	white-space: normal;
+}
+
+/* Broken standard links: strike through (beat theme underlines). */
+.ub-content-link.is-broken a.ub-content-link__anchor {
+	text-decoration: line-through solid currentcolor !important;
+	opacity: 0.75;
+}

@@ -26,6 +26,7 @@ require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-settings.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-url-status.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-file-mirror.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-status-render.php';
+require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-content-links.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-rest.php';
 
 /**

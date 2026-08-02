@@ -39,11 +39,12 @@ plugin uses to register all blocks efficiently.
 ## Settings
 
 While the plugin only needs configuration (no extra admin work pages), options live under
-**Settings → Usefull Blocks**:
+**Settings → Usefull Blocks**. These apply to **all normal WordPress links** in post/page
+content site-wide (not only the UB Link block):
 
 - Traffic-light status: before (default), after, or off
 - Strike through broken links (front end)
-- Auto-check URLs (page render cache + WP-Cron + editor)
+- Auto-check URLs (page render cache + WP-Cron)
 
 ## Development
 

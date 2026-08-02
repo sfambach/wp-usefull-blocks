@@ -121,7 +121,7 @@ final class WP_Usefull_Blocks_Settings {
 			__( 'Links', 'wp-usefull-blocks' ),
 			static function (): void {
 				echo '<p>' . esc_html__(
-					'UB Link behaves like a normal WordPress link. These options add a traffic-light status and strike-through for broken URLs.',
+					'These options apply to every normal WordPress link in post and page content site-wide (standard paragraph links, lists, etc.). When enabled, they look like the UB Link block: traffic-light status and strike-through for broken URLs.',
 					'wp-usefull-blocks'
 				) . '</p>';
 			},
@@ -136,7 +136,7 @@ final class WP_Usefull_Blocks_Settings {
 			'wp_usefull_blocks_links',
 			array(
 				'description' => __(
-					'Show the status indicator before or after the link, or turn it off. Default: before.',
+					'Show the status indicator before or after every content link, or turn it off. Default: before. Applies on all posts and pages.',
 					'wp-usefull-blocks'
 				),
 			)
@@ -151,7 +151,7 @@ final class WP_Usefull_Blocks_Settings {
 			array(
 				'key'         => 'strike_broken_links',
 				'description' => __(
-					'On the front end, render broken UB Link / UB File URLs with a strike-through so visitors see they are unavailable.',
+					'On the front end, render broken content links with a strike-through so visitors see they are unavailable.',
 					'wp-usefull-blocks'
 				),
 			)
@@ -166,7 +166,7 @@ final class WP_Usefull_Blocks_Settings {
 			array(
 				'key'         => 'auto_check_urls',
 				'description' => __(
-					'Check URLs when a page is rendered (cached) and refresh them in the background via WP-Cron. Also checks automatically in the editor when a URL is set.',
+					'Check URLs when a page is rendered (cached) and refresh them in the background via WP-Cron.',
 					'wp-usefull-blocks'
 				),
 			)
