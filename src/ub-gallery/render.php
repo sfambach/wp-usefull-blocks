@@ -2,13 +2,24 @@
 /**
  * Server-side render for the UB Gallery block.
  *
+ * Note: WordPress loads this file via require() inside an output buffer.
+ * Echo markup; do not return a string (returns are discarded).
+ *
  * @package WpUsefullBlocks
+ *
+ * @var array    $attributes Block attributes.
+ * @var string   $content    Block default content.
+ * @var WP_Block $block      Block instance.
  */
 
 declare(strict_types=1);
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+if ( ! function_exists( 'wp_usefull_blocks_ub_gallery_normalize_images' ) ) {
+	return;
 }
 
 $raw_images     = isset( $attributes['images'] ) && is_array( $attributes['images'] ) ? $attributes['images'] : array();
@@ -21,7 +32,7 @@ if ( ! in_array( $on_image_click, array( 'lightbox', 'media', 'none' ), true ) )
 }
 
 if ( array() === $images ) {
-	return '';
+	return;
 }
 
 if ( $selected_index >= count( $images ) ) {
@@ -37,7 +48,8 @@ $cache_key     = 'ub_gallery_' . md5( (string) wp_json_encode( $cache_payload ) 
 $cached_html   = get_transient( $cache_key );
 
 if ( is_string( $cached_html ) && '' !== $cached_html ) {
-	return $cached_html;
+	echo $cached_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Cached markup is built with escaped values below.
+	return;
 }
 
 $context = array(
@@ -54,10 +66,10 @@ $context_json = (string) wp_json_encode(
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class'                            => 'ub-gallery',
-		'data-wp-interactive'              => 'wp-usefull-blocks/ub-gallery',
-		'data-wp-context'                  => $context_json,
-		'data-wp-on-document--keydown'     => 'actions.handleKeydown',
+		'class'                        => 'ub-gallery',
+		'data-wp-interactive'          => 'wp-usefull-blocks/ub-gallery',
+		'data-wp-context'              => $context_json,
+		'data-wp-on-document--keydown' => 'actions.handleKeydown',
 	)
 );
 
@@ -232,4 +244,4 @@ if ( $ttl > 0 ) {
 	set_transient( $cache_key, $html, $ttl );
 }
 
-return $html;
+echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup is escaped when built above.
