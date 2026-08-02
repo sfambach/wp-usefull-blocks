@@ -41,7 +41,8 @@ file” or “None”.
 
 = How are broken links detected and shown? =
 
-Go to Settings → Usefull Blocks to enable/disable the traffic-light status, strike-through
+Go to Settings → Usefull Blocks to enable/disable the traffic-light status, choose whether
+the indicator appears before or after the link (default: before), enable strike-through
 for broken links, and automatic URL checks. When enabled, UB Link and UB File resolve URL
 status when the page is rendered. The first visitor (or a cache miss) triggers a lightweight
 remote check; the result is cached (default 12 hours) and the URL is added to a watchlist.

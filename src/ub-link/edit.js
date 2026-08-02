@@ -47,6 +47,7 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 
 	const settings = usePluginSettings();
 	const showStatus = !! settings.show_link_status;
+	const statusBefore = 'after' !== settings.link_status_position;
 	const autoCheck = !! settings.auto_check_urls;
 
 	const [ isEditingURL, setIsEditingURL ] = useState( false );
@@ -152,6 +153,9 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
+				{ showStatus && url && statusBefore && (
+					<StatusIndicator status={ lastStatus } />
+				) }
 				<RichText
 					tagName="a"
 					className="ub-link__anchor"
@@ -168,7 +172,7 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 						event.preventDefault();
 					} }
 				/>
-				{ showStatus && url && (
+				{ showStatus && url && ! statusBefore && (
 					<StatusIndicator status={ lastStatus } />
 				) }
 				{ isEditingURL && (

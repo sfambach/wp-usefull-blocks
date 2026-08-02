@@ -43,6 +43,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const settings = usePluginSettings();
 	const showStatus = !! settings.show_link_status;
+	const statusBefore = 'after' !== settings.link_status_position;
 	const autoCheck = !! settings.auto_check_urls;
 
 	const [ busy, setBusy ] = useState( '' );
@@ -232,6 +233,9 @@ export default function Edit( { attributes, setAttributes } ) {
 				) }
 
 				<div className="ub-file-editor__actions">
+					{ showStatus && sourceUrl && statusBefore && (
+						<StatusIndicator status={ lastStatus } />
+					) }
 					<Button
 						variant="primary"
 						onClick={ downloadNow }
@@ -253,7 +257,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					>
 						{ __( 'Check URL now', 'wp-usefull-blocks' ) }
 					</Button>
-					{ showStatus && sourceUrl && (
+					{ showStatus && sourceUrl && ! statusBefore && (
 						<StatusIndicator status={ lastStatus } />
 					) }
 				</div>

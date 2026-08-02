@@ -19,15 +19,19 @@ $attachment_id = isset( $attributes['attachmentId'] ) ? absint( $attributes['att
 $link_behavior = isset( $attributes['linkBehavior'] ) ? sanitize_key( (string) $attributes['linkBehavior'] ) : 'original-fallback-local';
 $stored_status = isset( $attributes['lastStatus'] ) ? sanitize_key( (string) $attributes['lastStatus'] ) : 'unknown';
 
-$show_status = class_exists( 'WP_Usefull_Blocks_Settings' )
-	? WP_Usefull_Blocks_Settings::is_enabled( 'show_link_status' )
-	: true;
-$strike_broken = class_exists( 'WP_Usefull_Blocks_Settings' )
-	? WP_Usefull_Blocks_Settings::is_enabled( 'strike_broken_links' )
-	: true;
-$auto_check = class_exists( 'WP_Usefull_Blocks_Settings' )
-	? WP_Usefull_Blocks_Settings::is_enabled( 'auto_check_urls' )
-	: true;
+$plugin_settings = class_exists( 'WP_Usefull_Blocks_Settings' )
+	? WP_Usefull_Blocks_Settings::get()
+	: array(
+		'show_link_status'     => true,
+		'link_status_position' => 'before',
+		'strike_broken_links'  => true,
+		'auto_check_urls'      => true,
+	);
+
+$show_status   = ! empty( $plugin_settings['show_link_status'] );
+$status_before = 'after' !== ( $plugin_settings['link_status_position'] ?? 'before' );
+$strike_broken = ! empty( $plugin_settings['strike_broken_links'] );
+$auto_check    = ! empty( $plugin_settings['auto_check_urls'] );
 
 if ( ! in_array( $link_behavior, array( 'original-fallback-local', 'original-only', 'local-only' ), true ) ) {
 	$link_behavior = 'original-fallback-local';
@@ -72,6 +76,9 @@ $classes = array( 'ub-file', 'ub-file--' . $status );
 if ( $strike_broken && 'broken' === $status && $href === $source_url ) {
 	$classes[] = 'is-broken';
 }
+if ( $show_status ) {
+	$classes[] = $status_before ? 'ub-file--status-before' : 'ub-file--status-after';
+}
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	array(
@@ -83,8 +90,18 @@ $anchor_title = '';
 if ( $strike_broken && 'broken' === $status && $href === $source_url ) {
 	$anchor_title = __( 'This link appears to be broken.', 'wp-usefull-blocks' );
 }
+
+$status_html = '';
+if ( $show_status && class_exists( 'WP_Usefull_Blocks_Status_Render' ) ) {
+	$status_html = WP_Usefull_Blocks_Status_Render::indicator( $status );
+}
 ?>
 <div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by helper. ?>>
+	<?php
+	if ( $status_before && '' !== $status_html ) {
+		echo $status_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	?>
 	<a
 		class="ub-file__anchor"
 		href="<?php echo esc_url( $href ); ?>"
@@ -95,8 +112,8 @@ if ( $strike_broken && 'broken' === $status && $href === $source_url ) {
 		<?php echo esc_html( $label ); ?>
 	</a>
 	<?php
-	if ( $show_status && class_exists( 'WP_Usefull_Blocks_Status_Render' ) ) {
-		echo WP_Usefull_Blocks_Status_Render::indicator( $status ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	if ( ! $status_before && '' !== $status_html ) {
+		echo $status_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 	?>
 	<?php if ( $attachment_id > 0 && $local_url ) : ?>

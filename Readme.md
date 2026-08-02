@@ -42,6 +42,7 @@ While the plugin only needs configuration (no extra admin work pages), options l
 **Settings → Usefull Blocks**:
 
 - Show traffic-light status (editor + front end)
+- Traffic-light position: before (default) or after the link
 - Strike through broken links (front end)
 - Auto-check URLs (page render cache + WP-Cron + editor)
 

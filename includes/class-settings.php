@@ -32,20 +32,21 @@ final class WP_Usefull_Blocks_Settings {
 	/**
 	 * Default option values.
 	 *
-	 * @return array{show_link_status:bool,strike_broken_links:bool,auto_check_urls:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool}
 	 */
 	public static function defaults(): array {
 		return array(
-			'show_link_status'    => true,
-			'strike_broken_links' => true,
-			'auto_check_urls'     => true,
+			'show_link_status'     => true,
+			'link_status_position' => 'before',
+			'strike_broken_links'  => true,
+			'auto_check_urls'      => true,
 		);
 	}
 
 	/**
 	 * Get merged settings.
 	 *
-	 * @return array{show_link_status:bool,strike_broken_links:bool,auto_check_urls:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -53,12 +54,17 @@ final class WP_Usefull_Blocks_Settings {
 			$stored = array();
 		}
 
-		$merged = array_merge( self::defaults(), $stored );
+		$merged   = array_merge( self::defaults(), $stored );
+		$position = sanitize_key( (string) $merged['link_status_position'] );
+		if ( ! in_array( $position, array( 'before', 'after' ), true ) ) {
+			$position = 'before';
+		}
 
 		return array(
-			'show_link_status'    => (bool) $merged['show_link_status'],
-			'strike_broken_links' => (bool) $merged['strike_broken_links'],
-			'auto_check_urls'     => (bool) $merged['auto_check_urls'],
+			'show_link_status'     => (bool) $merged['show_link_status'],
+			'link_status_position' => $position,
+			'strike_broken_links'  => (bool) $merged['strike_broken_links'],
+			'auto_check_urls'      => (bool) $merged['auto_check_urls'],
 		);
 	}
 
@@ -129,6 +135,20 @@ final class WP_Usefull_Blocks_Settings {
 		);
 
 		add_settings_field(
+			'link_status_position',
+			__( 'Traffic-light position', 'wp-usefull-blocks' ),
+			array( self::class, 'render_position' ),
+			'wp-usefull-blocks',
+			'wp_usefull_blocks_links',
+			array(
+				'description' => __(
+					'Place the status indicator before or after the link text. Default: before.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_field(
 			'strike_broken_links',
 			__( 'Strike through broken links', 'wp-usefull-blocks' ),
 			array( self::class, 'render_checkbox' ),
@@ -163,7 +183,7 @@ final class WP_Usefull_Blocks_Settings {
 	 * Sanitize option array.
 	 *
 	 * @param mixed $input Raw input.
-	 * @return array{show_link_status:bool,strike_broken_links:bool,auto_check_urls:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool}
 	 */
 	public static function sanitize( $input ): array {
 		$defaults = self::defaults();
@@ -171,11 +191,53 @@ final class WP_Usefull_Blocks_Settings {
 			return $defaults;
 		}
 
+		$position = isset( $input['link_status_position'] )
+			? sanitize_key( (string) $input['link_status_position'] )
+			: 'before';
+		if ( ! in_array( $position, array( 'before', 'after' ), true ) ) {
+			$position = 'before';
+		}
+
 		return array(
-			'show_link_status'    => ! empty( $input['show_link_status'] ),
-			'strike_broken_links' => ! empty( $input['strike_broken_links'] ),
-			'auto_check_urls'     => ! empty( $input['auto_check_urls'] ),
+			'show_link_status'     => ! empty( $input['show_link_status'] ),
+			'link_status_position' => $position,
+			'strike_broken_links'  => ! empty( $input['strike_broken_links'] ),
+			'auto_check_urls'      => ! empty( $input['auto_check_urls'] ),
 		);
+	}
+
+	/**
+	 * Radio field for traffic-light position.
+	 *
+	 * @param array{description?:string} $args Field args.
+	 */
+	public static function render_position( array $args ): void {
+		$description = isset( $args['description'] ) ? (string) $args['description'] : '';
+		$settings    = self::get();
+		$current     = $settings['link_status_position'];
+		$name        = self::OPTION . '[link_status_position]';
+		$options     = array(
+			'before' => __( 'Before the link', 'wp-usefull-blocks' ),
+			'after'  => __( 'After the link', 'wp-usefull-blocks' ),
+		);
+		?>
+		<fieldset>
+			<?php foreach ( $options as $value => $label ) : ?>
+				<label style="display:block;margin-bottom:0.35em;">
+					<input
+						type="radio"
+						name="<?php echo esc_attr( $name ); ?>"
+						value="<?php echo esc_attr( $value ); ?>"
+						<?php checked( $current, $value ); ?>
+					/>
+					<?php echo esc_html( $label ); ?>
+				</label>
+			<?php endforeach; ?>
+		</fieldset>
+		<?php if ( '' !== $description ) : ?>
+			<p class="description"><?php echo esc_html( $description ); ?></p>
+		<?php endif; ?>
+		<?php
 	}
 
 	/**
