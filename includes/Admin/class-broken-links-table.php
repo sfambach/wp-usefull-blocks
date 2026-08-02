@@ -60,6 +60,13 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 		usort(
 			$items,
 			static function ( array $a, array $b ): int {
+				// Keep recently rechecked rows near the top (including OK).
+				$ca = isset( $a['checked_at'] ) ? (int) $a['checked_at'] : 0;
+				$cb = isset( $b['checked_at'] ) ? (int) $b['checked_at'] : 0;
+				if ( $ca !== $cb ) {
+					return $cb <=> $ca;
+				}
+
 				$order = array(
 					'broken'  => 0,
 					'unknown' => 1,
@@ -154,7 +161,7 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 							<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
 							<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
 							<button
-								type="submit"
+								type="button"
 								class="button-link ub-recheck-button"
 								title="<?php echo esc_attr__( 'Recheck', 'wp-usefull-blocks' ); ?>"
 								aria-label="<?php echo esc_attr__( 'Recheck', 'wp-usefull-blocks' ); ?>"

@@ -21,7 +21,7 @@
 	}
 
 	function setBusy( form, busy ) {
-		const button = form.querySelector( 'input[type="submit"], button[type="submit"]' );
+		const button = form.querySelector( 'button, input[type="submit"]' );
 		if ( button ) {
 			button.disabled = !! busy;
 		}
@@ -67,7 +67,7 @@
 	async function postForm( form, action ) {
 		const ajaxUrl = window.wpUsefullBlocksBrokenLinks?.ajaxUrl;
 		if ( ! ajaxUrl || ! action ) {
-			return null;
+			throw new Error( 'Missing AJAX config' );
 		}
 
 		const data = new FormData( form );
@@ -111,6 +111,9 @@
 			}
 
 			applyStatusHtml( statusCell, payload.data.statusHtml );
+			if ( row ) {
+				row.dataset.ubStatus = payload.data.status || '';
+			}
 
 			showNotice(
 				payload.data.status === 'ok' ? 'success' : 'warning',
@@ -148,6 +151,9 @@
 			}
 
 			applyStatusHtml( statusCell, payload.data.statusHtml );
+			if ( row ) {
+				row.dataset.ubStatus = payload.data.status || '';
+			}
 
 			showNotice(
 				payload.data.status === 'ok' ? 'success' : 'warning',
@@ -166,12 +172,22 @@
 	}
 
 	document.addEventListener( 'click', function ( event ) {
-		const button = event.target.closest( '.ub-copy-old-url' );
-		if ( ! button ) {
+		const copyBtn = event.target.closest( '.ub-copy-old-url' );
+		if ( copyBtn ) {
+			event.preventDefault();
+			copyOldUrlIntoField( copyBtn );
 			return;
 		}
-		event.preventDefault();
-		copyOldUrlIntoField( button );
+
+		const recheckBtn = event.target.closest( '.ub-recheck-button' );
+		if ( recheckBtn ) {
+			event.preventDefault();
+			event.stopPropagation();
+			const form = recheckBtn.closest( 'form.ub-broken-links-recheck' );
+			if ( form ) {
+				submitRecheck( form );
+			}
+		}
 	} );
 
 	document.addEventListener( 'submit', function ( event ) {
@@ -180,6 +196,7 @@
 			return;
 		}
 
+		// Never allow classic navigation for these forms.
 		if ( form.classList.contains( 'ub-broken-links-replace' ) ) {
 			event.preventDefault();
 			submitReplace( form );

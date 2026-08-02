@@ -40,18 +40,23 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 			return;
 		}
 
+		$css_path = WP_USEFULL_BLOCKS_PATH . 'assets/content-links.css';
+		$js_path  = WP_USEFULL_BLOCKS_PATH . 'assets/admin-broken-links.js';
+		$css_ver  = is_readable( $css_path ) ? (string) filemtime( $css_path ) : WP_USEFULL_BLOCKS_VERSION;
+		$js_ver   = is_readable( $js_path ) ? (string) filemtime( $js_path ) : WP_USEFULL_BLOCKS_VERSION;
+
 		wp_enqueue_style(
 			'wp-usefull-blocks-content-links',
 			WP_USEFULL_BLOCKS_URL . 'assets/content-links.css',
 			array(),
-			WP_USEFULL_BLOCKS_VERSION
+			$css_ver
 		);
 
 		wp_enqueue_script(
 			'wp-usefull-blocks-admin-broken-links',
 			WP_USEFULL_BLOCKS_URL . 'assets/admin-broken-links.js',
 			array(),
-			WP_USEFULL_BLOCKS_VERSION,
+			$js_ver,
 			true
 		);
 
