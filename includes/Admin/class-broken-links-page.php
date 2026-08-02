@@ -406,21 +406,31 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 	/**
 	 * Shared single-URL recheck logic.
 	 *
+	 * Prefers checking the provided URL (may be the new URL from the textarea).
+	 * Optionally patches a different index row via index_url (the visible old URL).
+	 *
 	 * @return array{status:string,code:int,message:string,checked_at:int}|WP_Error
 	 */
 	private static function process_recheck_request() {
 		$url = isset( $_POST['url'] ) ? esc_url_raw( (string) wp_unslash( $_POST['url'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$index_url = isset( $_POST['index_url'] ) ? esc_url_raw( (string) wp_unslash( $_POST['index_url'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( '' === $url || ! class_exists( 'WP_Usefull_Blocks_Url_Status' ) ) {
 			return new WP_Error(
 				'ub_invalid_recheck',
 				__( 'Something went wrong. Please try again.', 'wp-usefull-blocks' )
 			);
 		}
+		if ( '' === $index_url ) {
+			$index_url = $url;
+		}
 
-		$result               = WP_Usefull_Blocks_Url_Status::check( $url );
-		$result['checkedAt']  = time();
+		$result              = WP_Usefull_Blocks_Url_Status::check( $url );
+		$result['checkedAt'] = time();
 		WP_Usefull_Blocks_Url_Status::store( $url, $result );
 		WP_Usefull_Blocks_Link_Scanner::apply_status( $url, $result );
+		if ( $index_url !== $url ) {
+			WP_Usefull_Blocks_Link_Scanner::apply_status( $index_url, $result );
+		}
 
 		$status = sanitize_key( (string) ( $result['status'] ?? 'unknown' ) );
 		if ( ! in_array( $status, array( 'ok', 'broken', 'unknown' ), true ) ) {

@@ -64,14 +64,27 @@
 		field.select?.();
 	}
 
-	async function postForm( form, action ) {
+	function getRowNewUrl( row ) {
+		const field = row ? row.querySelector( 'textarea[name="new_url"]' ) : null;
+		return field && field.value ? field.value.trim() : '';
+	}
+
+	function setRowRecheckUrl( row, url ) {
+		if ( ! row || ! url ) {
+			return;
+		}
+		const input = row.querySelector( '.ub-broken-links-recheck input[name="url"]' );
+		if ( input ) {
+			input.value = url;
+		}
+		row.dataset.ubUrl = url;
+	}
+
+	async function postData( data ) {
 		const ajaxUrl = window.wpUsefullBlocksBrokenLinks?.ajaxUrl;
-		if ( ! ajaxUrl || ! action ) {
+		if ( ! ajaxUrl ) {
 			throw new Error( 'Missing AJAX config' );
 		}
-
-		const data = new FormData( form );
-		data.set( 'action', action );
 
 		const response = await fetch( ajaxUrl, {
 			method: 'POST',
@@ -86,8 +99,11 @@
 		const statusCell = row ? row.querySelector( '.ub-status-summary' ) : null;
 		const action = window.wpUsefullBlocksBrokenLinks?.replaceAction;
 
-		const dataPreview = new FormData( form );
-		if ( ! dataPreview.get( 'new_url' ) ) {
+		const data = new FormData( form );
+		data.set( 'action', action );
+		const newUrl = ( data.get( 'new_url' ) || '' ).toString().trim();
+
+		if ( ! newUrl ) {
 			showNotice(
 				'error',
 				window.wpUsefullBlocksBrokenLinks?.i18n?.missingUrl ||
@@ -99,7 +115,7 @@
 		setBusy( form, true );
 
 		try {
-			const payload = await postForm( form, action );
+			const payload = await postData( data );
 
 			if ( ! payload || ! payload.success ) {
 				const msg =
@@ -111,6 +127,7 @@
 			}
 
 			applyStatusHtml( statusCell, payload.data.statusHtml );
+			setRowRecheckUrl( row, newUrl );
 			if ( row ) {
 				row.dataset.ubStatus = payload.data.status || '';
 			}
@@ -135,11 +152,29 @@
 		const row = form.closest( 'tr' );
 		const statusCell = row ? row.querySelector( '.ub-status-summary' ) : null;
 		const action = window.wpUsefullBlocksBrokenLinks?.recheckAction;
+		const newUrl = getRowNewUrl( row );
+		const fallbackUrl = form.querySelector( 'input[name="url"]' )?.value || '';
+		const checkUrl = newUrl || fallbackUrl;
+		const indexUrl = row?.dataset?.ubUrl || fallbackUrl || checkUrl;
+
+		if ( ! checkUrl ) {
+			showNotice(
+				'error',
+				window.wpUsefullBlocksBrokenLinks?.i18n?.missingUrl ||
+					'Please enter a new URL.'
+			);
+			return;
+		}
+
+		const data = new FormData( form );
+		data.set( 'action', action );
+		data.set( 'url', checkUrl );
+		data.set( 'index_url', indexUrl );
 
 		setBusy( form, true );
 
 		try {
-			const payload = await postForm( form, action );
+			const payload = await postData( data );
 
 			if ( ! payload || ! payload.success ) {
 				const msg =
@@ -151,6 +186,9 @@
 			}
 
 			applyStatusHtml( statusCell, payload.data.statusHtml );
+			if ( newUrl ) {
+				setRowRecheckUrl( row, newUrl );
+			}
 			if ( row ) {
 				row.dataset.ubStatus = payload.data.status || '';
 			}
