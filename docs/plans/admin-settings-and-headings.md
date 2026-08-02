@@ -21,13 +21,19 @@ Three connected pieces:
 
 Rule: multiple work pages ⇒ own top-level menu; work pages first; **Settings always last**.
 
+This is the **consolidated** menu across all plan docs (work pages appear before Settings; the
+exact order of the work pages is flexible):
+
 ```
 Usefull Blocks (top-level menu)
-├── Headings Converter   (work page — first)
+├── Headings Converter   (work page)          # admin-settings-and-headings.md
+├── Links                (work page, ub_link CPT)   # link-blocks.md
+├── Link Categories      (work page, taxonomy)      # link-blocks.md
+├── Link Checker         (work page)          # link-checker.md
 └── Settings             (last submenu)
 ```
 
-- Top-level slug: `wp-usefull-blocks`. Landing page = Headings Converter (first work page).
+- Top-level slug: `wp-usefull-blocks`. Landing page = the first work page (Headings Converter).
 - Registered with `add_menu_page()` + `add_submenu_page()`; capability per page (see §7).
 - This supersedes the earlier "no admin menu / core Settings" note in the Timeline plan.
 
