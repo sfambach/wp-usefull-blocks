@@ -213,7 +213,8 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 		if ( '' !== $url && class_exists( 'WP_Usefull_Blocks_Url_Status' ) ) {
 			$result = WP_Usefull_Blocks_Url_Status::check( $url );
 			WP_Usefull_Blocks_Url_Status::store( $url, $result );
-			WP_Usefull_Blocks_Link_Scanner::scan( 20 );
+			// Update only this URL in the index — do not rescan / re-live-check other URLs.
+			WP_Usefull_Blocks_Link_Scanner::apply_status( $url, $result );
 		}
 
 		wp_safe_redirect(

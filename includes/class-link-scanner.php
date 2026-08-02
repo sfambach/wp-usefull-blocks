@@ -225,6 +225,56 @@ final class WP_Usefull_Blocks_Link_Scanner {
 	}
 
 	/**
+	 * Patch a single URL's status into the stored index (no live re-scan of other URLs).
+	 *
+	 * @param string               $url    URL that was checked.
+	 * @param array<string, mixed> $result Status payload from Url_Status::check().
+	 */
+	public static function apply_status( string $url, array $result ): void {
+		$normalized = class_exists( 'WP_Usefull_Blocks_Url_Status' )
+			? WP_Usefull_Blocks_Url_Status::normalize_url( $url )
+			: esc_url_raw( $url );
+		if ( '' === $normalized ) {
+			$normalized = $url;
+		}
+
+		$index = self::get_index();
+		$items = $index['items'];
+		$found = false;
+
+		foreach ( $items as $i => $item ) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+			$item_url = isset( $item['url'] ) ? (string) $item['url'] : '';
+			if ( $item_url !== $normalized ) {
+				continue;
+			}
+
+			$items[ $i ]['status']     = sanitize_key( (string) ( $result['status'] ?? 'unknown' ) );
+			$items[ $i ]['code']       = isset( $result['code'] ) ? (int) $result['code'] : 0;
+			$items[ $i ]['message']    = isset( $result['message'] ) ? (string) $result['message'] : '';
+			$items[ $i ]['checked_at'] = isset( $result['checkedAt'] ) ? (int) $result['checkedAt'] : time();
+			$found                     = true;
+			break;
+		}
+
+		if ( ! $found ) {
+			// URL not in index yet — keep index unchanged; next full Scan will pick it up.
+			return;
+		}
+
+		update_option(
+			self::INDEX_OPTION,
+			array(
+				'scanned_at' => $index['scanned_at'],
+				'items'      => $items,
+			),
+			false
+		);
+	}
+
+	/**
 	 * Get stored index payload.
 	 *
 	 * @return array{scanned_at:int,items:list<array<string,mixed>>}

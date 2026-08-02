@@ -322,24 +322,23 @@ final class WP_Usefull_Blocks_Url_Status {
 	 * @return array{status:string,code:int,message:string}
 	 */
 	private static function check_remote( string $url ): array {
-		$response = wp_remote_head(
-			$url,
-			array(
-				'timeout'     => 6,
-				'redirection' => 3,
-				'user-agent'  => 'WP-Usefull-Blocks-LinkCheck/' . WP_USEFULL_BLOCKS_VERSION,
-			)
+		$args = array(
+			'timeout'     => 3,
+			'redirection' => 3,
+			'user-agent'  => 'WP-Usefull-Blocks-LinkCheck/' . WP_USEFULL_BLOCKS_VERSION,
 		);
 
-		if ( is_wp_error( $response ) ) {
-			// Some hosts reject HEAD — fall back to a ranged GET.
+		$response = wp_remote_head( $url, $args );
+
+		if ( is_wp_error( $response ) && ! self::is_hard_transport_failure( $response ) ) {
+			// Some hosts reject HEAD — fall back to a ranged GET (skip on DNS/connect/timeout).
 			$response = wp_remote_get(
 				$url,
-				array(
-					'timeout'     => 6,
-					'redirection' => 3,
-					'headers'     => array( 'Range' => 'bytes=0-0' ),
-					'user-agent'  => 'WP-Usefull-Blocks-LinkCheck/' . WP_USEFULL_BLOCKS_VERSION,
+				array_merge(
+					$args,
+					array(
+						'headers' => array( 'Range' => 'bytes=0-0' ),
+					)
 				)
 			);
 		}
@@ -370,6 +369,33 @@ final class WP_Usefull_Blocks_Url_Status {
 			'code'    => $code,
 			'message' => (string) wp_remote_retrieve_response_message( $response ),
 		);
+	}
+
+	/**
+	 * Whether a transport error is unlikely to succeed with a GET retry (DNS/connect/timeout).
+	 *
+	 * @param WP_Error $error Request error.
+	 */
+	private static function is_hard_transport_failure( WP_Error $error ): bool {
+		$message = strtolower( $error->get_error_message() );
+		$needles = array(
+			'could not resolve',
+			'failed to connect',
+			'connection timed out',
+			'operation timed out',
+			'network is unreachable',
+			'curl error 6',
+			'curl error 7',
+			'curl error 28',
+		);
+
+		foreach ( $needles as $needle ) {
+			if ( str_contains( $message, $needle ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
