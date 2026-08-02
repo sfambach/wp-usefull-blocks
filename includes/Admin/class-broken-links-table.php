@@ -38,10 +38,11 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	 */
 	public function get_columns(): array {
 		return array(
-			'url'     => __( 'URL', 'wp-usefull-blocks' ),
 			'status'  => __( 'Status', 'wp-usefull-blocks' ),
-			'posts'   => __( 'Found in', 'wp-usefull-blocks' ),
-			'actions' => __( 'Change link', 'wp-usefull-blocks' ),
+			'old_url' => __( 'Old URL', 'wp-usefull-blocks' ),
+			'copy'    => '',
+			'new_url' => __( 'New URL', 'wp-usefull-blocks' ),
+			'actions' => __( 'Actions', 'wp-usefull-blocks' ),
 		);
 	}
 
@@ -92,18 +93,6 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	}
 
 	/**
-	 * @param array<string,mixed> $item Item.
-	 * @return string
-	 */
-	protected function column_url( array $item ): string {
-		$url = isset( $item['url'] ) ? (string) $item['url'] : '';
-		return sprintf(
-			'<code style="word-break:break-all;">%s</code>',
-			esc_html( $url )
-		);
-	}
-
-	/**
 	 * Keep stable row identity for in-place AJAX status updates.
 	 *
 	 * @param array<string,mixed> $item Item.
@@ -132,13 +121,121 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Old URL as clickable link, with "Found in" under it.
+	 *
 	 * @param array<string,mixed> $item Item.
 	 * @return string
 	 */
-	protected function column_posts( array $item ): string {
+	protected function column_old_url( array $item ): string {
+		$url = isset( $item['url'] ) ? (string) $item['url'] : '';
+		if ( '' === $url ) {
+			return '&mdash;';
+		}
+
+		$out = sprintf(
+			'<a class="ub-old-url" href="%1$s" target="_blank" rel="noopener noreferrer" data-ub-old-url="%2$s">%3$s</a>',
+			esc_url( $url ),
+			esc_attr( $url ),
+			esc_html( $url )
+		);
+
+		$posts_html = $this->render_found_in( $item );
+		if ( '' !== $posts_html ) {
+			$out .= '<div class="ub-found-in description">' . $posts_html . '</div>';
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Copy-old-URL-to-the-right button.
+	 *
+	 * @param array<string,mixed> $item Item.
+	 * @return string
+	 */
+	protected function column_copy( array $item ): string {
+		$url = isset( $item['url'] ) ? (string) $item['url'] : '';
+		$id  = 'ub-new-url-' . md5( $url );
+
+		return sprintf(
+			'<button type="button" class="button ub-copy-old-url" data-ub-target="%1$s" data-ub-old-url="%2$s" title="%3$s" aria-label="%3$s">&rarr;</button>',
+			esc_attr( $id ),
+			esc_attr( $url ),
+			esc_attr__( 'Copy old URL into the new URL field', 'wp-usefull-blocks' )
+		);
+	}
+
+	/**
+	 * New URL textarea (associated to the row form via HTML form attribute).
+	 *
+	 * @param array<string,mixed> $item Item.
+	 * @return string
+	 */
+	protected function column_new_url( array $item ): string {
+		$url      = isset( $item['url'] ) ? (string) $item['url'] : '';
+		$form_id  = 'ub-replace-form-' . md5( $url );
+		$field_id = 'ub-new-url-' . md5( $url );
+
+		return sprintf(
+			'<label class="screen-reader-text" for="%1$s">%2$s</label><textarea class="ub-new-url large-text" rows="2" id="%1$s" name="new_url" form="%3$s" placeholder="https://" required></textarea>',
+			esc_attr( $field_id ),
+			esc_html__( 'New URL', 'wp-usefull-blocks' ),
+			esc_attr( $form_id )
+		);
+	}
+
+	/**
+	 * @param array<string,mixed> $item Item.
+	 * @return string
+	 */
+	protected function column_actions( array $item ): string {
+		$url   = isset( $item['url'] ) ? (string) $item['url'] : '';
+		$hrefs = isset( $item['hrefs'] ) && is_array( $item['hrefs'] ) ? $item['hrefs'] : array();
+		$posts = isset( $item['posts'] ) && is_array( $item['posts'] ) ? $item['posts'] : array();
+		$ids   = array();
+		foreach ( $posts as $post ) {
+			if ( is_array( $post ) && ! empty( $post['id'] ) ) {
+				$ids[] = (int) $post['id'];
+			}
+		}
+
+		$form_id    = 'ub-replace-form-' . md5( $url );
+		$action_url = admin_url( 'admin-post.php' );
+		ob_start();
+		?>
+		<form
+			id="<?php echo esc_attr( $form_id ); ?>"
+			method="post"
+			action="<?php echo esc_url( $action_url ); ?>"
+			class="ub-broken-links-replace"
+		>
+			<?php wp_nonce_field( 'wp_usefull_blocks_replace_url', 'ub_replace_nonce' ); ?>
+			<input type="hidden" name="action" value="wp_usefull_blocks_replace_url" />
+			<input type="hidden" name="old_url" value="<?php echo esc_attr( $url ); ?>" />
+			<input type="hidden" name="post_ids" value="<?php echo esc_attr( implode( ',', $ids ) ); ?>" />
+			<input type="hidden" name="hrefs" value="<?php echo esc_attr( wp_json_encode( array_values( $hrefs ) ) ); ?>" />
+			<?php submit_button( __( 'Update URL', 'wp-usefull-blocks' ), 'secondary', 'submit', false ); ?>
+		</form>
+		<form method="post" action="<?php echo esc_url( $action_url ); ?>" class="ub-broken-links-recheck">
+			<?php wp_nonce_field( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' ); ?>
+			<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
+			<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
+			<?php submit_button( __( 'Recheck', 'wp-usefull-blocks' ), 'link', 'submit', false ); ?>
+		</form>
+		<?php
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Compact "Found in" links for under the old URL.
+	 *
+	 * @param array<string,mixed> $item Item.
+	 * @return string
+	 */
+	private function render_found_in( array $item ): string {
 		$posts = isset( $item['posts'] ) && is_array( $item['posts'] ) ? $item['posts'] : array();
 		if ( array() === $posts ) {
-			return '&mdash;';
+			return '';
 		}
 
 		$links = array();
@@ -166,54 +263,11 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 			}
 		}
 
-		return implode( '<br>', $links );
-	}
-
-	/**
-	 * @param array<string,mixed> $item Item.
-	 * @return string
-	 */
-	protected function column_actions( array $item ): string {
-		$url   = isset( $item['url'] ) ? (string) $item['url'] : '';
-		$hrefs = isset( $item['hrefs'] ) && is_array( $item['hrefs'] ) ? $item['hrefs'] : array();
-		$posts = isset( $item['posts'] ) && is_array( $item['posts'] ) ? $item['posts'] : array();
-		$ids   = array();
-		foreach ( $posts as $post ) {
-			if ( is_array( $post ) && ! empty( $post['id'] ) ) {
-				$ids[] = (int) $post['id'];
-			}
+		if ( array() === $links ) {
+			return '';
 		}
 
-		$action_url = admin_url( 'admin-post.php' );
-		ob_start();
-		?>
-		<form method="post" action="<?php echo esc_url( $action_url ); ?>" class="ub-broken-links-replace" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
-			<?php wp_nonce_field( 'wp_usefull_blocks_replace_url', 'ub_replace_nonce' ); ?>
-			<input type="hidden" name="action" value="wp_usefull_blocks_replace_url" />
-			<input type="hidden" name="old_url" value="<?php echo esc_attr( $url ); ?>" />
-			<input type="hidden" name="post_ids" value="<?php echo esc_attr( implode( ',', $ids ) ); ?>" />
-			<input type="hidden" name="hrefs" value="<?php echo esc_attr( wp_json_encode( array_values( $hrefs ) ) ); ?>" />
-			<label class="screen-reader-text" for="ub-new-url-<?php echo esc_attr( md5( $url ) ); ?>">
-				<?php esc_html_e( 'New URL', 'wp-usefull-blocks' ); ?>
-			</label>
-			<input
-				type="url"
-				class="regular-text"
-				id="ub-new-url-<?php echo esc_attr( md5( $url ) ); ?>"
-				name="new_url"
-				placeholder="https://"
-				required
-			/>
-			<?php submit_button( __( 'Update URL', 'wp-usefull-blocks' ), 'secondary', 'submit', false ); ?>
-		</form>
-		<form method="post" action="<?php echo esc_url( $action_url ); ?>" style="margin-top:0.35rem;">
-			<?php wp_nonce_field( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' ); ?>
-			<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
-			<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
-			<?php submit_button( __( 'Recheck', 'wp-usefull-blocks' ), 'link', 'submit', false ); ?>
-		</form>
-		<?php
-		return (string) ob_get_clean();
+		return esc_html__( 'Found in:', 'wp-usefull-blocks' ) . ' ' . implode( ', ', $links );
 	}
 
 	/**

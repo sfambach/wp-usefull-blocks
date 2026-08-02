@@ -1,5 +1,5 @@
 /**
- * Broken Links admin: update traffic light in-place after URL save (no page jump).
+ * Broken Links admin: in-place ampel update + copy old URL into new URL field.
  */
 ( function () {
 	'use strict';
@@ -28,6 +28,23 @@
 		form.classList.toggle( 'ub-is-busy', !! busy );
 	}
 
+	function copyOldUrlIntoField( button ) {
+		const targetId = button.getAttribute( 'data-ub-target' );
+		const oldUrl = button.getAttribute( 'data-ub-old-url' ) || '';
+		if ( ! targetId || ! oldUrl ) {
+			return;
+		}
+
+		const field = document.getElementById( targetId );
+		if ( ! field ) {
+			return;
+		}
+
+		field.value = oldUrl;
+		field.focus();
+		field.select?.();
+	}
+
 	async function submitReplace( form ) {
 		const row = form.closest( 'tr' );
 		const statusCell = row ? row.querySelector( '.ub-row-status' ) : null;
@@ -40,6 +57,25 @@
 
 		const data = new FormData( form );
 		data.set( 'action', action );
+
+		// Textarea may live outside the form (HTML form= attribute).
+		if ( ! data.get( 'new_url' ) && form.id ) {
+			const external = document.querySelector(
+				'textarea[name="new_url"][form="' + CSS.escape( form.id ) + '"]'
+			);
+			if ( external && external.value ) {
+				data.set( 'new_url', external.value );
+			}
+		}
+
+		if ( ! data.get( 'new_url' ) ) {
+			showNotice(
+				'error',
+				window.wpUsefullBlocksBrokenLinks?.i18n?.missingUrl ||
+					'Please enter a new URL.'
+			);
+			return;
+		}
 
 		setBusy( form, true );
 
@@ -66,7 +102,9 @@
 
 			showNotice(
 				payload.data.status === 'ok' ? 'success' : 'warning',
-				payload.data.message || window.wpUsefullBlocksBrokenLinks?.i18n?.updated || 'Updated.'
+				payload.data.message ||
+					window.wpUsefullBlocksBrokenLinks?.i18n?.updated ||
+					'Updated.'
 			);
 		} catch ( err ) {
 			showNotice(
@@ -77,6 +115,15 @@
 			setBusy( form, false );
 		}
 	}
+
+	document.addEventListener( 'click', function ( event ) {
+		const button = event.target.closest( '.ub-copy-old-url' );
+		if ( ! button ) {
+			return;
+		}
+		event.preventDefault();
+		copyOldUrlIntoField( button );
+	} );
 
 	document.addEventListener( 'submit', function ( event ) {
 		const form = event.target;

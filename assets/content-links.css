@@ -21,6 +21,44 @@
 	height: 1em;
 }
 
+/* Broken Links admin table layout */
+.wp-admin .wp-list-table .column-status {
+	width: 8rem;
+}
+
+.wp-admin .wp-list-table .column-copy {
+	width: 3rem;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.wp-admin .wp-list-table .column-new_url {
+	width: 22%;
+}
+
+.wp-admin .wp-list-table .column-actions {
+	width: 8rem;
+}
+
+.wp-admin .wp-list-table .ub-old-url {
+	word-break: break-all;
+}
+
+.wp-admin .wp-list-table .ub-found-in {
+	margin-top: 0.35rem;
+}
+
+.wp-admin .wp-list-table .ub-new-url {
+	width: 100%;
+	min-width: 12rem;
+	resize: vertical;
+}
+
+.wp-admin .wp-list-table .ub-broken-links-replace,
+.wp-admin .wp-list-table .ub-broken-links-recheck {
+	margin: 0.15rem 0;
+}
+
 .ub-status--ok {
 	color: #1a7f37;
 }

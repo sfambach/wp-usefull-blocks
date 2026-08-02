@@ -61,8 +61,9 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
 				'replaceAction' => 'wp_usefull_blocks_replace_url',
 				'i18n'          => array(
-					'updated' => __( 'URL updated. Traffic light refreshed; reload the page to refresh the list.', 'wp-usefull-blocks' ),
-					'error'   => __( 'Something went wrong. Please try again.', 'wp-usefull-blocks' ),
+					'updated'    => __( 'URL updated. Traffic light refreshed; reload the page to refresh the list.', 'wp-usefull-blocks' ),
+					'error'      => __( 'Something went wrong. Please try again.', 'wp-usefull-blocks' ),
+					'missingUrl' => __( 'Please enter a new URL.', 'wp-usefull-blocks' ),
 				),
 			)
 		);
