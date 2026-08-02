@@ -31,7 +31,6 @@ $image_crop     = ! isset( $attributes['imageCrop'] ) || (bool) $attributes['ima
 $random_order   = ! empty( $attributes['randomOrder'] );
 $selected_index = isset( $attributes['selectedIndex'] ) ? absint( $attributes['selectedIndex'] ) : 0;
 $gallery_caption = isset( $attributes['caption'] ) ? wp_kses_post( (string) $attributes['caption'] ) : '';
-$columns        = isset( $attributes['columns'] ) ? absint( $attributes['columns'] ) : 0;
 
 if ( '_blank' !== $link_target ) {
 	$link_target = '';
@@ -50,10 +49,7 @@ if ( $selected_index >= count( $images ) ) {
 	$selected_index = 0;
 }
 
-if ( $columns < 1 ) {
-	$columns = (int) min( 3, count( $images ) );
-}
-$columns = (int) max( 1, min( 8, $columns, count( $images ) ) );
+$thumb_count = count( $images );
 
 $cache_payload = array(
 	'images'        => $images,
@@ -62,7 +58,6 @@ $cache_payload = array(
 	'linkTarget'    => $link_target,
 	'sizeSlug'      => $size_slug,
 	'imageCrop'     => $image_crop,
-	'columns'       => $columns,
 	'caption'       => $gallery_caption,
 );
 
@@ -91,13 +86,11 @@ $wrapper_classes = array( 'ub-gallery' );
 if ( $image_crop ) {
 	$wrapper_classes[] = 'is-cropped';
 }
-$wrapper_classes[] = 'has-nested-images';
-$wrapper_classes[] = 'columns-' . $columns;
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	array(
 		'class'                        => implode( ' ', $wrapper_classes ),
-		'style'                        => '--ub-gallery-columns:' . $columns . ';',
+		'style'                        => '--ub-gallery-thumb-count:' . (int) $thumb_count . ';',
 		'data-wp-interactive'          => 'wp-usefull-blocks/ub-gallery',
 		'data-wp-context'              => $context_json,
 		'data-wp-on-document--keydown' => 'actions.handleKeydown',

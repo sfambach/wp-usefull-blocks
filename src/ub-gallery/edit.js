@@ -20,7 +20,6 @@ import {
 	MenuGroup,
 	MenuItem,
 	PanelBody,
-	RangeControl,
 	SelectControl,
 	ToggleControl,
 	ToolbarButton,
@@ -44,7 +43,6 @@ const LINK_DESTINATION_NONE = 'none';
 const LINK_DESTINATION_MEDIA = 'media';
 const LINK_DESTINATION_ATTACHMENT = 'attachment';
 const LINK_DESTINATION_LIGHTBOX = 'lightbox';
-const MAX_COLUMNS = 8;
 
 const LINK_OPTIONS = [
 	{
@@ -101,16 +99,6 @@ function mapMediaToImages( media ) {
 }
 
 /**
- * Default column count like core/gallery.
- *
- * @param {number} imageCount Number of images.
- * @return {number} Default columns.
- */
-function defaultColumnsNumber( imageCount ) {
-	return imageCount ? Math.min( 3, imageCount ) : 3;
-}
-
-/**
  * @param {Object}   props
  * @param {Object}   props.attributes
  * @param {Function} props.setAttributes
@@ -124,14 +112,12 @@ export default function Edit( { attributes, setAttributes } ) {
 		sizeSlug = 'large',
 		imageCrop = true,
 		randomOrder = false,
-		columns,
 		caption = '',
 	} = attributes;
 
 	const hasImages = images.length > 0;
 	const imageIds = images.map( ( image ) => image.id ).filter( Boolean );
 	const hasLinkTo = linkTo && LINK_DESTINATION_NONE !== linkTo;
-	const columnCount = columns || defaultColumnsNumber( images.length );
 
 	const imageSizeOptions = useSelect( ( select ) => {
 		const settings = select( blockEditorStore ).getSettings();
@@ -159,9 +145,6 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( {
 			images: nextImages,
 			selectedIndex: 0,
-			columns: columns
-				? Math.min( columns, nextImages.length )
-				: undefined,
 		} );
 	};
 
@@ -169,7 +152,6 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( {
 			images: [],
 			selectedIndex: 0,
-			columns: undefined,
 			caption: '',
 		} );
 	};
@@ -296,24 +278,6 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<InspectorControls>
 				<PanelBody title={ __( 'Settings', 'wp-usefull-blocks' ) }>
-					{ images.length > 1 && (
-						<RangeControl
-							__nextHasNoMarginBottom
-							__next40pxDefaultSize
-							label={ __( 'Columns', 'wp-usefull-blocks' ) }
-							help={ __(
-								'Number of thumbnail columns under the focus image.',
-								'wp-usefull-blocks'
-							) }
-							value={ columnCount }
-							onChange={ ( value ) =>
-								setAttributes( { columns: value } )
-							}
-							min={ 1 }
-							max={ Math.min( MAX_COLUMNS, images.length ) }
-							required
-						/>
-					) }
 					{ imageSizeOptions.length > 0 && (
 						<SelectControl
 							__nextHasNoMarginBottom

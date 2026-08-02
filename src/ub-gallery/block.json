@@ -41,11 +41,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"columns": {
-			"type": "number",
-			"minimum": 1,
-			"maximum": 8
-		},
 		"caption": {
 			"type": "string",
 			"default": ""
