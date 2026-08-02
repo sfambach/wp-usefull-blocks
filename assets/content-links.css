@@ -76,11 +76,26 @@
 	font-weight: 600;
 }
 
-.wp-admin .wp-list-table .ub-status-reason {
+.wp-admin .wp-list-table .ub-status-reason,
+.wp-admin .wp-list-table .ub-status-checked {
 	display: block;
 	margin-top: 0.15rem;
 	white-space: normal;
 	word-break: break-word;
+}
+
+.wp-admin .wp-list-table .ub-status-checked {
+	opacity: 0.85;
+}
+
+.wp-admin .wp-list-table .ub-recheck-button .dashicons.spin {
+	animation: ub-recheck-spin 0.8s linear infinite;
+}
+
+@keyframes ub-recheck-spin {
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 .wp-admin .wp-list-table .ub-broken-links-recheck {

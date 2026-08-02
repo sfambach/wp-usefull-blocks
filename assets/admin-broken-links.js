@@ -26,6 +26,25 @@
 			button.disabled = !! busy;
 		}
 		form.classList.toggle( 'ub-is-busy', !! busy );
+		const icon = form.querySelector( '.dashicons-update' );
+		if ( icon ) {
+			icon.classList.toggle( 'spin', !! busy );
+		}
+	}
+
+	function applyStatusHtml( statusCell, statusHtml ) {
+		if ( ! statusCell || ! statusHtml ) {
+			return;
+		}
+
+		const recheck = statusCell.querySelector( '.ub-broken-links-recheck' );
+		statusCell.innerHTML = statusHtml;
+		const line = statusCell.querySelector( '.ub-status-line' );
+		if ( recheck && line ) {
+			line.appendChild( recheck );
+		} else if ( recheck ) {
+			statusCell.appendChild( recheck );
+		}
 	}
 
 	function copyOldUrlIntoField( button ) {
@@ -45,20 +64,30 @@
 		field.select?.();
 	}
 
-	async function submitReplace( form ) {
-		const row = form.closest( 'tr' );
-		const statusCell = row ? row.querySelector( '.ub-status-summary' ) : null;
+	async function postForm( form, action ) {
 		const ajaxUrl = window.wpUsefullBlocksBrokenLinks?.ajaxUrl;
-		const action = window.wpUsefullBlocksBrokenLinks?.replaceAction;
-
 		if ( ! ajaxUrl || ! action ) {
-			return;
+			return null;
 		}
 
 		const data = new FormData( form );
 		data.set( 'action', action );
 
-		if ( ! data.get( 'new_url' ) ) {
+		const response = await fetch( ajaxUrl, {
+			method: 'POST',
+			credentials: 'same-origin',
+			body: data,
+		} );
+		return response.json();
+	}
+
+	async function submitReplace( form ) {
+		const row = form.closest( 'tr' );
+		const statusCell = row ? row.querySelector( '.ub-status-summary' ) : null;
+		const action = window.wpUsefullBlocksBrokenLinks?.replaceAction;
+
+		const dataPreview = new FormData( form );
+		if ( ! dataPreview.get( 'new_url' ) ) {
 			showNotice(
 				'error',
 				window.wpUsefullBlocksBrokenLinks?.i18n?.missingUrl ||
@@ -70,12 +99,7 @@
 		setBusy( form, true );
 
 		try {
-			const response = await fetch( ajaxUrl, {
-				method: 'POST',
-				credentials: 'same-origin',
-				body: data,
-			} );
-			const payload = await response.json();
+			const payload = await postForm( form, action );
 
 			if ( ! payload || ! payload.success ) {
 				const msg =
@@ -86,23 +110,50 @@
 				return;
 			}
 
-			if ( statusCell && payload.data.statusHtml ) {
-				// Keep the refresh control: replace label/reason, then re-attach recheck form.
-				const recheck = statusCell.querySelector( '.ub-broken-links-recheck' );
-				statusCell.innerHTML = payload.data.statusHtml;
-				const line = statusCell.querySelector( '.ub-status-line' );
-				if ( recheck && line ) {
-					line.appendChild( recheck );
-				} else if ( recheck ) {
-					statusCell.appendChild( recheck );
-				}
-			}
+			applyStatusHtml( statusCell, payload.data.statusHtml );
 
 			showNotice(
 				payload.data.status === 'ok' ? 'success' : 'warning',
 				payload.data.message ||
 					window.wpUsefullBlocksBrokenLinks?.i18n?.updated ||
 					'Updated.'
+			);
+		} catch ( err ) {
+			showNotice(
+				'error',
+				window.wpUsefullBlocksBrokenLinks?.i18n?.error || 'Something went wrong.'
+			);
+		} finally {
+			setBusy( form, false );
+		}
+	}
+
+	async function submitRecheck( form ) {
+		const row = form.closest( 'tr' );
+		const statusCell = row ? row.querySelector( '.ub-status-summary' ) : null;
+		const action = window.wpUsefullBlocksBrokenLinks?.recheckAction;
+
+		setBusy( form, true );
+
+		try {
+			const payload = await postForm( form, action );
+
+			if ( ! payload || ! payload.success ) {
+				const msg =
+					payload?.data?.message ||
+					window.wpUsefullBlocksBrokenLinks?.i18n?.error ||
+					'Something went wrong.';
+				showNotice( 'error', msg );
+				return;
+			}
+
+			applyStatusHtml( statusCell, payload.data.statusHtml );
+
+			showNotice(
+				payload.data.status === 'ok' ? 'success' : 'warning',
+				payload.data.message ||
+					window.wpUsefullBlocksBrokenLinks?.i18n?.rechecked ||
+					'Rechecked.'
 			);
 		} catch ( err ) {
 			showNotice(
@@ -128,11 +179,16 @@
 		if ( ! ( form instanceof HTMLFormElement ) ) {
 			return;
 		}
-		if ( ! form.classList.contains( 'ub-broken-links-replace' ) ) {
+
+		if ( form.classList.contains( 'ub-broken-links-replace' ) ) {
+			event.preventDefault();
+			submitReplace( form );
 			return;
 		}
 
-		event.preventDefault();
-		submitReplace( form );
+		if ( form.classList.contains( 'ub-broken-links-recheck' ) ) {
+			event.preventDefault();
+			submitRecheck( form );
+		}
 	} );
 }() );

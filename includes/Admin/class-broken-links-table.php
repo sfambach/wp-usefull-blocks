@@ -104,16 +104,17 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	}
 
 	/**
-	 * One line: ampel + label + refresh; reason underneath.
+	 * One line: ampel + label + refresh; reason and checked time underneath.
 	 *
 	 * @param array<string,mixed> $item Item.
 	 * @return string
 	 */
 	protected function column_status( array $item ): string {
-		$status  = isset( $item['status'] ) ? sanitize_key( (string) $item['status'] ) : 'unknown';
-		$code    = isset( $item['code'] ) ? (int) $item['code'] : 0;
-		$message = isset( $item['message'] ) ? (string) $item['message'] : '';
-		$url     = isset( $item['url'] ) ? (string) $item['url'] : '';
+		$status     = isset( $item['status'] ) ? sanitize_key( (string) $item['status'] ) : 'unknown';
+		$code       = isset( $item['code'] ) ? (int) $item['code'] : 0;
+		$message    = isset( $item['message'] ) ? (string) $item['message'] : '';
+		$checked_at = isset( $item['checked_at'] ) ? (int) $item['checked_at'] : 0;
+		$url        = isset( $item['url'] ) ? (string) $item['url'] : '';
 
 		if ( ! in_array( $status, array( 'ok', 'broken', 'unknown' ), true ) ) {
 			$status = 'unknown';
@@ -165,6 +166,18 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 				</div>
 				<?php if ( '' !== $reason ) : ?>
 					<div class="ub-status-reason description"><?php echo esc_html( $reason ); ?></div>
+				<?php endif; ?>
+				<?php if ( $checked_at > 0 ) : ?>
+					<div class="ub-status-checked description">
+						<?php
+						echo esc_html(
+							wp_date(
+								get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+								$checked_at
+							)
+						);
+						?>
+					</div>
 				<?php endif; ?>
 			</div>
 		</div>

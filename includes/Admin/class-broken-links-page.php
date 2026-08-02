@@ -26,6 +26,7 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 		add_action( 'admin_post_wp_usefull_blocks_replace_url', array( self::class, 'handle_replace' ) );
 		add_action( 'admin_post_wp_usefull_blocks_recheck_url', array( self::class, 'handle_recheck' ) );
 		add_action( 'wp_ajax_wp_usefull_blocks_replace_url', array( self::class, 'ajax_replace' ) );
+		add_action( 'wp_ajax_wp_usefull_blocks_recheck_url', array( self::class, 'ajax_recheck' ) );
 		add_action( 'admin_enqueue_scripts', array( self::class, 'enqueue_assets' ) );
 	}
 
@@ -60,8 +61,10 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 			array(
 				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
 				'replaceAction' => 'wp_usefull_blocks_replace_url',
+				'recheckAction' => 'wp_usefull_blocks_recheck_url',
 				'i18n'          => array(
 					'updated'    => __( 'URL updated. Traffic light refreshed; reload the page to refresh the list.', 'wp-usefull-blocks' ),
+					'rechecked'  => __( 'URL rechecked.', 'wp-usefull-blocks' ),
 					'error'      => __( 'Something went wrong. Please try again.', 'wp-usefull-blocks' ),
 					'missingUrl' => __( 'Please enter a new URL.', 'wp-usefull-blocks' ),
 				),
@@ -269,11 +272,12 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 			);
 		}
 
-		$status  = (string) $outcome['status'];
-		$code    = (int) $outcome['code'];
-		$message = (string) $outcome['message'];
-		$html    = class_exists( 'WP_Usefull_Blocks_Status_Render' )
-			? WP_Usefull_Blocks_Status_Render::admin_cell( $status, $code, $message )
+		$status     = (string) $outcome['status'];
+		$code       = (int) $outcome['code'];
+		$message    = (string) $outcome['message'];
+		$checked_at = (int) $outcome['checked_at'];
+		$html       = class_exists( 'WP_Usefull_Blocks_Status_Render' )
+			? WP_Usefull_Blocks_Status_Render::admin_cell( $status, $code, $message, $checked_at )
 			: esc_html( $status );
 
 		wp_send_json_success(
@@ -292,9 +296,54 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 	}
 
 	/**
-	 * Shared replace + recheck logic.
+	 * AJAX Recheck: verify URL and return updated status HTML (row stays put).
+	 */
+	public static function ajax_recheck(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Forbidden.', 'wp-usefull-blocks' ),
+				),
+				403
+			);
+		}
+
+		check_ajax_referer( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' );
+
+		$outcome = self::process_recheck_request();
+		if ( is_wp_error( $outcome ) ) {
+			wp_send_json_error(
+				array(
+					'message' => $outcome->get_error_message(),
+				)
+			);
+		}
+
+		$status     = (string) $outcome['status'];
+		$code       = (int) $outcome['code'];
+		$message    = (string) $outcome['message'];
+		$checked_at = (int) $outcome['checked_at'];
+		$html       = class_exists( 'WP_Usefull_Blocks_Status_Render' )
+			? WP_Usefull_Blocks_Status_Render::admin_cell( $status, $code, $message, $checked_at )
+			: esc_html( $status );
+
+		wp_send_json_success(
+			array(
+				'status'     => $status,
+				'statusHtml' => $html,
+				'message'    => sprintf(
+					/* translators: %s: status label */
+					__( 'URL rechecked. Status: %s', 'wp-usefull-blocks' ),
+					self::status_label( $status )
+				),
+			)
+		);
+	}
+
+	/**
+	 * Shared replace + status check logic.
 	 *
-	 * @return array{updated:int,status:string,code:int,message:string}|WP_Error
+	 * @return array{updated:int,status:string,code:int,message:string,checked_at:int}|WP_Error
 	 */
 	private static function process_replace_request() {
 		$old_url   = isset( $_POST['old_url'] ) ? esc_url_raw( (string) wp_unslash( $_POST['old_url'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -324,7 +373,8 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 			'message' => '',
 		);
 		if ( class_exists( 'WP_Usefull_Blocks_Url_Status' ) ) {
-			$check = WP_Usefull_Blocks_Url_Status::check( $new_url );
+			$check              = WP_Usefull_Blocks_Url_Status::check( $new_url );
+			$check['checkedAt'] = time();
 			WP_Usefull_Blocks_Url_Status::store( $new_url, $check );
 			delete_transient( 'ub_url_status_' . md5( $old_url ) );
 		}
@@ -337,11 +387,46 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 			$new_status = 'unknown';
 		}
 
+		$checked_at = isset( $check['checkedAt'] ) ? (int) $check['checkedAt'] : time();
+
 		return array(
-			'updated' => (int) $result['updated'],
-			'status'  => $new_status,
-			'code'    => isset( $check['code'] ) ? (int) $check['code'] : 0,
-			'message' => isset( $check['message'] ) ? (string) $check['message'] : '',
+			'updated'    => (int) $result['updated'],
+			'status'     => $new_status,
+			'code'       => isset( $check['code'] ) ? (int) $check['code'] : 0,
+			'message'    => isset( $check['message'] ) ? (string) $check['message'] : '',
+			'checked_at' => $checked_at,
+		);
+	}
+
+	/**
+	 * Shared single-URL recheck logic.
+	 *
+	 * @return array{status:string,code:int,message:string,checked_at:int}|WP_Error
+	 */
+	private static function process_recheck_request() {
+		$url = isset( $_POST['url'] ) ? esc_url_raw( (string) wp_unslash( $_POST['url'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( '' === $url || ! class_exists( 'WP_Usefull_Blocks_Url_Status' ) ) {
+			return new WP_Error(
+				'ub_invalid_recheck',
+				__( 'Something went wrong. Please try again.', 'wp-usefull-blocks' )
+			);
+		}
+
+		$result               = WP_Usefull_Blocks_Url_Status::check( $url );
+		$result['checkedAt']  = time();
+		WP_Usefull_Blocks_Url_Status::store( $url, $result );
+		WP_Usefull_Blocks_Link_Scanner::apply_status( $url, $result );
+
+		$status = sanitize_key( (string) ( $result['status'] ?? 'unknown' ) );
+		if ( ! in_array( $status, array( 'ok', 'broken', 'unknown' ), true ) ) {
+			$status = 'unknown';
+		}
+
+		return array(
+			'status'     => $status,
+			'code'       => isset( $result['code'] ) ? (int) $result['code'] : 0,
+			'message'    => isset( $result['message'] ) ? (string) $result['message'] : '',
+			'checked_at' => (int) $result['checkedAt'],
 		);
 	}
 
@@ -359,7 +444,7 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 	}
 
 	/**
-	 * Handle single URL recheck.
+	 * Classic form POST fallback for Recheck.
 	 */
 	public static function handle_recheck(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -367,12 +452,18 @@ final class WP_Usefull_Blocks_Broken_Links_Page {
 		}
 		check_admin_referer( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' );
 
-		$url = isset( $_POST['url'] ) ? esc_url_raw( (string) wp_unslash( $_POST['url'] ) ) : '';
-		if ( '' !== $url && class_exists( 'WP_Usefull_Blocks_Url_Status' ) ) {
-			$result = WP_Usefull_Blocks_Url_Status::check( $url );
-			WP_Usefull_Blocks_Url_Status::store( $url, $result );
-			// Update only this URL in the index — do not rescan / re-live-check other URLs.
-			WP_Usefull_Blocks_Link_Scanner::apply_status( $url, $result );
+		$outcome = self::process_recheck_request();
+		if ( is_wp_error( $outcome ) ) {
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'page'      => self::PAGE_SLUG,
+						'ub_notice' => 'error',
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			exit;
 		}
 
 		wp_safe_redirect(
