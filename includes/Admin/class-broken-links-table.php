@@ -104,7 +104,7 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Traffic light + reason, with Recheck under the status.
+	 * One line: ampel + label + refresh; reason underneath.
 	 *
 	 * @param array<string,mixed> $item Item.
 	 * @return string
@@ -115,35 +115,58 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 		$message = isset( $item['message'] ) ? (string) $item['message'] : '';
 		$url     = isset( $item['url'] ) ? (string) $item['url'] : '';
 
-		$inner = class_exists( 'WP_Usefull_Blocks_Status_Render' )
-			? WP_Usefull_Blocks_Status_Render::admin_cell( $status, $code, $message )
-			: esc_html( $status );
+		if ( ! in_array( $status, array( 'ok', 'broken', 'unknown' ), true ) ) {
+			$status = 'unknown';
+		}
+
+		$labels = array(
+			'ok'      => __( 'OK', 'wp-usefull-blocks' ),
+			'broken'  => __( 'Broken', 'wp-usefull-blocks' ),
+			'unknown' => __( 'Unknown', 'wp-usefull-blocks' ),
+		);
+
+		$ampel = class_exists( 'WP_Usefull_Blocks_Status_Render' )
+			? WP_Usefull_Blocks_Status_Render::indicator( $status )
+			: '';
+
+		$reason = $message;
+		if ( $code > 0 ) {
+			$reason = ( '' !== $reason )
+				? sprintf( '%s (%d)', $reason, $code )
+				: (string) $code;
+		}
 
 		$action_url = admin_url( 'admin-post.php' );
 		ob_start();
 		?>
 		<div class="ub-row-status">
 			<div class="ub-status-summary">
-				<?php
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- admin_cell() returns escaped HTML.
-				echo $inner;
-				?>
+				<div class="ub-status-line">
+					<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- indicator() returns escaped HTML.
+					echo $ampel;
+					?>
+					<strong class="ub-status-label"><?php echo esc_html( $labels[ $status ] ); ?></strong>
+					<?php if ( '' !== $url ) : ?>
+						<form method="post" action="<?php echo esc_url( $action_url ); ?>" class="ub-broken-links-recheck">
+							<?php wp_nonce_field( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' ); ?>
+							<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
+							<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
+							<button
+								type="submit"
+								class="button-link ub-recheck-button"
+								title="<?php echo esc_attr__( 'Recheck', 'wp-usefull-blocks' ); ?>"
+								aria-label="<?php echo esc_attr__( 'Recheck', 'wp-usefull-blocks' ); ?>"
+							>
+								<span class="dashicons dashicons-update" aria-hidden="true"></span>
+							</button>
+						</form>
+					<?php endif; ?>
+				</div>
+				<?php if ( '' !== $reason ) : ?>
+					<div class="ub-status-reason description"><?php echo esc_html( $reason ); ?></div>
+				<?php endif; ?>
 			</div>
-			<?php if ( '' !== $url ) : ?>
-				<form method="post" action="<?php echo esc_url( $action_url ); ?>" class="ub-broken-links-recheck">
-					<?php wp_nonce_field( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' ); ?>
-					<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
-					<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
-					<button
-						type="submit"
-						class="button-link ub-recheck-button"
-						title="<?php echo esc_attr__( 'Recheck', 'wp-usefull-blocks' ); ?>"
-						aria-label="<?php echo esc_attr__( 'Recheck', 'wp-usefull-blocks' ); ?>"
-					>
-						<span class="dashicons dashicons-update" aria-hidden="true"></span>
-					</button>
-				</form>
-			<?php endif; ?>
 		</div>
 		<?php
 		return (string) ob_get_clean();

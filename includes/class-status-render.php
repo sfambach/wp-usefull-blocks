@@ -50,7 +50,9 @@ final class WP_Usefull_Blocks_Status_Render {
 	}
 
 	/**
-	 * Admin list status cell: traffic light + label (+ optional code/message).
+	 * Admin list status summary used for AJAX in-place updates.
+	 *
+	 * Layout: ampel + label (+ refresh kept by the page markup) / reason below.
 	 *
 	 * @param string $status  ok|broken|unknown.
 	 * @param int    $code    HTTP code.
@@ -69,12 +71,20 @@ final class WP_Usefull_Blocks_Status_Render {
 			'unknown' => __( 'Unknown', 'wp-usefull-blocks' ),
 		);
 
-		$out = self::indicator( $status ) . ' <strong>' . esc_html( $labels[ $status ] ) . '</strong>';
+		$reason = $message;
 		if ( $code > 0 ) {
-			$out .= ' <span class="description">(' . esc_html( (string) $code ) . ')</span>';
+			$reason = ( '' !== $reason )
+				? sprintf( '%s (%d)', $reason, $code )
+				: (string) $code;
 		}
-		if ( '' !== $message ) {
-			$out .= '<br><span class="description">' . esc_html( $message ) . '</span>';
+
+		$out  = '<div class="ub-status-line">';
+		$out .= self::indicator( $status );
+		$out .= ' <strong class="ub-status-label">' . esc_html( $labels[ $status ] ) . '</strong>';
+		$out .= '</div>';
+
+		if ( '' !== $reason ) {
+			$out .= '<div class="ub-status-reason description">' . esc_html( $reason ) . '</div>';
 		}
 
 		return $out;

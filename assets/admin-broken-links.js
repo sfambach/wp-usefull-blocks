@@ -87,7 +87,15 @@
 			}
 
 			if ( statusCell && payload.data.statusHtml ) {
+				// Keep the refresh control: replace label/reason, then re-attach recheck form.
+				const recheck = statusCell.querySelector( '.ub-broken-links-recheck' );
 				statusCell.innerHTML = payload.data.statusHtml;
+				const line = statusCell.querySelector( '.ub-status-line' );
+				if ( recheck && line ) {
+					line.appendChild( recheck );
+				} else if ( recheck ) {
+					statusCell.appendChild( recheck );
+				}
 			}
 
 			showNotice(
