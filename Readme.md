@@ -7,16 +7,25 @@ and the modern Block API (v3, `block.json` as the single source of truth).
 ## Requirements
 
 - Node.js 20+ and npm (used for the block build tooling)
-- A WordPress 6.8+ site with PHP 7.4+ to run the plugin
+- A WordPress 6.8+ site with PHP 8.1+ to run the plugin
 
 ## Project structure
 
 ```
 wp-usefull-blocks.php          # Plugin bootstrap (registers blocks from build/)
-src/wp-usefull-blocks/         # Block source (block.json, edit.js, save.js, styles)
+includes/                      # Shared PHP helpers (e.g. gallery normalizer)
+src/ub-gallery/                # UB Gallery block (dynamic + Interactivity API)
+src/wp-usefull-blocks/         # Scaffold sample block (placeholder)
 build/                         # Compiled assets (generated, git-ignored)
 readme.txt                     # WordPress.org plugin readme
 ```
+
+### Blocks
+
+| Block | Name | Notes |
+| --- | --- | --- |
+| **UB Gallery** | `wp-usefull-blocks/ub-gallery` | Focus image + thumbnail strip; click = lightbox / media link / none |
+| WP Usefull Blocks | `wp-usefull-blocks/wp-usefull-blocks` | Scaffold sample; will be removed later |
 
 Each block lives in its own folder under `src/` with a `block.json`. `npm run build`
 compiles every block into `build/` and generates `build/blocks-manifest.php`, which the
@@ -56,7 +65,7 @@ npx @wp-now/wp-now start
 
 `wp-now` boots a local WordPress with this plugin auto-activated and prints the URL
 (default `http://localhost:8881`, admin login `admin` / `password`). Open a new post in
-the block editor and insert the **WP Usefull Blocks** block.
+the block editor and insert the **UB Gallery** block (Media category).
 
 Alternatively, mount the plugin folder into any WordPress install under
 `wp-content/plugins/wp-usefull-blocks/` and activate it from **Plugins**.

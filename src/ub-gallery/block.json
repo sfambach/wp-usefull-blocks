@@ -1,0 +1,55 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-gallery",
+	"version": "0.2.0",
+	"title": "UB Gallery",
+	"category": "media",
+	"icon": "format-gallery",
+	"description": "eBay-style gallery with one large focus image and a selectable thumbnail strip.",
+	"keywords": [ "gallery", "images", "photos", "lightbox" ],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"images": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		},
+		"selectedIndex": {
+			"type": "number",
+			"default": 0
+		},
+		"onImageClick": {
+			"type": "string",
+			"default": "lightbox",
+			"enum": [ "lightbox", "media", "none" ]
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"interactivity": true
+	},
+	"example": {
+		"attributes": {
+			"images": [
+				{
+					"id": 0,
+					"url": "https://s.w.org/images/core/5.3/Windbuchencom.jpg",
+					"alt": "Sample gallery image",
+					"caption": "",
+					"fullUrl": "https://s.w.org/images/core/5.3/Windbuchencom.jpg"
+				}
+			],
+			"selectedIndex": 0,
+			"onImageClick": "lightbox"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}
