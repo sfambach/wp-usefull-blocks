@@ -1,7 +1,11 @@
-# Plan: Timeline Block (`wp-usefull-blocks/timeline`)
+# Plan: Timeline Block (`wp-usefull-blocks/ub-timeline`)
 
 > Status: **Planning** (no implementation yet). This document is saved plan data so a
 > later session can resume it. It builds on the plugin scaffold from PR #1.
+>
+> **Naming:** per the `ub-` convention (`docs/plans/conventions.md`) this block is
+> `wp-usefull-blocks/ub-timeline`, folder `src/ub-timeline/`. (Earlier references to
+> `timeline` / `src/timeline/` below should be read with the `ub-` prefix.)
 
 ## 1. Goal
 
