@@ -90,6 +90,5 @@
 
 ## 9. Definition of done (design)
 
-Before hand-over, each block/screen is checked against §1–§7 (a short design/a11y checklist) as
-part of the pre-handover tests (`docs/plans/block-showcase-and-pretests.md`), including a quick
-keyboard-only and screen-reader-label pass.
+Before hand-over, each block/screen is checked against §1–§7 (a short design/a11y checklist),
+including a quick keyboard-only and screen-reader-label pass.
