@@ -26,14 +26,15 @@
 	width: 8rem;
 }
 
+.wp-admin .wp-list-table .column-old_url,
+.wp-admin .wp-list-table .column-new_url {
+	width: 34%;
+}
+
 .wp-admin .wp-list-table .column-copy {
 	width: 3rem;
 	text-align: center;
 	vertical-align: middle;
-}
-
-.wp-admin .wp-list-table .column-new_url {
-	width: 22%;
 }
 
 .wp-admin .wp-list-table .column-actions {
@@ -41,6 +42,8 @@
 }
 
 .wp-admin .wp-list-table .ub-old-url {
+	display: inline-block;
+	max-width: 100%;
 	word-break: break-all;
 }
 
@@ -50,7 +53,7 @@
 
 .wp-admin .wp-list-table .ub-new-url {
 	width: 100%;
-	min-width: 12rem;
+	box-sizing: border-box;
 	resize: vertical;
 }
 
