@@ -48,4 +48,35 @@ final class WP_Usefull_Blocks_Status_Render {
 			esc_html( $icons[ $status ] )
 		);
 	}
+
+	/**
+	 * Admin list status cell: traffic light + label (+ optional code/message).
+	 *
+	 * @param string $status  ok|broken|unknown.
+	 * @param int    $code    HTTP code.
+	 * @param string $message Optional detail message.
+	 * @return string HTML
+	 */
+	public static function admin_cell( string $status, int $code = 0, string $message = '' ): string {
+		$status = sanitize_key( $status );
+		if ( ! in_array( $status, array( 'ok', 'broken', 'unknown' ), true ) ) {
+			$status = 'unknown';
+		}
+
+		$labels = array(
+			'ok'      => __( 'OK', 'wp-usefull-blocks' ),
+			'broken'  => __( 'Broken', 'wp-usefull-blocks' ),
+			'unknown' => __( 'Unknown', 'wp-usefull-blocks' ),
+		);
+
+		$out = self::indicator( $status ) . ' <strong>' . esc_html( $labels[ $status ] ) . '</strong>';
+		if ( $code > 0 ) {
+			$out .= ' <span class="description">(' . esc_html( (string) $code ) . ')</span>';
+		}
+		if ( '' !== $message ) {
+			$out .= '<br><span class="description">' . esc_html( $message ) . '</span>';
+		}
+
+		return $out;
+	}
 }

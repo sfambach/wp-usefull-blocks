@@ -60,13 +60,6 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 		usort(
 			$items,
 			static function ( array $a, array $b ): int {
-				// Newest checks first so a just-fixed (green) URL stays visible after Update.
-				$ca = isset( $a['checked_at'] ) ? (int) $a['checked_at'] : 0;
-				$cb = isset( $b['checked_at'] ) ? (int) $b['checked_at'] : 0;
-				if ( $ca !== $cb ) {
-					return $cb <=> $ca;
-				}
-
 				$order = array(
 					'broken'  => 0,
 					'unknown' => 1,
@@ -111,6 +104,18 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Keep stable row identity for in-place AJAX status updates.
+	 *
+	 * @param array<string,mixed> $item Item.
+	 */
+	public function single_row( $item ): void {
+		$url = isset( $item['url'] ) ? (string) $item['url'] : '';
+		echo '<tr data-ub-url="' . esc_attr( $url ) . '">';
+		$this->single_row_columns( $item );
+		echo '</tr>';
+	}
+
+	/**
 	 * @param array<string,mixed> $item Item.
 	 * @return string
 	 */
@@ -119,28 +124,11 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 		$code    = isset( $item['code'] ) ? (int) $item['code'] : 0;
 		$message = isset( $item['message'] ) ? (string) $item['message'] : '';
 
-		if ( ! in_array( $status, array( 'ok', 'broken', 'unknown' ), true ) ) {
-			$status = 'unknown';
-		}
+		$inner = class_exists( 'WP_Usefull_Blocks_Status_Render' )
+			? WP_Usefull_Blocks_Status_Render::admin_cell( $status, $code, $message )
+			: esc_html( $status );
 
-		$labels = array(
-			'ok'      => __( 'OK', 'wp-usefull-blocks' ),
-			'broken'  => __( 'Broken', 'wp-usefull-blocks' ),
-			'unknown' => __( 'Unknown', 'wp-usefull-blocks' ),
-		);
-
-		$ampel = class_exists( 'WP_Usefull_Blocks_Status_Render' )
-			? WP_Usefull_Blocks_Status_Render::indicator( $status )
-			: '';
-
-		$out = $ampel . ' <strong>' . esc_html( $labels[ $status ] ) . '</strong>';
-		if ( $code > 0 ) {
-			$out .= ' <span class="description">(' . esc_html( (string) $code ) . ')</span>';
-		}
-		if ( '' !== $message ) {
-			$out .= '<br><span class="description">' . esc_html( $message ) . '</span>';
-		}
-		return $out;
+		return '<div class="ub-row-status">' . $inner . '</div>';
 	}
 
 	/**
@@ -199,7 +187,7 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 		$action_url = admin_url( 'admin-post.php' );
 		ob_start();
 		?>
-		<form method="post" action="<?php echo esc_url( $action_url ); ?>" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+		<form method="post" action="<?php echo esc_url( $action_url ); ?>" class="ub-broken-links-replace" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
 			<?php wp_nonce_field( 'wp_usefull_blocks_replace_url', 'ub_replace_nonce' ); ?>
 			<input type="hidden" name="action" value="wp_usefull_blocks_replace_url" />
 			<input type="hidden" name="old_url" value="<?php echo esc_attr( $url ); ?>" />
