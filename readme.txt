@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.3.0
+Stable tag:        0.4.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -10,9 +10,10 @@ Some useful blocks for the WordPress Gutenberg editor.
 
 == Description ==
 
-WP Usefull Blocks provides practical Gutenberg blocks. This release includes **UB Gallery**
-(eBay-style focus image + thumbnails), **UB Link** (URL with live status), and **UB File**
-(file URL with optional local media mirror via “Download now”).
+WP Usefull Blocks provides practical Gutenberg blocks. This release includes **UB Timeline**
+(expandable title/description entries), **UB Gallery** (eBay-style focus image + thumbnails),
+**UB Link** (URL with live status), and **UB File** (file URL with optional local media mirror
+via “Download now”).
 
 Under the top-level **Useful** menu: Broken Links (list + edit URLs) and Settings.
 When enabled, every normal WordPress link in post/page content gets a traffic-light status
@@ -64,6 +65,12 @@ link in all listed posts/pages.
 Mirroring is intentional and manual. Use “Download now” in the editor to copy the file into
 the media library. If you change the source URL later, press Download now again.
 
+= How do I use UB Timeline? =
+
+Insert **UB Timeline**, add title/description rows in the table, choose vertical or horizontal
+orientation in the sidebar, and publish. On the front end, visitors click a title to show or
+hide its description. No extra settings page is required for the block to work.
+
 == Screenshots ==
 
 1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
@@ -73,6 +80,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.4.0 =
+* Add UB Timeline block — table editor for title/description entries, vertical or horizontal
+  layout, click-to-toggle descriptions via the Interactivity API, ServerSideRender preview.
 
 = 0.3.0 =
 * Add UB Link block — WordPress-style link (RichText + link UI) with traffic-light status.

@@ -1,0 +1,64 @@
+/**
+ * Editor-only styles for the UB Timeline table UI.
+ */
+
+.ub-timeline-editor__table {
+	display: grid;
+	gap: 0.75rem;
+	margin-bottom: 0.75rem;
+}
+
+.ub-timeline-editor__row {
+	display: grid;
+	grid-template-columns: minmax(8rem, 1fr) minmax(12rem, 2fr) auto;
+	gap: 0.75rem;
+	align-items: start;
+	padding: 0.75rem;
+	border: 1px solid #ddd;
+	background: #fff;
+}
+
+.ub-timeline-editor__row--head {
+	background: #f6f7f7;
+	font-weight: 600;
+	padding-block: 0.5rem;
+}
+
+.ub-timeline-editor__cell--actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	justify-content: flex-end;
+	min-width: 9rem;
+}
+
+.ub-timeline-editor__toolbar {
+	margin-bottom: 1rem;
+}
+
+.ub-timeline-editor__preview {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid #ddd;
+}
+
+.ub-timeline-editor__preview-label {
+	margin: 0 0 0.5rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: #757575;
+}
+
+@media (max-width: 782px) {
+
+	.ub-timeline-editor__row {
+		grid-template-columns: 1fr;
+	}
+
+	.ub-timeline-editor__cell--actions {
+		justify-content: flex-start;
+		min-width: 0;
+	}
+}

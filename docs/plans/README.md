@@ -5,8 +5,8 @@ session should **check here for saved plans before starting**.
 
 ## Current repository state
 
-Implementation + plan data live together on branch **`cursor/local-continue-579b`**
-(plugin code from the UB Link/File work, plus all plan docs).
+Latest implementation branch: **`cursor/ub-timeline-block-342d`** (adds `ub-timeline` on top
+of the consolidated plugin + plan data from `cursor/local-continue-579b`).
 
 ### Implemented (code present)
 
@@ -14,6 +14,7 @@ Implementation + plan data live together on branch **`cursor/local-continue-579b
 |------|-------|
 | Dev scaffold / `@wordpress/scripts` | Plugin bootstrap, lint/build/test |
 | **`ub-gallery`** | Focus image + thumbnail strip; Interactivity API |
+| **`ub-timeline`** | Title/description entries; vertical/horizontal; click-to-toggle |
 | **`ub-link`** | Core-style link + traffic-light status |
 | **`ub-file`** | File URL + manual “Download now” mirror |
 | Site-wide content links | Normal `<a>` links get status UI via `the_content` |
@@ -25,7 +26,6 @@ Implementation + plan data live together on branch **`cursor/local-continue-579b
 
 | Item | Plan doc |
 |------|----------|
-| **`ub-timeline`** | `timeline-block.md` |
 | Link data layer → `ub-link` CPT / `ub-link-list` | `link-blocks.md` |
 | Full Link Checker admin tool (beyond Broken Links) | `link-checker.md` |
 | Heading tools + Headings Converter | `admin-settings-and-headings.md` |
@@ -54,10 +54,9 @@ conditional asset loading. Details in `conventions.md` / `timeline-block.md`.
 
 ## Recommended next work
 
-1. **`ub-timeline`** — `timeline-block.md`
-2. Link data layer / `ub-link-list` — `link-blocks.md` (may evolve the current inline `ub-link`)
-3. Heading tools + Headings Converter — `admin-settings-and-headings.md`
-4. Expand Link Checker toward the full plan — `link-checker.md`
+1. Link data layer / `ub-link-list` — `link-blocks.md` (may evolve the current inline `ub-link`)
+2. Heading tools + Headings Converter — `admin-settings-and-headings.md`
+3. Expand Link Checker toward the full plan — `link-checker.md`
 
 ## Consolidated open questions (confirm before/at implementation)
 
