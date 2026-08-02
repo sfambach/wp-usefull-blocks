@@ -30,8 +30,14 @@ $plugin_settings = class_exists( 'WP_Usefull_Blocks_Settings' )
 		'auto_check_urls'      => true,
 	);
 
-$show_status   = ! empty( $plugin_settings['show_link_status'] );
-$status_before = 'after' !== ( $plugin_settings['link_status_position'] ?? 'before' );
+$status_position = isset( $plugin_settings['link_status_position'] )
+	? sanitize_key( (string) $plugin_settings['link_status_position'] )
+	: 'before';
+if ( ! in_array( $status_position, array( 'before', 'after', 'off' ), true ) ) {
+	$status_position = 'before';
+}
+$show_status   = ( 'off' !== $status_position );
+$status_before = ( 'before' === $status_position );
 $strike_broken = ! empty( $plugin_settings['strike_broken_links'] );
 $auto_check    = ! empty( $plugin_settings['auto_check_urls'] );
 

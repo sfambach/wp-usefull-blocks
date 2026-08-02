@@ -42,8 +42,8 @@ export default function Edit( { attributes, setAttributes } ) {
 	} = attributes;
 
 	const settings = usePluginSettings();
-	const showStatus = !! settings.show_link_status;
-	const statusBefore = 'after' !== settings.link_status_position;
+	const showStatus = 'off' !== settings.link_status_position;
+	const statusBefore = 'before' === settings.link_status_position;
 	const autoCheck = !! settings.auto_check_urls;
 
 	const [ busy, setBusy ] = useState( '' );

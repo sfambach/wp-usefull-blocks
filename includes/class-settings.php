@@ -56,12 +56,21 @@ final class WP_Usefull_Blocks_Settings {
 
 		$merged   = array_merge( self::defaults(), $stored );
 		$position = sanitize_key( (string) $merged['link_status_position'] );
-		if ( ! in_array( $position, array( 'before', 'after' ), true ) ) {
+		if ( ! in_array( $position, array( 'before', 'after', 'off' ), true ) ) {
 			$position = 'before';
 		}
 
+		// Legacy: older "Show traffic-light" checkbox off → position off.
+		if (
+			array_key_exists( 'show_link_status', $stored )
+			&& empty( $stored['show_link_status'] )
+			&& 'off' !== $position
+		) {
+			$position = 'off';
+		}
+
 		return array(
-			'show_link_status'     => (bool) $merged['show_link_status'],
+			'show_link_status'     => ( 'off' !== $position ),
 			'link_status_position' => $position,
 			'strike_broken_links'  => (bool) $merged['strike_broken_links'],
 			'auto_check_urls'      => (bool) $merged['auto_check_urls'],
@@ -120,29 +129,14 @@ final class WP_Usefull_Blocks_Settings {
 		);
 
 		add_settings_field(
-			'show_link_status',
-			__( 'Show traffic-light status', 'wp-usefull-blocks' ),
-			array( self::class, 'render_checkbox' ),
-			'wp-usefull-blocks',
-			'wp_usefull_blocks_links',
-			array(
-				'key'         => 'show_link_status',
-				'description' => __(
-					'Show the green / yellow / red status indicator next to UB Link (and UB File) in the editor and on the front end.',
-					'wp-usefull-blocks'
-				),
-			)
-		);
-
-		add_settings_field(
 			'link_status_position',
-			__( 'Traffic-light position', 'wp-usefull-blocks' ),
+			__( 'Traffic-light status', 'wp-usefull-blocks' ),
 			array( self::class, 'render_position' ),
 			'wp-usefull-blocks',
 			'wp_usefull_blocks_links',
 			array(
 				'description' => __(
-					'Place the status indicator before or after the link text. Default: before.',
+					'Show the status indicator before or after the link, or turn it off. Default: before.',
 					'wp-usefull-blocks'
 				),
 			)
@@ -194,12 +188,12 @@ final class WP_Usefull_Blocks_Settings {
 		$position = isset( $input['link_status_position'] )
 			? sanitize_key( (string) $input['link_status_position'] )
 			: 'before';
-		if ( ! in_array( $position, array( 'before', 'after' ), true ) ) {
+		if ( ! in_array( $position, array( 'before', 'after', 'off' ), true ) ) {
 			$position = 'before';
 		}
 
 		return array(
-			'show_link_status'     => ! empty( $input['show_link_status'] ),
+			'show_link_status'     => ( 'off' !== $position ),
 			'link_status_position' => $position,
 			'strike_broken_links'  => ! empty( $input['strike_broken_links'] ),
 			'auto_check_urls'      => ! empty( $input['auto_check_urls'] ),
@@ -219,6 +213,7 @@ final class WP_Usefull_Blocks_Settings {
 		$options     = array(
 			'before' => __( 'Before the link', 'wp-usefull-blocks' ),
 			'after'  => __( 'After the link', 'wp-usefull-blocks' ),
+			'off'    => __( 'Off', 'wp-usefull-blocks' ),
 		);
 		?>
 		<fieldset>

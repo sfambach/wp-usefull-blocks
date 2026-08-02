@@ -13,19 +13,32 @@ const DEFAULTS = {
 };
 
 /**
+ * Normalize traffic-light position.
+ *
+ * @param {string} position Raw position.
+ * @return {'before'|'after'|'off'} Position.
+ */
+function normalizePosition( position ) {
+	if ( 'after' === position || 'off' === position ) {
+		return position;
+	}
+	return 'before';
+}
+
+/**
  * @return {{show_link_status:boolean,link_status_position:string,strike_broken_links:boolean,auto_check_urls:boolean}} Settings.
  */
 export default function usePluginSettings() {
 	return useSelect( ( select ) => {
 		const settings = select( blockEditorStore ).getSettings?.() || {};
 		const plugin = settings.wpUsefullBlocks || {};
-		const position =
-			plugin.link_status_position ?? DEFAULTS.link_status_position;
+		const position = normalizePosition(
+			plugin.link_status_position ?? DEFAULTS.link_status_position
+		);
 
 		return {
-			show_link_status:
-				plugin.show_link_status ?? DEFAULTS.show_link_status,
-			link_status_position: 'after' === position ? 'after' : 'before',
+			show_link_status: 'off' !== position,
+			link_status_position: position,
 			strike_broken_links:
 				plugin.strike_broken_links ?? DEFAULTS.strike_broken_links,
 			auto_check_urls: plugin.auto_check_urls ?? DEFAULTS.auto_check_urls,

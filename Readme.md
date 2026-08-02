@@ -41,8 +41,7 @@ plugin uses to register all blocks efficiently.
 While the plugin only needs configuration (no extra admin work pages), options live under
 **Settings → Usefull Blocks**:
 
-- Show traffic-light status (editor + front end)
-- Traffic-light position: before (default) or after the link
+- Traffic-light status: before (default), after, or off
 - Strike through broken links (front end)
 - Auto-check URLs (page render cache + WP-Cron + editor)
 
