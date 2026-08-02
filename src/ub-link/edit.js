@@ -188,8 +188,11 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 							} }
 							onChange={ ( next ) => {
 								const nextUrl = next?.url || '';
+								const nextLabel =
+									label || next?.title || next?.name || '';
 								setAttributes( {
 									url: nextUrl,
+									label: nextLabel,
 									openInNewTab: !! next?.opensInNewTab,
 									lastStatus:
 										nextUrl === url

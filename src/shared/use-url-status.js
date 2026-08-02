@@ -103,9 +103,9 @@ export default function useUrlStatus( {
 			return undefined;
 		}
 
-		// Already have a known status for this URL — do not re-check on every
-		// editor load (avoids parallel outbound HTTP storms).
-		if ( initialStatus && 'unknown' !== initialStatus ) {
+		// Already verified OK — skip on editor load. Re-check unknown/broken
+		// so false "broken" results (e.g. internal post links) can recover.
+		if ( 'ok' === initialStatus ) {
 			lastCheckedUrl.current = url;
 			return undefined;
 		}

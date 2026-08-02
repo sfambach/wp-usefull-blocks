@@ -44,11 +44,10 @@ file” or “None”.
 Go to Settings → Usefull Blocks to set the traffic-light to before the link, after the
 link, or off (default: before), enable strike-through for broken links, and automatic URL
 checks. When status is on, UB Link and UB File resolve URL
-status when the page is rendered. The first visitor (or a cache miss) triggers a lightweight
-remote check; the result is cached (default 12 hours) and the URL is added to a watchlist.
-An hourly WP-Cron job rechecks watched URLs in the background. Broken links are struck
-through on the front end. Full-page caches may delay the visual update until that HTML is
-regenerated.
+status when the page is rendered. External URLs are checked remotely; links to posts/pages
+on the same site are verified via WordPress (no HTTP loopback). Results are cached
+(default 12 hours) and refreshed hourly via WP-Cron. Broken links are struck through on the
+front end. Full-page caches may delay the visual update until that HTML is regenerated.
 
 = Where are the link status settings? =
 

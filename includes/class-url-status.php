@@ -3,6 +3,8 @@
  * Lightweight URL status checks for UB Link / UB File blocks.
  *
  * Status is resolved on page render (cached) and refreshed in the background via WP-Cron.
+ * Internal (same-site) URLs are verified via WordPress APIs — never via HTTP loopback
+ * (which fails on single-process local servers such as wp-now).
  *
  * @package WpUsefullBlocks
  */
@@ -22,7 +24,7 @@ final class WP_Usefull_Blocks_Url_Status {
 	public const STATUS_BROKEN  = 'broken';
 	public const STATUS_UNKNOWN = 'unknown';
 
-	private const CACHE_TTL       = 12 * HOUR_IN_SECONDS;
+	private const CACHE_TTL        = 12 * HOUR_IN_SECONDS;
 	private const WATCHLIST_OPTION = 'wp_usefull_blocks_url_watchlist';
 	private const CRON_HOOK        = 'wp_usefull_blocks_recheck_urls';
 	private const BATCH_SIZE       = 10;
@@ -45,6 +47,54 @@ final class WP_Usefull_Blocks_Url_Status {
 	}
 
 	/**
+	 * Normalize relative / protocol-relative URLs to absolute site URLs.
+	 *
+	 * @param string $url Raw URL (may be site-relative).
+	 * @return string Absolute URL or empty string.
+	 */
+	public static function normalize_url( string $url ): string {
+		$url = trim( $url );
+		if ( '' === $url ) {
+			return '';
+		}
+
+		// Protocol-relative: //example.com/path
+		if ( str_starts_with( $url, '//' ) ) {
+			$scheme = is_ssl() ? 'https:' : 'http:';
+			return esc_url_raw( $scheme . $url );
+		}
+
+		// Site-relative: /?p=1 or /sample-page/
+		if ( str_starts_with( $url, '/' ) ) {
+			return esc_url_raw( home_url( $url ) );
+		}
+
+		return esc_url_raw( $url );
+	}
+
+	/**
+	 * Whether a URL points at this WordPress site.
+	 *
+	 * @param string $url Absolute URL.
+	 * @return bool
+	 */
+	public static function is_internal_url( string $url ): bool {
+		$url = self::normalize_url( $url );
+		if ( '' === $url ) {
+			return false;
+		}
+
+		$home_host = wp_parse_url( home_url(), PHP_URL_HOST );
+		$url_host  = wp_parse_url( $url, PHP_URL_HOST );
+
+		if ( ! is_string( $home_host ) || '' === $home_host || ! is_string( $url_host ) || '' === $url_host ) {
+			return false;
+		}
+
+		return strtolower( $home_host ) === strtolower( $url_host );
+	}
+
+	/**
 	 * Transient key for a URL.
 	 *
 	 * @param string $url URL.
@@ -60,7 +110,7 @@ final class WP_Usefull_Blocks_Url_Status {
 	 * @param string $url URL.
 	 */
 	public static function watch( string $url ): void {
-		$url = esc_url_raw( $url );
+		$url = self::normalize_url( $url );
 		if ( '' === $url ) {
 			return;
 		}
@@ -90,7 +140,7 @@ final class WP_Usefull_Blocks_Url_Status {
 	 * @param array<string, mixed> $result Result payload.
 	 */
 	public static function store( string $url, array $result ): void {
-		$url = esc_url_raw( $url );
+		$url = self::normalize_url( $url );
 		if ( '' === $url ) {
 			return;
 		}
@@ -114,7 +164,7 @@ final class WP_Usefull_Blocks_Url_Status {
 	 * @return array{status:string,code:int,message:string,checkedAt?:int}|null
 	 */
 	public static function get_cached( string $url ): ?array {
-		$url = esc_url_raw( $url );
+		$url = self::normalize_url( $url );
 		if ( '' === $url ) {
 			return null;
 		}
@@ -130,12 +180,12 @@ final class WP_Usefull_Blocks_Url_Status {
 	/**
 	 * Resolve status for front-end render: use cache, otherwise check now (page load).
 	 *
-	 * @param string $url              URL to resolve.
-	 * @param string $stored_fallback  Fallback status from block attributes.
+	 * @param string $url             URL to resolve.
+	 * @param string $stored_fallback Fallback status from block attributes.
 	 * @return array{status:string,code:int,message:string,checkedAt?:int}
 	 */
 	public static function resolve_for_render( string $url, string $stored_fallback = 'unknown' ): array {
-		$url = esc_url_raw( $url );
+		$url = self::normalize_url( $url );
 
 		if ( '' === $url ) {
 			return array(
@@ -147,6 +197,14 @@ final class WP_Usefull_Blocks_Url_Status {
 
 		$cached = self::get_cached( $url );
 		if ( null !== $cached ) {
+			// Recover from false "broken" results caused by HTTP loopback to this site.
+			$cached_status = isset( $cached['status'] ) ? (string) $cached['status'] : '';
+			if ( self::STATUS_BROKEN === $cached_status && self::is_internal_url( $url ) ) {
+				$result = self::check( $url );
+				self::store( $url, $result );
+				return $result;
+			}
+
 			self::watch( $url );
 			return $cached;
 		}
@@ -169,7 +227,7 @@ final class WP_Usefull_Blocks_Url_Status {
 	 * @return array{status:string,code:int,message:string}
 	 */
 	public static function check( string $url ): array {
-		$url = esc_url_raw( $url );
+		$url = self::normalize_url( $url );
 
 		if ( '' === $url ) {
 			return array(
@@ -179,6 +237,91 @@ final class WP_Usefull_Blocks_Url_Status {
 			);
 		}
 
+		// Same-site URLs: never HTTP-loopback (breaks on wp-now / some hosts).
+		if ( self::is_internal_url( $url ) ) {
+			return self::check_internal( $url );
+		}
+
+		return self::check_remote( $url );
+	}
+
+	/**
+	 * Verify an internal URL via WordPress APIs / filesystem.
+	 *
+	 * @param string $url Absolute internal URL.
+	 * @return array{status:string,code:int,message:string}
+	 */
+	private static function check_internal( string $url ): array {
+		$post_id = url_to_postid( $url );
+		if ( $post_id > 0 ) {
+			$status = get_post_status( $post_id );
+			if ( 'publish' === $status ) {
+				return array(
+					'status'  => self::STATUS_OK,
+					'code'    => 200,
+					'message' => __( 'Internal content exists.', 'wp-usefull-blocks' ),
+				);
+			}
+
+			return array(
+				'status'  => self::STATUS_BROKEN,
+				'code'    => 404,
+				'message' => __( 'Internal content is not published.', 'wp-usefull-blocks' ),
+			);
+		}
+
+		$home = untrailingslashit( home_url() );
+		$norm = untrailingslashit( $url );
+		if ( $norm === $home || $norm === untrailingslashit( home_url( '/' ) ) ) {
+			return array(
+				'status'  => self::STATUS_OK,
+				'code'    => 200,
+				'message' => __( 'Site home URL.', 'wp-usefull-blocks' ),
+			);
+		}
+
+		$uploads = wp_get_upload_dir();
+		if ( ! empty( $uploads['baseurl'] ) && ! empty( $uploads['basedir'] ) ) {
+			$baseurl = (string) $uploads['baseurl'];
+			if ( str_starts_with( $url, $baseurl ) ) {
+				$relative = substr( $url, strlen( $baseurl ) );
+				$path     = trailingslashit( (string) $uploads['basedir'] ) . ltrim( (string) $relative, '/' );
+				// Strip query string from path.
+				$query_pos = strpos( $path, '?' );
+				if ( false !== $query_pos ) {
+					$path = substr( $path, 0, $query_pos );
+				}
+				if ( is_file( $path ) ) {
+					return array(
+						'status'  => self::STATUS_OK,
+						'code'    => 200,
+						'message' => __( 'Local media file exists.', 'wp-usefull-blocks' ),
+					);
+				}
+
+				return array(
+					'status'  => self::STATUS_BROKEN,
+					'code'    => 404,
+					'message' => __( 'Local media file missing.', 'wp-usefull-blocks' ),
+				);
+			}
+		}
+
+		// Unknown internal route (custom rewrite, etc.) — do not mark broken via loopback.
+		return array(
+			'status'  => self::STATUS_UNKNOWN,
+			'code'    => 0,
+			'message' => __( 'Internal URL could not be verified.', 'wp-usefull-blocks' ),
+		);
+	}
+
+	/**
+	 * Verify an external URL via HTTP.
+	 *
+	 * @param string $url Absolute external URL.
+	 * @return array{status:string,code:int,message:string}
+	 */
+	private static function check_remote( string $url ): array {
 		$response = wp_remote_head(
 			$url,
 			array(
@@ -214,6 +357,9 @@ final class WP_Usefull_Blocks_Url_Status {
 		if ( $code >= 200 && $code < 400 ) {
 			$status = self::STATUS_OK;
 		} elseif ( in_array( $code, array( 401, 403, 429 ), true ) ) {
+			$status = self::STATUS_UNKNOWN;
+		} elseif ( 502 === $code || 503 === $code || 504 === $code ) {
+			// Transient gateway errors — do not hard-mark as permanently broken.
 			$status = self::STATUS_UNKNOWN;
 		} else {
 			$status = self::STATUS_BROKEN;
