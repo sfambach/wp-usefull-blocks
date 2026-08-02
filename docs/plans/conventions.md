@@ -24,6 +24,13 @@ All blocks in this plugin use the **`ub-`** prefix ("UB" = Usefull Blocks) on th
 - The scaffold sample block `wp-usefull-blocks/wp-usefull-blocks` (from `@wordpress/create-block`)
   is a placeholder and will be removed/replaced by the real `ub-*` blocks.
 
+## Definition of done for every block (standing rule)
+
+Whenever a block is added or changed, before handing it over for testing:
+
+- Add/refresh it on the **Block Showcase** test page (auto-synced) and run the **pre-handover
+  tests** — see `docs/plans/block-showcase-and-pretests.md`.
+
 ## Default block architecture (recap)
 
 Unless a block clearly warrants otherwise, blocks follow the architecture chosen for the
