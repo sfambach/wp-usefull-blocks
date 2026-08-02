@@ -157,9 +157,11 @@ New dependency: `@wordpress/server-side-render` (for the preview).
 
 ## 11. Admin menu / settings
 
-- This feature is block-only and needs **no settings page**, so no admin menu changes. If a
-  setting later becomes necessary, it goes under the core **Settings** menu
-  (`add_options_page`), and any required setting will be noted in the FAQ (per rules).
+- The Timeline block itself needs no dedicated settings to function. However, the separate
+  admin plan (`docs/plans/admin-settings-and-headings.md`) introduces an **own top-level
+  "Usefull Blocks" menu** with a Settings page that lists a **per-block section** for every
+  plugin block. Timeline will therefore get a placeholder settings section (headline only)
+  until it has specific settings. Any required setting will be noted in the FAQ (per rules).
 
 ## 12. Testing plan (for the implementation phase)
 
