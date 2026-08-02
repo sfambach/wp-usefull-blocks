@@ -29,7 +29,6 @@ $link_to        = wp_usefull_blocks_ub_gallery_get_link_to( $attributes );
 $link_target    = isset( $attributes['linkTarget'] ) ? (string) $attributes['linkTarget'] : '';
 $image_crop     = ! isset( $attributes['imageCrop'] ) || (bool) $attributes['imageCrop'];
 $random_order   = ! empty( $attributes['randomOrder'] );
-$selected_index = isset( $attributes['selectedIndex'] ) ? absint( $attributes['selectedIndex'] ) : 0;
 $gallery_caption = isset( $attributes['caption'] ) ? wp_kses_post( (string) $attributes['caption'] ) : '';
 
 if ( '_blank' !== $link_target ) {
@@ -42,12 +41,10 @@ if ( array() === $images ) {
 
 if ( $random_order ) {
 	shuffle( $images );
-	$selected_index = 0;
 }
 
-if ( $selected_index >= count( $images ) ) {
-	$selected_index = 0;
-}
+// Always start with the first gallery image in focus (editor preview + front end).
+$selected_index = 0;
 
 $thumb_count = count( $images );
 
@@ -62,7 +59,8 @@ $cache_payload = array(
 );
 
 // Randomized galleries must not be cached across requests.
-$cache_key   = 'ub_gallery_' . md5( (string) wp_json_encode( $cache_payload ) );
+// v3: first image always focused; captions only in lightbox; context-bound focus fields.
+$cache_key   = 'ub_gallery_v3_' . md5( (string) wp_json_encode( $cache_payload ) );
 $cached_html = $random_order ? false : get_transient( $cache_key );
 
 if ( is_string( $cached_html ) && '' !== $cached_html ) {
@@ -70,11 +68,31 @@ if ( is_string( $cached_html ) && '' !== $cached_html ) {
 	return;
 }
 
+$focus_image = $images[ $selected_index ];
+$focus_href  = '';
+
+if ( 'media' === $link_to ) {
+	$focus_href = (string) $focus_image['fullUrl'];
+} elseif ( 'attachment' === $link_to ) {
+	$focus_href = (string) ( $focus_image['attachmentUrl'] ?? '' );
+	if ( '' === $focus_href ) {
+		$focus_href = (string) $focus_image['fullUrl'];
+	}
+}
+
 $context = array(
-	'images'        => $images,
-	'selectedIndex' => $selected_index,
-	'linkTo'        => $link_to,
-	'lightboxOpen'  => false,
+	'images'         => $images,
+	'selectedIndex'  => $selected_index,
+	'linkTo'         => $link_to,
+	'lightboxOpen'   => false,
+	'focusUrl'       => (string) $focus_image['url'],
+	'focusSrcset'    => (string) $focus_image['srcset'],
+	'focusSizes'     => (string) $focus_image['sizes'],
+	'focusAlt'       => (string) $focus_image['alt'],
+	'focusFullUrl'   => (string) $focus_image['fullUrl'],
+	'focusHref'      => $focus_href,
+	'focusCaption'   => (string) $focus_image['caption'],
+	'hasFocusCaption'=> '' !== trim( (string) $focus_image['caption'] ),
 );
 
 $context_json = (string) wp_json_encode(
@@ -97,18 +115,6 @@ $wrapper_attributes = get_block_wrapper_attributes(
 	)
 );
 
-$focus_image = $images[ $selected_index ];
-$focus_href  = '';
-
-if ( 'media' === $link_to ) {
-	$focus_href = (string) $focus_image['fullUrl'];
-} elseif ( 'attachment' === $link_to ) {
-	$focus_href = (string) ( $focus_image['attachmentUrl'] ?? '' );
-	if ( '' === $focus_href ) {
-		$focus_href = (string) $focus_image['fullUrl'];
-	}
-}
-
 $link_rel = '_blank' === $link_target ? 'noopener noreferrer' : '';
 
 ob_start();
@@ -118,7 +124,7 @@ ob_start();
 		<?php if ( in_array( $link_to, array( 'media', 'attachment' ), true ) ) : ?>
 			<a
 				class="ub-gallery__focus-media"
-				data-wp-bind--href="state.focusHref"
+				data-wp-bind--href="context.focusHref"
 				href="<?php echo esc_url( $focus_href ); ?>"
 				<?php if ( '' !== $link_target ) : ?>
 					target="<?php echo esc_attr( $link_target ); ?>"
@@ -133,10 +139,10 @@ ob_start();
 						sizes="<?php echo esc_attr( (string) $focus_image['sizes'] ); ?>"
 					<?php endif; ?>
 					alt="<?php echo esc_attr( (string) $focus_image['alt'] ); ?>"
-					data-wp-bind--src="state.focusUrl"
-					data-wp-bind--srcset="state.focusSrcset"
-					data-wp-bind--sizes="state.focusSizes"
-					data-wp-bind--alt="state.focusAlt"
+					data-wp-bind--src="context.focusUrl"
+					data-wp-bind--srcset="context.focusSrcset"
+					data-wp-bind--sizes="context.focusSizes"
+					data-wp-bind--alt="context.focusAlt"
 					loading="eager"
 					decoding="async"
 				/>
@@ -156,10 +162,10 @@ ob_start();
 						sizes="<?php echo esc_attr( (string) $focus_image['sizes'] ); ?>"
 					<?php endif; ?>
 					alt="<?php echo esc_attr( (string) $focus_image['alt'] ); ?>"
-					data-wp-bind--src="state.focusUrl"
-					data-wp-bind--srcset="state.focusSrcset"
-					data-wp-bind--sizes="state.focusSizes"
-					data-wp-bind--alt="state.focusAlt"
+					data-wp-bind--src="context.focusUrl"
+					data-wp-bind--srcset="context.focusSrcset"
+					data-wp-bind--sizes="context.focusSizes"
+					data-wp-bind--alt="context.focusAlt"
 					loading="eager"
 					decoding="async"
 				/>
@@ -174,24 +180,15 @@ ob_start();
 						sizes="<?php echo esc_attr( (string) $focus_image['sizes'] ); ?>"
 					<?php endif; ?>
 					alt="<?php echo esc_attr( (string) $focus_image['alt'] ); ?>"
-					data-wp-bind--src="state.focusUrl"
-					data-wp-bind--srcset="state.focusSrcset"
-					data-wp-bind--sizes="state.focusSizes"
-					data-wp-bind--alt="state.focusAlt"
+					data-wp-bind--src="context.focusUrl"
+					data-wp-bind--srcset="context.focusSrcset"
+					data-wp-bind--sizes="context.focusSizes"
+					data-wp-bind--alt="context.focusAlt"
 					loading="eager"
 					decoding="async"
 				/>
 			</div>
 		<?php endif; ?>
-
-		<figcaption
-			class="ub-gallery__focus-caption"
-			data-wp-bind--hidden="!state.hasCaption"
-			data-wp-text="state.focusCaption"
-			<?php echo empty( $focus_image['caption'] ) ? 'hidden' : ''; ?>
-		>
-			<?php echo esc_html( (string) $focus_image['caption'] ); ?>
-		</figcaption>
 	</figure>
 
 	<?php if ( count( $images ) > 1 ) : ?>
@@ -235,12 +232,6 @@ ob_start();
 		</ul>
 	<?php endif; ?>
 
-	<?php if ( '' !== trim( wp_strip_all_tags( $gallery_caption ) ) ) : ?>
-		<figcaption class="ub-gallery__caption blocks-gallery-caption">
-			<?php echo $gallery_caption; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Filtered with wp_kses_post. ?>
-		</figcaption>
-	<?php endif; ?>
-
 	<?php if ( 'lightbox' === $link_to ) : ?>
 		<div
 			class="ub-gallery__lightbox"
@@ -268,9 +259,30 @@ ob_start();
 					class="ub-gallery__lightbox-image"
 					src="<?php echo esc_url( (string) $focus_image['fullUrl'] ); ?>"
 					alt="<?php echo esc_attr( (string) $focus_image['alt'] ); ?>"
-					data-wp-bind--src="state.focusFullUrl"
-					data-wp-bind--alt="state.focusAlt"
+					data-wp-bind--src="context.focusFullUrl"
+					data-wp-bind--alt="context.focusAlt"
 				/>
+				<?php
+				$has_image_caption   = '' !== trim( (string) $focus_image['caption'] );
+				$has_gallery_caption = '' !== trim( wp_strip_all_tags( $gallery_caption ) );
+				?>
+				<?php if ( $has_image_caption || $has_gallery_caption ) : ?>
+					<div class="ub-gallery__lightbox-captions">
+						<p
+							class="ub-gallery__lightbox-caption"
+							data-wp-bind--hidden="!context.hasFocusCaption"
+							data-wp-text="context.focusCaption"
+							<?php echo $has_image_caption ? '' : 'hidden'; ?>
+						>
+							<?php echo esc_html( (string) $focus_image['caption'] ); ?>
+						</p>
+						<?php if ( $has_gallery_caption ) : ?>
+							<div class="ub-gallery__lightbox-gallery-caption">
+								<?php echo $gallery_caption; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Filtered with wp_kses_post. ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
 			</div>
 		</div>
 	<?php endif; ?>

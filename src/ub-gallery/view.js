@@ -4,45 +4,34 @@
 
 import { getContext, store } from '@wordpress/interactivity';
 
-const { state } = store( 'wp-usefull-blocks/ub-gallery', {
+/**
+ * Sync derived focus fields from the selected gallery image.
+ *
+ * @param {Object} context Interactivity context.
+ */
+function syncFocusFromSelection( context ) {
+	const images = context.images || [];
+	const index = Number( context.selectedIndex ) || 0;
+	const image = images[ index ] || images[ 0 ] || {};
+
+	context.focusUrl = image.url || '';
+	context.focusSrcset = image.srcset || '';
+	context.focusSizes = image.sizes || '';
+	context.focusAlt = image.alt || '';
+	context.focusFullUrl = image.fullUrl || image.url || '';
+	context.focusCaption = image.caption || '';
+	context.hasFocusCaption = Boolean( image.caption );
+
+	if ( 'attachment' === context.linkTo ) {
+		context.focusHref =
+			image.attachmentUrl || image.fullUrl || image.url || '';
+	} else {
+		context.focusHref = image.fullUrl || image.url || '';
+	}
+}
+
+store( 'wp-usefull-blocks/ub-gallery', {
 	state: {
-		get focusImage() {
-			const context = getContext();
-			const images = context.images || [];
-			const index = Number( context.selectedIndex ) || 0;
-			return images[ index ] || images[ 0 ] || {};
-		},
-		get focusAlt() {
-			return state.focusImage.alt || '';
-		},
-		get focusUrl() {
-			return state.focusImage.url || '';
-		},
-		get focusSrcset() {
-			return state.focusImage.srcset || undefined;
-		},
-		get focusSizes() {
-			return state.focusImage.sizes || undefined;
-		},
-		get focusFullUrl() {
-			return state.focusImage.fullUrl || state.focusImage.url || '';
-		},
-		get focusHref() {
-			const context = getContext();
-			const image = state.focusImage;
-
-			if ( 'attachment' === context.linkTo ) {
-				return image.attachmentUrl || image.fullUrl || image.url || '';
-			}
-
-			return image.fullUrl || image.url || '';
-		},
-		get focusCaption() {
-			return state.focusImage.caption || '';
-		},
-		get hasCaption() {
-			return Boolean( state.focusCaption );
-		},
 		get isThumbSelected() {
 			const context = getContext();
 			return (
@@ -60,6 +49,7 @@ const { state } = store( 'wp-usefull-blocks/ub-gallery', {
 			}
 
 			context.selectedIndex = thumbIndex;
+			syncFocusFromSelection( context );
 		},
 		openLightbox() {
 			const context = getContext();

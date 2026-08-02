@@ -355,8 +355,17 @@ export default function Edit( { attributes, setAttributes } ) {
 				</div>
 				<ServerSideRender
 					block="wp-usefull-blocks/ub-gallery"
-					attributes={ attributes }
+					attributes={ {
+						...attributes,
+						selectedIndex: 0,
+					} }
 				/>
+				<p className="ub-gallery-editor__caption-help">
+					{ __(
+						'Captions are shown in the full-size (lightbox) view only.',
+						'wp-usefull-blocks'
+					) }
+				</p>
 				<RichText
 					tagName="figcaption"
 					className="ub-gallery-editor__caption"
