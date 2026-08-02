@@ -47,7 +47,7 @@
 
 	async function submitReplace( form ) {
 		const row = form.closest( 'tr' );
-		const statusCell = row ? row.querySelector( '.ub-row-status' ) : null;
+		const statusCell = row ? row.querySelector( '.ub-status-summary' ) : null;
 		const ajaxUrl = window.wpUsefullBlocksBrokenLinks?.ajaxUrl;
 		const action = window.wpUsefullBlocksBrokenLinks?.replaceAction;
 

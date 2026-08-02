@@ -29,13 +29,13 @@
 }
 
 .wp-admin .wp-list-table .column-status {
-	width: 6.5rem;
-	vertical-align: middle;
+	width: 9rem;
+	vertical-align: top;
 }
 
 .wp-admin .wp-list-table .column-old_url,
 .wp-admin .wp-list-table .column-new_url {
-	width: 40%;
+	width: 38%;
 	vertical-align: middle;
 }
 
@@ -47,7 +47,6 @@
 	padding-right: 2px;
 }
 
-.wp-admin .wp-list-table .ub-old-url-row,
 .wp-admin .wp-list-table .ub-new-url-row {
 	display: flex;
 	align-items: center;
@@ -55,15 +54,25 @@
 }
 
 .wp-admin .wp-list-table .ub-old-url {
-	flex: 1 1 auto;
-	min-width: 0;
+	display: inline-block;
+	max-width: 100%;
 	word-break: break-all;
 	line-height: 1.3;
 }
 
+.wp-admin .wp-list-table .ub-row-status {
+	line-height: 1.35;
+}
+
+.wp-admin .wp-list-table .ub-row-status .description {
+	display: inline;
+	white-space: normal;
+	word-break: break-word;
+}
+
 .wp-admin .wp-list-table .ub-broken-links-recheck {
-	flex: 0 0 auto;
-	margin: 0;
+	display: block;
+	margin: 0.2rem 0 0;
 }
 
 .wp-admin .wp-list-table .ub-recheck-button {
@@ -91,15 +100,6 @@
 
 .wp-admin .wp-list-table .ub-save-button {
 	flex: 0 0 auto;
-}
-
-.wp-admin .wp-list-table .ub-row-status {
-	line-height: 1.3;
-	white-space: nowrap;
-}
-
-.wp-admin .wp-list-table .ub-row-status .description {
-	display: none;
 }
 
 .ub-status--ok {

@@ -104,7 +104,7 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Compact traffic light (label + optional HTTP code, no multi-line message).
+	 * Traffic light + reason, with Recheck under the status.
 	 *
 	 * @param array<string,mixed> $item Item.
 	 * @return string
@@ -113,22 +113,45 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 		$status  = isset( $item['status'] ) ? sanitize_key( (string) $item['status'] ) : 'unknown';
 		$code    = isset( $item['code'] ) ? (int) $item['code'] : 0;
 		$message = isset( $item['message'] ) ? (string) $item['message'] : '';
+		$url     = isset( $item['url'] ) ? (string) $item['url'] : '';
 
 		$inner = class_exists( 'WP_Usefull_Blocks_Status_Render' )
-			? WP_Usefull_Blocks_Status_Render::admin_cell( $status, $code, '' )
+			? WP_Usefull_Blocks_Status_Render::admin_cell( $status, $code, $message )
 			: esc_html( $status );
 
-		// Keep detail available on hover without adding row height.
-		$title = '' !== $message ? $message : '';
-		$wrap  = '' !== $title
-			? '<div class="ub-row-status" title="' . esc_attr( $title ) . '">'
-			: '<div class="ub-row-status">';
-
-		return $wrap . $inner . '</div>';
+		$action_url = admin_url( 'admin-post.php' );
+		ob_start();
+		?>
+		<div class="ub-row-status">
+			<div class="ub-status-summary">
+				<?php
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- admin_cell() returns escaped HTML.
+				echo $inner;
+				?>
+			</div>
+			<?php if ( '' !== $url ) : ?>
+				<form method="post" action="<?php echo esc_url( $action_url ); ?>" class="ub-broken-links-recheck">
+					<?php wp_nonce_field( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' ); ?>
+					<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
+					<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
+					<?php
+					submit_button(
+						__( 'Recheck', 'wp-usefull-blocks' ),
+						'link',
+						'submit',
+						false,
+						array( 'class' => 'button-link ub-recheck-button' )
+					);
+					?>
+				</form>
+			<?php endif; ?>
+		</div>
+		<?php
+		return (string) ob_get_clean();
 	}
 
 	/**
-	 * Old URL link + Recheck, with "Found in" under it.
+	 * Old URL as clickable link, with "Found in" under it.
 	 *
 	 * @param array<string,mixed> $item Item.
 	 * @return string
@@ -139,39 +162,19 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 			return '&mdash;';
 		}
 
-		$action_url = admin_url( 'admin-post.php' );
-		ob_start();
-		?>
-		<div class="ub-old-url-row">
-			<a
-				class="ub-old-url"
-				href="<?php echo esc_url( $url ); ?>"
-				target="_blank"
-				rel="noopener noreferrer"
-				data-ub-old-url="<?php echo esc_attr( $url ); ?>"
-			><?php echo esc_html( $url ); ?></a>
-			<form method="post" action="<?php echo esc_url( $action_url ); ?>" class="ub-broken-links-recheck">
-				<?php wp_nonce_field( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' ); ?>
-				<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
-				<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
-				<?php
-				submit_button(
-					__( 'Recheck', 'wp-usefull-blocks' ),
-					'link',
-					'submit',
-					false,
-					array( 'class' => 'button-link ub-recheck-button' )
-				);
-				?>
-			</form>
-		</div>
-		<?php
+		$out = sprintf(
+			'<a class="ub-old-url" href="%1$s" target="_blank" rel="noopener noreferrer" data-ub-old-url="%2$s">%3$s</a>',
+			esc_url( $url ),
+			esc_attr( $url ),
+			esc_html( $url )
+		);
+
 		$posts_html = $this->render_found_in( $item );
 		if ( '' !== $posts_html ) {
-			echo '<div class="ub-found-in description">' . $posts_html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from escaped parts.
+			$out .= '<div class="ub-found-in description">' . $posts_html . '</div>';
 		}
 
-		return (string) ob_get_clean();
+		return $out;
 	}
 
 	/**
