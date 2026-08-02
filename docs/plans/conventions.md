@@ -24,10 +24,18 @@ All blocks in this plugin use the **`ub-`** prefix ("UB" = Usefull Blocks) on th
 - The scaffold sample block `wp-usefull-blocks/wp-usefull-blocks` (from `@wordpress/create-block`)
   is a placeholder and will be removed/replaced by the real `ub-*` blocks.
 
+## Design & UX rules (binding)
+
+All blocks and admin screens must follow the **UX & UI Design Guidelines**
+(`docs/plans/ux-design-guidelines.md`): native `@wordpress/components`, recognition over recall,
+progressive disclosure, sensible defaults, clear feedback/empty/loading states, and **WCAG 2.2
+AA** accessibility (keyboard, focus, ARIA, never colour-alone, reduced motion).
+
 ## Definition of done for every block (standing rule)
 
 Whenever a block is added or changed, before handing it over for testing:
 
+- Follow the **Design & UX rules** above (incl. a keyboard/screen-reader pass).
 - Add/refresh it on the **Block Showcase** test page (auto-synced) and run the **pre-handover
   tests** — see `docs/plans/block-showcase-and-pretests.md`.
 
