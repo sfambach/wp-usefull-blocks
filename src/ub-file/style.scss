@@ -2,6 +2,8 @@
  * Shared styles for UB File.
  */
 
+@use "../shared/status";
+
 .wp-block-wp-usefull-blocks-ub-file {
 	display: flex;
 	flex-wrap: wrap;

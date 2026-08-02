@@ -13,8 +13,11 @@ and the modern Block API (v3, `block.json` as the single source of truth).
 
 ```
 wp-usefull-blocks.php          # Plugin bootstrap (registers blocks from build/)
-includes/                      # Shared PHP helpers (e.g. gallery normalizer)
+includes/                      # Shared PHP helpers (gallery, URL status, file mirror, REST)
 src/ub-gallery/                # UB Gallery block (dynamic + Interactivity API)
+src/ub-link/                   # UB Link block (URL + live status / strike-through)
+src/ub-file/                   # UB File block (URL + optional local media mirror)
+src/shared/                    # Shared front-end styles (status / broken links)
 src/wp-usefull-blocks/         # Scaffold sample block (placeholder)
 build/                         # Compiled assets (generated, git-ignored)
 readme.txt                     # WordPress.org plugin readme
@@ -25,6 +28,8 @@ readme.txt                     # WordPress.org plugin readme
 | Block | Name | Notes |
 | --- | --- | --- |
 | **UB Gallery** | `wp-usefull-blocks/ub-gallery` | Focus image + thumbnail strip; click = lightbox / media link / none |
+| **UB Link** | `wp-usefull-blocks/ub-link` | URL + traffic light; broken links struck through; auto-check on render + cron |
+| **UB File** | `wp-usefull-blocks/ub-file` | File URL + manual “Download now” mirror; same status / strike-through behaviour |
 | WP Usefull Blocks | `wp-usefull-blocks/wp-usefull-blocks` | Scaffold sample; will be removed later |
 
 Each block lives in its own folder under `src/` with a `block.json`. `npm run build`

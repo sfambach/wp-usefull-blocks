@@ -75,6 +75,7 @@ final class WP_Usefull_Blocks_Rest {
 	public static function check_url( WP_REST_Request $request ): WP_REST_Response {
 		$url    = (string) $request->get_param( 'url' );
 		$result = WP_Usefull_Blocks_Url_Status::check( $url );
+		WP_Usefull_Blocks_Url_Status::store( $url, $result );
 
 		return new WP_REST_Response( $result, 200 );
 	}

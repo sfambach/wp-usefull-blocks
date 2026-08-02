@@ -2,6 +2,8 @@
  * Shared styles for UB Link.
  */
 
+@use "../shared/status";
+
 .wp-block-wp-usefull-blocks-ub-link {
 	display: flex;
 	flex-wrap: wrap;
@@ -11,26 +13,4 @@
 	.ub-link__anchor {
 		word-break: break-word;
 	}
-}
-
-.ub-status {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 0.85em;
-	height: 0.85em;
-	line-height: 1;
-	font-size: 0.9em;
-}
-
-.ub-status--ok {
-	color: #1a7f37;
-}
-
-.ub-status--broken {
-	color: #cf222e;
-}
-
-.ub-status--unknown {
-	color: #9a6700;
 }

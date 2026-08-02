@@ -18,7 +18,7 @@ $label           = isset( $attributes['label'] ) ? sanitize_text_field( (string)
 $attachment_id   = isset( $attributes['attachmentId'] ) ? absint( $attributes['attachmentId'] ) : 0;
 $link_behavior   = isset( $attributes['linkBehavior'] ) ? sanitize_key( (string) $attributes['linkBehavior'] ) : 'original-fallback-local';
 $show_status     = ! isset( $attributes['showStatus'] ) || (bool) $attributes['showStatus'];
-$last_status     = isset( $attributes['lastStatus'] ) ? sanitize_key( (string) $attributes['lastStatus'] ) : 'unknown';
+$stored_status   = isset( $attributes['lastStatus'] ) ? sanitize_key( (string) $attributes['lastStatus'] ) : 'unknown';
 
 if ( ! in_array( $link_behavior, array( 'original-fallback-local', 'original-only', 'local-only' ), true ) ) {
 	$link_behavior = 'original-fallback-local';
@@ -28,13 +28,19 @@ if ( '' === $source_url && $attachment_id < 1 ) {
 	return;
 }
 
+$status_payload = array( 'status' => $stored_status );
+if ( '' !== $source_url && class_exists( 'WP_Usefull_Blocks_Url_Status' ) ) {
+	$status_payload = WP_Usefull_Blocks_Url_Status::resolve_for_render( $source_url, $stored_status );
+}
+$status = isset( $status_payload['status'] ) ? sanitize_key( (string) $status_payload['status'] ) : 'unknown';
+
 $local_url = $attachment_id > 0 ? (string) wp_get_attachment_url( $attachment_id ) : '';
 
 $href = $source_url;
 if ( 'local-only' === $link_behavior ) {
 	$href = $local_url ? $local_url : $source_url;
 } elseif ( 'original-fallback-local' === $link_behavior ) {
-	if ( 'broken' === $last_status && $local_url ) {
+	if ( 'broken' === $status && $local_url ) {
 		$href = $local_url;
 	}
 }
@@ -47,19 +53,36 @@ if ( '' === $label ) {
 	$label = __( 'Download file', 'wp-usefull-blocks' );
 }
 
+$classes = array( 'ub-file', 'ub-file--' . $status );
+// Strike through only when the visible link still points at a broken original URL.
+if ( 'broken' === $status && $href === $source_url ) {
+	$classes[] = 'is-broken';
+}
+
 $wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'ub-file',
+		'class' => implode( ' ', $classes ),
 	)
 );
+
+$anchor_title = '';
+if ( 'broken' === $status && $href === $source_url ) {
+	$anchor_title = __( 'This link appears to be broken.', 'wp-usefull-blocks' );
+}
 ?>
 <div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by helper. ?>>
-	<a class="ub-file__anchor" href="<?php echo esc_url( $href ); ?>">
+	<a
+		class="ub-file__anchor"
+		href="<?php echo esc_url( $href ); ?>"
+		<?php if ( '' !== $anchor_title ) : ?>
+			title="<?php echo esc_attr( $anchor_title ); ?>"
+		<?php endif; ?>
+	>
 		<?php echo esc_html( $label ); ?>
 	</a>
 	<?php
 	if ( $show_status && class_exists( 'WP_Usefull_Blocks_Status_Render' ) ) {
-		echo WP_Usefull_Blocks_Status_Render::indicator( $last_status ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo WP_Usefull_Blocks_Status_Render::indicator( $status ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 	?>
 	<?php if ( $attachment_id > 0 && $local_url ) : ?>

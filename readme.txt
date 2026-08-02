@@ -10,8 +10,12 @@ Some useful blocks for the WordPress Gutenberg editor.
 
 == Description ==
 
-WP Usefull Blocks provides practical Gutenberg blocks. This release includes **UB Gallery**:
-an eBay-style image gallery with one large focus image and a selectable thumbnail strip.
+WP Usefull Blocks provides practical Gutenberg blocks. This release includes **UB Gallery**
+(eBay-style focus image + thumbnails), **UB Link** (URL with live status), and **UB File**
+(file URL with optional local media mirror via “Download now”).
+
+Broken links are shown struck through on the front end. Status is checked on page render
+(cached) and refreshed in the background via WP-Cron.
 
 The plugin is provided as is under GPL-2.0-or-later. Use at your own risk and keep backups
 before major updates.
@@ -34,6 +38,20 @@ install or activation. Site owners remain responsible for their content and back
 By default it opens a lightbox. In the block sidebar you can switch that to “Link to media
 file” or “None”.
 
+= How are broken links detected and shown? =
+
+UB Link and UB File resolve URL status when the page is rendered. The first visitor (or a
+cache miss) triggers a lightweight remote check; the result is cached (default 12 hours) and
+the URL is added to a watchlist. An hourly WP-Cron job rechecks watched URLs in the
+background. Links with status “broken” are rendered with a strike-through so visitors see
+immediately that the target has been unavailable. Full-page caches may delay the visual
+update until that HTML is regenerated.
+
+= Why does UB File not download automatically? =
+
+Mirroring is intentional and manual. Use “Download now” in the editor to copy the file into
+the media library. If you change the source URL later, press Download now again.
+
 == Screenshots ==
 
 1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
@@ -47,6 +65,7 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 = 0.3.0 =
 * Add UB Link block (URL + traffic-light status check).
 * Add UB File block with manual “Download now” media mirror (refresh when URL changes).
+* Broken links are struck through on the front end; status auto-checks on page load (cached) and via hourly WP-Cron.
 
 = 0.2.0 =
 * Add UB Gallery block (focus image + thumbnail strip, lightbox/media/none click modes).
