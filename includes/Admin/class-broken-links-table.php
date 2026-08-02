@@ -134,15 +134,14 @@ final class WP_Usefull_Blocks_Broken_Links_Table extends WP_List_Table {
 					<?php wp_nonce_field( 'wp_usefull_blocks_recheck_url', 'ub_recheck_nonce' ); ?>
 					<input type="hidden" name="action" value="wp_usefull_blocks_recheck_url" />
 					<input type="hidden" name="url" value="<?php echo esc_attr( $url ); ?>" />
-					<?php
-					submit_button(
-						__( 'Recheck', 'wp-usefull-blocks' ),
-						'link',
-						'submit',
-						false,
-						array( 'class' => 'button-link ub-recheck-button' )
-					);
-					?>
+					<button
+						type="submit"
+						class="button-link ub-recheck-button"
+						title="<?php echo esc_attr__( 'Recheck', 'wp-usefull-blocks' ); ?>"
+						aria-label="<?php echo esc_attr__( 'Recheck', 'wp-usefull-blocks' ); ?>"
+					>
+						<span class="dashicons dashicons-update" aria-hidden="true"></span>
+					</button>
 				</form>
 			<?php endif; ?>
 		</div>
