@@ -24,10 +24,10 @@
 	color: #9a6700;
 }
 
-/* Broken URLs: strike through for visitors. */
-.wp-block-wp-usefull-blocks-ub-link.is-broken .ub-link__anchor,
-.wp-block-wp-usefull-blocks-ub-file.is-broken .ub-file__anchor {
-	text-decoration-line: line-through;
-	text-decoration-thickness: from-font;
+/* Broken URLs: strike through (override theme link underlines). */
+.wp-block-wp-usefull-blocks-ub-link.is-broken a.ub-link__anchor,
+.wp-block-wp-usefull-blocks-ub-file.is-broken a.ub-file__anchor {
+	/* stylelint-disable-next-line declaration-no-important -- beat theme */
+	text-decoration: line-through solid currentcolor !important;
 	opacity: 0.75;
 }
