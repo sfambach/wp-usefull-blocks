@@ -14,10 +14,10 @@ WP Usefull Blocks provides practical Gutenberg blocks. This release includes **U
 (eBay-style focus image + thumbnails), **UB Link** (URL with live status), and **UB File**
 (file URL with optional local media mirror via “Download now”).
 
-When enabled under Settings → Usefull Blocks, every normal WordPress link in post/page
-content gets a traffic-light status and optional strike-through for broken URLs — site-wide.
-Status is checked on page render (cached) and refreshed in the background via WP-Cron.
-The optional UB Link block offers the same look as a dedicated block.
+Under the top-level **Useful** menu: Broken Links (list + edit URLs) and Settings.
+When enabled, every normal WordPress link in post/page content gets a traffic-light status
+and optional strike-through for broken URLs — site-wide. Status is checked on page render
+(cached) and refreshed in the background via WP-Cron.
 
 The plugin is provided as is under GPL-2.0-or-later. Use at your own risk and keep backups
 before major updates.
@@ -42,9 +42,9 @@ file” or “None”.
 
 = How are broken links detected and shown? =
 
-Go to Settings → Usefull Blocks to set the traffic-light to before the link, after the
-link, or off (default: before), enable strike-through for broken links, and automatic URL
-checks. This applies to every standard link in post and page content on the whole site.
+Go to Useful → Settings and choose the traffic-light position from the select list
+(before / after / off; default: before), enable strike-through, and automatic URL checks.
+This applies to every standard link in post and page content on the whole site.
 External URLs are checked remotely; links to posts/pages on the same site are verified via
 WordPress (no HTTP loopback). Results are cached (default 12 hours) and refreshed hourly
 via WP-Cron. Broken links are struck through on the front end. Full-page caches may delay
@@ -52,8 +52,12 @@ the visual update until that HTML is regenerated.
 
 = Where are the link status settings? =
 
-Settings → Usefull Blocks. There is no separate top-level admin menu while the plugin only
-needs settings (no extra work pages yet).
+Useful → Settings (top-level admin menu “Useful”; Settings is the last submenu item).
+
+= How do I find and fix broken links? =
+
+Open Useful → Broken Links, click Scan now, then use “Update URL” on a row to replace that
+link in all listed posts/pages.
 
 = Why does UB File not download automatically? =
 

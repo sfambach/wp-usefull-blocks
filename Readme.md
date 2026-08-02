@@ -36,15 +36,14 @@ Each block lives in its own folder under `src/` with a `block.json`. `npm run bu
 compiles every block into `build/` and generates `build/blocks-manifest.php`, which the
 plugin uses to register all blocks efficiently.
 
-## Settings
+## Admin: Useful
 
-While the plugin only needs configuration (no extra admin work pages), options live under
-**Settings → Usefull Blocks**. These apply to **all normal WordPress links** in post/page
-content site-wide (not only the UB Link block):
+Top-level menu **Useful**:
 
-- Traffic-light status: before (default), after, or off
-- Strike through broken links (front end)
-- Auto-check URLs (page render cache + WP-Cron)
+1. **Broken Links** — scan the site, list broken URLs, change/replace them in posts/pages  
+2. **Settings** (last) — traffic-light select (before / after / off), strike-through, auto-check  
+
+These settings apply to **all normal WordPress links** in post/page content site-wide.
 
 ## Development
 

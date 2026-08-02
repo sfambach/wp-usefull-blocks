@@ -2,7 +2,7 @@
 /**
  * Enhance all standard WordPress content links with status UI.
  *
- * When enabled in Settings → Usefull Blocks, every normal <a href> in post/page
+ * When enabled in Useful → Settings, every normal <a href> in post/page
  * content gets the traffic-light indicator and optional strike-through — same
  * look as the UB Link block, site-wide.
  *

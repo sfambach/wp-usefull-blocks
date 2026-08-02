@@ -1,8 +1,6 @@
 <?php
 /**
- * Plugin settings (Settings → Usefull Blocks).
- *
- * Only a settings page for now — registered under the core Settings menu.
+ * Plugin settings (Useful → Settings).
  *
  * @package WpUsefullBlocks
  */
@@ -18,13 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class WP_Usefull_Blocks_Settings {
 
-	public const OPTION = 'wp_usefull_blocks_settings';
+	public const OPTION    = 'wp_usefull_blocks_settings';
+	public const PAGE_SLUG = 'useful-settings';
 
 	/**
 	 * Hook registration.
 	 */
 	public static function init(): void {
-		add_action( 'admin_menu', array( self::class, 'register_menu' ) );
 		add_action( 'admin_init', array( self::class, 'register_settings' ) );
 		add_filter( 'block_editor_settings_all', array( self::class, 'inject_editor_settings' ) );
 	}
@@ -89,19 +87,6 @@ final class WP_Usefull_Blocks_Settings {
 	}
 
 	/**
-	 * Settings → Usefull Blocks (no top-level menu — settings only).
-	 */
-	public static function register_menu(): void {
-		add_options_page(
-			__( 'Usefull Blocks', 'wp-usefull-blocks' ),
-			__( 'Usefull Blocks', 'wp-usefull-blocks' ),
-			'manage_options',
-			'wp-usefull-blocks',
-			array( self::class, 'render_page' )
-		);
-	}
-
-	/**
 	 * Register Settings API fields.
 	 */
 	public static function register_settings(): void {
@@ -121,22 +106,22 @@ final class WP_Usefull_Blocks_Settings {
 			__( 'Links', 'wp-usefull-blocks' ),
 			static function (): void {
 				echo '<p>' . esc_html__(
-					'These options apply to every normal WordPress link in post and page content site-wide (standard paragraph links, lists, etc.). When enabled, they look like the UB Link block: traffic-light status and strike-through for broken URLs.',
+					'These options apply to every normal WordPress link in post and page content site-wide. When enabled, links show a traffic-light status and optional strike-through for broken URLs.',
 					'wp-usefull-blocks'
 				) . '</p>';
 			},
-			'wp-usefull-blocks'
+			self::PAGE_SLUG
 		);
 
 		add_settings_field(
 			'link_status_position',
 			__( 'Traffic-light status', 'wp-usefull-blocks' ),
 			array( self::class, 'render_position' ),
-			'wp-usefull-blocks',
+			self::PAGE_SLUG,
 			'wp_usefull_blocks_links',
 			array(
 				'description' => __(
-					'Show the status indicator before or after every content link, or turn it off. Default: before. Applies on all posts and pages.',
+					'Show the status indicator before or after every content link, or turn it off. Default: before.',
 					'wp-usefull-blocks'
 				),
 			)
@@ -146,12 +131,12 @@ final class WP_Usefull_Blocks_Settings {
 			'strike_broken_links',
 			__( 'Strike through broken links', 'wp-usefull-blocks' ),
 			array( self::class, 'render_checkbox' ),
-			'wp-usefull-blocks',
+			self::PAGE_SLUG,
 			'wp_usefull_blocks_links',
 			array(
 				'key'         => 'strike_broken_links',
 				'description' => __(
-					'On the front end, render broken content links with a strike-through so visitors see they are unavailable.',
+					'On the front end, render broken content links with a strike-through.',
 					'wp-usefull-blocks'
 				),
 			)
@@ -161,12 +146,12 @@ final class WP_Usefull_Blocks_Settings {
 			'auto_check_urls',
 			__( 'Auto-check URLs', 'wp-usefull-blocks' ),
 			array( self::class, 'render_checkbox' ),
-			'wp-usefull-blocks',
+			self::PAGE_SLUG,
 			'wp_usefull_blocks_links',
 			array(
 				'key'         => 'auto_check_urls',
 				'description' => __(
-					'Check URLs when a page is rendered (cached) and refresh them in the background via WP-Cron.',
+					'Check URLs when a page is rendered (cached) and refresh them via WP-Cron.',
 					'wp-usefull-blocks'
 				),
 			)
@@ -201,7 +186,7 @@ final class WP_Usefull_Blocks_Settings {
 	}
 
 	/**
-	 * Radio field for traffic-light position.
+	 * Select field for traffic-light position.
 	 *
 	 * @param array{description?:string} $args Field args.
 	 */
@@ -210,25 +195,20 @@ final class WP_Usefull_Blocks_Settings {
 		$settings    = self::get();
 		$current     = $settings['link_status_position'];
 		$name        = self::OPTION . '[link_status_position]';
+		$id          = 'wp_usefull_blocks_link_status_position';
 		$options     = array(
 			'before' => __( 'Before the link', 'wp-usefull-blocks' ),
 			'after'  => __( 'After the link', 'wp-usefull-blocks' ),
 			'off'    => __( 'Off', 'wp-usefull-blocks' ),
 		);
 		?>
-		<fieldset>
+		<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>">
 			<?php foreach ( $options as $value => $label ) : ?>
-				<label style="display:block;margin-bottom:0.35em;">
-					<input
-						type="radio"
-						name="<?php echo esc_attr( $name ); ?>"
-						value="<?php echo esc_attr( $value ); ?>"
-						<?php checked( $current, $value ); ?>
-					/>
+				<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $current, $value ); ?>>
 					<?php echo esc_html( $label ); ?>
-				</label>
+				</option>
 			<?php endforeach; ?>
-		</fieldset>
+		</select>
 		<?php if ( '' !== $description ) : ?>
 			<p class="description"><?php echo esc_html( $description ); ?></p>
 		<?php endif; ?>
@@ -273,11 +253,11 @@ final class WP_Usefull_Blocks_Settings {
 		}
 		?>
 		<div class="wrap">
-			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+			<h1><?php echo esc_html__( 'Useful Settings', 'wp-usefull-blocks' ); ?></h1>
 			<form action="options.php" method="post">
 				<?php
 				settings_fields( 'wp_usefull_blocks_settings_group' );
-				do_settings_sections( 'wp-usefull-blocks' );
+				do_settings_sections( self::PAGE_SLUG );
 				submit_button();
 				?>
 			</form>

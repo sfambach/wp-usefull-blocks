@@ -27,7 +27,11 @@ require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-url-status.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-file-mirror.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-status-render.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-content-links.php';
+require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-link-scanner.php';
+require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-url-replacer.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-rest.php';
+require_once WP_USEFULL_BLOCKS_PATH . 'includes/Admin/class-broken-links-page.php';
+require_once WP_USEFULL_BLOCKS_PATH . 'includes/Admin/class-menu.php';
 
 /**
  * Registers the block(s) metadata from the `blocks-manifest.php`.
