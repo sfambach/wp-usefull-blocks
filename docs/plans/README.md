@@ -19,13 +19,14 @@ Implementation + plan data live together on branch **`cursor/local-continue-579b
 | Site-wide content links | Normal `<a>` links get status UI via `the_content` |
 | Admin menu **Useful** | Broken Links work page; Settings last |
 | Settings | Traffic-light select (before / after / off), strike-through, auto-check |
+| Broken Links UX (0.4.0) | Ampel, AJAX save/recheck, new-URL field, last-checked time |
 | License decision | GPL “AS IS”; **no** activation disclaimer gate (`legal-disclaimer.md`) |
 
 ### Still planned (not implemented)
 
 | Item | Plan doc |
 |------|----------|
-| **`ub-timeline`** | `timeline-block.md` |
+| **`ub-timeline`** | `timeline-block.md` (next) |
 | Link data layer → `ub-link` CPT / `ub-link-list` | `link-blocks.md` |
 | Full Link Checker admin tool (beyond Broken Links) | `link-checker.md` |
 | Heading tools + Headings Converter | `admin-settings-and-headings.md` |

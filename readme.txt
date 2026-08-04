@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.3.0
+Stable tag:        0.4.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,11 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.4.0 =
+* Broken Links admin: traffic-light status, reason + last-checked time, reload icon.
+* Update URL in-place (AJAX): ampel updates without page jump; Recheck uses new URL when set.
+* Faster single-URL recheck (no full rescan); compact Old/New URL columns with copy arrow.
 
 = 0.3.0 =
 * Add UB Link block — WordPress-style link (RichText + link UI) with traffic-light status.
