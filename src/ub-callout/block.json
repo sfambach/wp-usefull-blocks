@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-callout",
+	"version": "0.6.0",
+	"title": "UB Callout",
+	"category": "text",
+	"icon": "info-outline",
+	"description": "Highlight a tip, info, warning, or success note for readers.",
+	"keywords": [
+		"callout",
+		"notice",
+		"tip",
+		"warning",
+		"info",
+		"hinweis",
+		"achtung"
+	],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"default": "info",
+			"enum": [ "info", "tip", "warning", "success" ]
+		},
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"content": {
+			"type": "string",
+			"default": ""
+		},
+		"showIcon": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"supports": {
+		"anchor": true,
+		"align": [ "wide" ],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"example": {
+		"attributes": {
+			"variant": "tip",
+			"title": "Tip",
+			"content": "Keep related settings in the block sidebar so the canvas stays focused on content.",
+			"showIcon": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

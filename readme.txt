@@ -71,6 +71,13 @@ in the block sidebar. On small screens a horizontal timeline stacks vertically. 
 title on the front end expands or collapses its description. There are no required global
 settings under Useful → Settings.
 
+= How do UB Callout and Table of Contents work? =
+
+**UB Callout** is a highlighted note (info / tip / warning / success) with optional title.
+**UB Table of Contents** lists headings from the same post; set min/max heading levels in the
+sidebar. On the front end, headings get stable `id`s so TOC links jump correctly. In the
+editor, core Heading blocks also get **− / +** toolbar buttons to change the level quickly.
+
 == Screenshots ==
 
 1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from

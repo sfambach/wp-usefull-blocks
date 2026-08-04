@@ -1,0 +1,57 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-toc",
+	"version": "0.6.0",
+	"title": "UB Table of Contents",
+	"category": "widgets",
+	"icon": "list-view",
+	"description": "Automatically lists this post’s headings as an on-page table of contents.",
+	"keywords": [
+		"toc",
+		"contents",
+		"outline",
+		"headings",
+		"inhaltsverzeichnis"
+	],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"minLevel": {
+			"type": "number",
+			"default": 2
+		},
+		"maxLevel": {
+			"type": "number",
+			"default": 3
+		},
+		"ordered": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"usesContext": [ "postId", "postType" ],
+	"supports": {
+		"anchor": true,
+		"align": [ "wide" ],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"example": {
+		"attributes": {
+			"title": "Contents",
+			"minLevel": 2,
+			"maxLevel": 3
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

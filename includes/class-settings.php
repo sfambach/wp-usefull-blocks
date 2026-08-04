@@ -168,6 +168,30 @@ final class WP_Usefull_Blocks_Settings {
 			},
 			self::PAGE_SLUG
 		);
+
+		add_settings_section(
+			'wp_usefull_blocks_ub_callout',
+			__( 'UB Callout', 'wp-usefull-blocks' ),
+			static function (): void {
+				echo '<p>' . esc_html__(
+					'No global settings yet. Type, title, and message are configured per block.',
+					'wp-usefull-blocks'
+				) . '</p>';
+			},
+			self::PAGE_SLUG
+		);
+
+		add_settings_section(
+			'wp_usefull_blocks_ub_toc',
+			__( 'UB Table of Contents', 'wp-usefull-blocks' ),
+			static function (): void {
+				echo '<p>' . esc_html__(
+					'No global settings yet. Title and heading levels are configured per block. Heading ± buttons are always available on core Heading blocks in the editor.',
+					'wp-usefull-blocks'
+				) . '</p>';
+			},
+			self::PAGE_SLUG
+		);
 	}
 
 	/**

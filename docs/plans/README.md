@@ -21,12 +21,16 @@ Implementation + plan data live together on branch **`cursor/local-continue-579b
 | Settings | Traffic-light select (before / after / off), strike-through, auto-check |
 | Broken Links UX (0.4.0) | Ampel, AJAX save/recheck, new-URL field, last-checked time |
 | **`ub-timeline`** | Title/description table + SSR preview; Interactivity toggle (`timeline-block.md`) |
+| **`ub-callout`** | Info/tip/warning/success callout (`daily-helpers.md`) |
+| **`ub-toc`** | Auto table of contents from post headings (`daily-helpers.md`) |
+| Heading ± toolbar | − / + on `core/heading` in the editor |
 | License decision | GPL “AS IS”; **no** activation disclaimer gate (`legal-disclaimer.md`) |
 
 ### Still planned (not implemented)
 
 | Item | Plan doc |
 |------|----------|
+| More daily helpers (FAQ, reading time, …) | `daily-helpers.md` |
 | Link data layer → `ub-link` CPT / `ub-link-list` | `link-blocks.md` |
 | Full Link Checker admin tool (beyond Broken Links) | `link-checker.md` |
 | Heading tools + Headings Converter | `admin-settings-and-headings.md` |
@@ -55,9 +59,10 @@ conditional asset loading. Details in `conventions.md` / `timeline-block.md`.
 
 ## Recommended next work
 
-1. Link data layer / `ub-link-list` — `link-blocks.md` (may evolve the current inline `ub-link`)
-2. Heading tools + Headings Converter — `admin-settings-and-headings.md`
-3. Expand Link Checker toward the full plan — `link-checker.md`
+1. More daily helpers from `daily-helpers.md` (FAQ, reading time, back-to-top, …)
+2. Link data layer / `ub-link-list` — `link-blocks.md` (may evolve the current inline `ub-link`)
+3. Headings Converter admin tool — `admin-settings-and-headings.md`
+4. Expand Link Checker toward the full plan — `link-checker.md`
 
 ## Consolidated open questions (confirm before/at implementation)
 
