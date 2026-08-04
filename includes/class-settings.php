@@ -156,6 +156,18 @@ final class WP_Usefull_Blocks_Settings {
 				),
 			)
 		);
+
+		add_settings_section(
+			'wp_usefull_blocks_ub_timeline',
+			__( 'UB Timeline', 'wp-usefull-blocks' ),
+			static function (): void {
+				echo '<p>' . esc_html__(
+					'No global settings yet. Orientation and expand behaviour are configured per block in the editor sidebar.',
+					'wp-usefull-blocks'
+				) . '</p>';
+			},
+			self::PAGE_SLUG
+		);
 	}
 
 	/**

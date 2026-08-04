@@ -15,6 +15,7 @@ and the modern Block API (v3, `block.json` as the single source of truth).
 wp-usefull-blocks.php          # Plugin bootstrap (registers blocks from build/)
 includes/                      # Shared PHP helpers (gallery, URL status, file mirror, REST)
 src/ub-gallery/                # UB Gallery block (dynamic + Interactivity API)
+src/ub-timeline/               # UB Timeline block (table editor + Interactivity toggle)
 src/ub-link/                   # UB Link block (URL + live status / strike-through)
 src/ub-file/                   # UB File block (URL + optional local media mirror)
 src/shared/                    # Shared front-end styles (status / broken links)
@@ -28,6 +29,7 @@ readme.txt                     # WordPress.org plugin readme
 | Block | Name | Notes |
 | --- | --- | --- |
 | **UB Gallery** | `wp-usefull-blocks/ub-gallery` | Focus image + thumbnail strip; click = lightbox / media link / none |
+| **UB Timeline** | `wp-usefull-blocks/ub-timeline` | Title/description entries; click title to expand; vertical or horizontal |
 | **UB Link** | `wp-usefull-blocks/ub-link` | Normal WP-style link + traffic light; strike-through when broken (global settings) |
 | **UB File** | `wp-usefull-blocks/ub-file` | File URL + manual “Download now” mirror; same status behaviour via global settings |
 | WP Usefull Blocks | `wp-usefull-blocks/wp-usefull-blocks` | Scaffold sample; will be removed later |

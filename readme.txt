@@ -64,6 +64,13 @@ link in all listed posts/pages.
 Mirroring is intentional and manual. Use “Download now” in the editor to copy the file into
 the media library. If you change the source URL later, press Download now again.
 
+= How do I configure the UB Timeline block? =
+
+Insert **UB Timeline**, fill the Title / Description table, and choose Vertical or Horizontal
+in the block sidebar. On small screens a horizontal timeline stacks vertically. Clicking a
+title on the front end expands or collapses its description. There are no required global
+settings under Useful → Settings.
+
 == Screenshots ==
 
 1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
