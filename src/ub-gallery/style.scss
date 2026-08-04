@@ -1,0 +1,182 @@
+/**
+ * Shared styles for the UB Gallery block (editor + front end).
+ */
+
+.wp-block-wp-usefull-blocks-ub-gallery {
+	--ub-gallery-gap: 0.75rem;
+	--ub-gallery-focus-radius: 4px;
+	--ub-gallery-thumb-min: 56px;
+	--ub-gallery-accent: currentcolor;
+	--ub-gallery-thumb-count: 1;
+
+	.ub-gallery__focus {
+		margin: 0 0 var(--ub-gallery-gap);
+		position: relative;
+	}
+
+	.ub-gallery__focus-media,
+	.ub-gallery__focus-button {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		cursor: zoom-in;
+		border-radius: var(--ub-gallery-focus-radius);
+		overflow: hidden;
+	}
+
+	.ub-gallery__focus-media {
+		cursor: pointer;
+	}
+
+	.ub-gallery__focus-media--static {
+		cursor: default;
+	}
+
+	.ub-gallery__focus-image {
+		display: block;
+		width: 100%;
+		height: auto;
+		vertical-align: middle;
+		object-fit: contain;
+	}
+
+	&.is-cropped .ub-gallery__focus-image {
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+	}
+
+	.ub-gallery__thumbs {
+		display: flex;
+		flex-wrap: nowrap;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		overflow-x: auto;
+		scrollbar-width: thin;
+	}
+
+	.ub-gallery__thumb-item {
+
+		/* Size and count follow the gallery images: equal share of the row. */
+		flex: 1 1 calc(100% / var(--ub-gallery-thumb-count));
+		min-width: var(--ub-gallery-thumb-min);
+		max-width: calc(100% / var(--ub-gallery-thumb-count));
+		margin: 0;
+	}
+
+	.ub-gallery__thumb {
+		display: block;
+		width: 100%;
+		aspect-ratio: 1;
+		padding: 0;
+		border: 2px solid transparent;
+		border-radius: 4px;
+		background: transparent;
+		cursor: pointer;
+		overflow: hidden;
+		opacity: 0.75;
+		transition: opacity 0.15s ease, border-color 0.15s ease;
+	}
+
+	.ub-gallery__thumb:hover,
+	.ub-gallery__thumb:focus-visible {
+		opacity: 1;
+		outline: 2px solid var(--ub-gallery-accent);
+		outline-offset: 2px;
+	}
+
+	.ub-gallery__thumb[aria-selected="true"] {
+		opacity: 1;
+		border-color: var(--ub-gallery-accent);
+	}
+
+	.ub-gallery__thumb-image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	&.is-cropped .ub-gallery__thumb-image {
+		object-fit: cover;
+	}
+
+	.ub-gallery__lightbox {
+		position: fixed;
+		inset: 0;
+		z-index: 100000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1.5rem;
+		background: rgba(0, 0, 0, 0.85);
+	}
+
+	.ub-gallery__lightbox[hidden] {
+		display: none !important;
+	}
+
+	.ub-gallery__lightbox-dialog {
+		position: relative;
+		max-width: min(96vw, 1200px);
+		max-height: 92vh;
+	}
+
+	.ub-gallery__lightbox-image {
+		display: block;
+		max-width: 100%;
+		max-height: 80vh;
+		width: auto;
+		height: auto;
+		margin: 0 auto;
+		border-radius: 2px;
+	}
+
+	.ub-gallery__lightbox-captions {
+		margin-top: 0.75rem;
+		color: #fff;
+		text-align: center;
+		font-size: 0.95em;
+		line-height: 1.4;
+	}
+
+	.ub-gallery__lightbox-caption,
+	.ub-gallery__lightbox-gallery-caption {
+		margin: 0.25rem 0 0;
+	}
+
+	.ub-gallery__lightbox-caption[hidden] {
+		display: none !important;
+	}
+
+	.ub-gallery__lightbox-close {
+		position: absolute;
+		top: -0.5rem;
+		right: -0.5rem;
+		z-index: 1;
+		width: 2.25rem;
+		height: 2.25rem;
+		border: 0;
+		border-radius: 999px;
+		background: #fff;
+		color: #111;
+		font-size: 1.25rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.ub-gallery__lightbox-close:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 2px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.wp-block-wp-usefull-blocks-ub-gallery .ub-gallery__thumb {
+		transition: none;
+	}
+}
