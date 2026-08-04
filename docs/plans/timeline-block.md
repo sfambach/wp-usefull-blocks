@@ -179,7 +179,7 @@ New dependency: `@wordpress/server-side-render` (for the preview).
 
 ## 13. Release & versioning (per rules)
 
-- Target version **0.2.0** (new feature → next `*.*.0`).
+- Target version **0.5.0** (new feature → next `*.*.0`).
 - Before release: bundled i18n pass (POT/PO/MO/JSON), update `Readme.md`, `readme.txt`
   changelog, wiki, and project page.
 - Build the release ZIP via `git archive` with the correct `wp-usefull-blocks/` folder prefix.

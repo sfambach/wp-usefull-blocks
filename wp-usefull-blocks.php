@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       WP Usefull Blocks
  * Description:       Some useful blocks for the WordPress Gutenberg editor.
- * Version:           0.4.0
+ * Version:           0.5.0
  * Requires at least: 6.8
  * Requires PHP:      8.1
  * Author:            The WordPress Contributors
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'WP_USEFULL_BLOCKS_VERSION', '0.4.0' );
+define( 'WP_USEFULL_BLOCKS_VERSION', '0.5.0' );
 define( 'WP_USEFULL_BLOCKS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WP_USEFULL_BLOCKS_URL', plugin_dir_url( __FILE__ ) );
 

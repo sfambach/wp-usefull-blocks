@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.4.0
+Stable tag:        0.5.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,11 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.5.0 =
+* Add UB Timeline block: Title/Description table editor, vertical/horizontal layout.
+* Front end click-to-expand descriptions (Interactivity API); SSR preview in the editor.
+* Useful → Settings: placeholder section for UB Timeline (per-block controls in the sidebar).
 
 = 0.4.0 =
 * Broken Links admin: traffic-light status, reason + last-checked time, reload icon.
