@@ -1,0 +1,26 @@
+/**
+ * Editor-only styles for the UB Callout block.
+ */
+
+.ub-callout-editor {
+
+	.ub-callout-editor__fields {
+		display: grid;
+		gap: 0.75rem;
+		margin-bottom: 1rem;
+	}
+
+	.ub-callout-editor__preview-label {
+		margin: 0 0 0.5rem;
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		opacity: 0.7;
+	}
+
+	.ub-callout-editor__preview-empty {
+		margin: 0;
+		opacity: 0.7;
+	}
+}

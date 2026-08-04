@@ -1,0 +1,59 @@
+/**
+ * Shared styles for the UB Callout block.
+ */
+
+.wp-block-wp-usefull-blocks-ub-callout {
+	--ub-callout-accent: #2563eb;
+	--ub-callout-bg: color-mix(in srgb, var(--ub-callout-accent) 10%, transparent);
+	--ub-callout-border: color-mix(in srgb, var(--ub-callout-accent) 35%, transparent);
+
+	display: flex;
+	gap: 0.85rem;
+	align-items: flex-start;
+	margin: 1rem 0;
+	padding: 0.9rem 1rem;
+	border: 1px solid var(--ub-callout-border);
+	border-left: 4px solid var(--ub-callout-accent);
+	border-radius: 4px;
+	background: var(--ub-callout-bg);
+	color: inherit;
+
+	&.is-variant-tip {
+		--ub-callout-accent: #0f766e;
+	}
+
+	&.is-variant-warning {
+		--ub-callout-accent: #b45309;
+	}
+
+	&.is-variant-success {
+		--ub-callout-accent: #15803d;
+	}
+
+	.ub-callout__icon {
+		flex: 0 0 auto;
+		width: 1.25rem;
+		height: 1.25rem;
+		margin-top: 0.1rem;
+		font-size: 1.25rem;
+		line-height: 1;
+		color: var(--ub-callout-accent);
+	}
+
+	.ub-callout__body {
+		min-width: 0;
+		flex: 1 1 auto;
+	}
+
+	.ub-callout__title {
+		margin: 0 0 0.25rem;
+		font-weight: 650;
+		line-height: 1.35;
+	}
+
+	.ub-callout__content {
+		margin: 0;
+		line-height: 1.5;
+		white-space: pre-wrap;
+	}
+}

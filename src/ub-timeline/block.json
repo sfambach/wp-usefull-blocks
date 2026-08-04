@@ -1,0 +1,91 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-timeline",
+	"version": "0.5.0",
+	"title": "UB Timeline",
+	"category": "widgets",
+	"icon": "backup",
+	"description": "A timeline of titled entries with click-to-expand descriptions. Choose horizontal or vertical layout.",
+	"keywords": [
+		"timeline",
+		"history",
+		"chronology",
+		"zeitleiste",
+		"ablauf"
+	],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"orientation": {
+			"type": "string",
+			"default": "vertical",
+			"enum": [ "vertical", "horizontal" ]
+		},
+		"items": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		},
+		"initiallyOpen": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"supports": {
+		"anchor": true,
+		"align": [ "wide", "full" ],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"blockGap": true
+		},
+		"color": {
+			"text": true,
+			"background": true,
+			"gradients": true,
+			"link": false
+		},
+		"__experimentalBorder": {
+			"radius": true,
+			"color": true,
+			"width": true,
+			"style": true,
+			"__experimentalDefaultControls": {
+				"color": true,
+				"radius": true
+			}
+		},
+		"interactivity": true
+	},
+	"example": {
+		"attributes": {
+			"orientation": "vertical",
+			"initiallyOpen": true,
+			"items": [
+				{
+					"id": "example-1",
+					"title": "Kickoff",
+					"description": "Project starts and goals are set."
+				},
+				{
+					"id": "example-2",
+					"title": "Build",
+					"description": "Features ship in iterative releases."
+				},
+				{
+					"id": "example-3",
+					"title": "Launch",
+					"description": "The product goes live."
+				}
+			]
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}
