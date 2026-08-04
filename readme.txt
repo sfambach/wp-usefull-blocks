@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.5.0
+Stable tag:        0.6.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,6 +87,12 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.6.0 =
+* Add UB Callout block (info / tip / warning / success notes).
+* Add UB Table of Contents block from post headings with stable in-page anchors.
+* Add − / + heading level buttons on core Heading blocks in the editor.
+* Document further daily-helper ideas in docs/plans/daily-helpers.md.
 
 = 0.5.0 =
 * Add UB Timeline block: Title/Description table editor, vertical/horizontal layout.
