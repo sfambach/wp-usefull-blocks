@@ -56,10 +56,9 @@ if ( array() === $items ) {
 }
 
 $cache_payload = array(
-	'locale'        => get_locale(),
-	'orientation'   => $orientation,
-	'items'         => $items,
-	'initiallyOpen' => $initially_open,
+	'orientation'    => $orientation,
+	'items'          => $items,
+	'initiallyOpen'  => $initially_open,
 );
 
 // v1: independent toggles, plain-text descriptions, orientation modifier classes.

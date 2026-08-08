@@ -9,7 +9,6 @@
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       wp-usefull-blocks
- * Domain Path:       /languages
  *
  * @package WpUsefullBlocks
  */
@@ -38,18 +37,6 @@ require_once WP_USEFULL_BLOCKS_PATH . 'includes/Admin/class-broken-links-page.ph
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/Admin/class-menu.php';
 
 /**
- * Load plugin translations.
- */
-function wp_usefull_blocks_load_textdomain(): void {
-	load_plugin_textdomain(
-		'wp-usefull-blocks',
-		false,
-		dirname( plugin_basename( __FILE__ ) ) . '/languages'
-	);
-}
-add_action( 'init', 'wp_usefull_blocks_load_textdomain', 1 );
-
-/**
  * Registers the block(s) metadata from the `blocks-manifest.php`.
  */
 function wp_usefull_blocks_block_init(): void {
@@ -65,29 +52,3 @@ function wp_usefull_blocks_block_init(): void {
 	);
 }
 add_action( 'init', 'wp_usefull_blocks_block_init' );
-
-/**
- * Register script translations for block editor assets.
- */
-function wp_usefull_blocks_set_script_translations(): void {
-	$handles = array(
-		'wp-usefull-blocks-ub-callout-editor-script',
-		'wp-usefull-blocks-ub-faq-editor-script',
-		'wp-usefull-blocks-ub-file-editor-script',
-		'wp-usefull-blocks-ub-gallery-editor-script',
-		'wp-usefull-blocks-ub-link-editor-script',
-		'wp-usefull-blocks-ub-reading-time-editor-script',
-		'wp-usefull-blocks-ub-timeline-editor-script',
-		'wp-usefull-blocks-ub-toc-editor-script',
-		'wp-usefull-blocks-wp-usefull-blocks-editor-script',
-	);
-
-	foreach ( $handles as $handle ) {
-		wp_set_script_translations(
-			$handle,
-			'wp-usefull-blocks',
-			WP_USEFULL_BLOCKS_PATH . 'languages'
-		);
-	}
-}
-add_action( 'enqueue_block_editor_assets', 'wp_usefull_blocks_set_script_translations' );

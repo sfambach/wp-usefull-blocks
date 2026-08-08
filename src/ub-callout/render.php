@@ -47,7 +47,6 @@ $icons = array(
 );
 
 $cache_payload = array(
-	'locale'   => get_locale(),
 	'variant'  => $variant,
 	'title'    => $title,
 	'content'  => $body,

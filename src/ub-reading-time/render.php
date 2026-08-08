@@ -74,7 +74,6 @@ if ( $show_word_count ) {
 $display = implode( ' ', $parts );
 
 $cache_payload = array(
-	'locale'         => get_locale(),
 	'postId'         => $post_id,
 	'wordsPerMinute' => $wpm,
 	'showWordCount'  => $show_word_count,

@@ -51,7 +51,6 @@ if ( array() === $headings ) {
 }
 
 $cache_payload = array(
-	'locale'   => get_locale(),
 	'postId'   => $post_id,
 	'title'    => $title,
 	'minLevel' => $min_level,

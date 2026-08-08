@@ -51,7 +51,6 @@ if ( array() === $items ) {
 }
 
 $cache_payload = array(
-	'locale'        => get_locale(),
 	'items'         => $items,
 	'initiallyOpen' => $initially_open,
 );
