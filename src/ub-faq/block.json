@@ -1,0 +1,81 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-faq",
+	"version": "0.7.0",
+	"title": "UB FAQ",
+	"category": "text",
+	"icon": "editor-help",
+	"description": "A question-and-answer accordion. Click a question to reveal its answer.",
+	"keywords": [
+		"faq",
+		"accordion",
+		"questions",
+		"answers",
+		"hilfe",
+		"fragen"
+	],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"items": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		},
+		"initiallyOpen": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"supports": {
+		"anchor": true,
+		"align": [ "wide" ],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"blockGap": true
+		},
+		"color": {
+			"text": true,
+			"background": true,
+			"gradients": true,
+			"link": false
+		},
+		"__experimentalBorder": {
+			"radius": true,
+			"color": true,
+			"width": true,
+			"style": true,
+			"__experimentalDefaultControls": {
+				"color": true,
+				"radius": true
+			}
+		},
+		"interactivity": true
+	},
+	"example": {
+		"attributes": {
+			"initiallyOpen": true,
+			"items": [
+				{
+					"id": "example-1",
+					"question": "What is this block for?",
+					"answer": "It presents frequently asked questions with expandable answers."
+				},
+				{
+					"id": "example-2",
+					"question": "Can visitors open several answers?",
+					"answer": "Yes. Each question toggles independently, like the timeline entries."
+				}
+			]
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

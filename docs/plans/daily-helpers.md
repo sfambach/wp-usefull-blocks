@@ -12,13 +12,15 @@
 - Admin work pages only when there is real list/tool work; Settings stay last under **Useful**.
 - Ship one helper at a time as the next `*.*.0` when the feature is usable.
 
-## Shipping in this iteration (0.6.0 target)
+## Shipped
 
-| Helper | Why it helps daily |
-|--------|--------------------|
-| **`ub-callout`** | Info / tip / warning / success boxes without custom HTML |
-| **`ub-toc`** | Auto table of contents from post headings with stable anchors |
-| **Heading ± toolbar** | Faster outline edits on `core/heading` (− / + level) |
+| Helper | Release | Why it helps daily |
+|--------|---------|--------------------|
+| **`ub-callout`** | 0.6.0 | Info / tip / warning / success boxes without custom HTML |
+| **`ub-toc`** | 0.6.0 | Auto table of contents from post headings with stable anchors |
+| **Heading ± toolbar** | 0.6.0 | Faster outline edits on `core/heading` (− / + level) |
+| **`ub-faq`** | 0.7.0 | Q&A accordion (timeline toggle pattern; question/answer rows) |
+| **`ub-reading-time`** | 0.7.0 | Estimated reading time from post word count |
 
 ## Idea backlog (implement later, pick by usefulness)
 
@@ -26,8 +28,6 @@
 
 | Idea | Notes |
 |------|-------|
-| **`ub-faq`** | Q&A accordion (reuse timeline toggle pattern; question/answer rows) |
-| **`ub-reading-time`** | Estimated reading time from post word count |
 | **`ub-back-to-top`** | Accessible “Back to top” control (Interactivity smooth scroll + reduced motion) |
 | **`ub-breadcrumb`** | Simple post/page breadcrumb trail |
 | **`ub-related`** | Related posts by category/tag (cached query) |
@@ -62,3 +62,7 @@
 - TOC: built from `core/heading` in the **same post**; min/max level attributes; inject missing
   heading `id`s via `render_block` so links work.
 - Heading ±: editor-only asset (`assets/editor-heading-toolbar.js`), no experimental WP APIs.
+- FAQ: **independent** toggles (not exclusive accordion); plain-text question/answer; same
+  Interactivity store pattern as timeline.
+- Reading time: default **200 WPM** (clamped 50–600); optional prefix + word-count; uses
+  `postId` context like TOC.

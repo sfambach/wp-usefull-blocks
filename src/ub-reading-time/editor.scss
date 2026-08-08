@@ -1,0 +1,21 @@
+/**
+ * Editor-only styles for the UB Reading Time block.
+ */
+
+.ub-reading-time-editor {
+
+	.ub-reading-time-editor__preview-label {
+		margin: 0 0 0.5rem;
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		opacity: 0.7;
+	}
+
+	.ub-reading-time-editor__help {
+		margin: 0 0 0.75rem;
+		opacity: 0.75;
+		font-size: 13px;
+	}
+}

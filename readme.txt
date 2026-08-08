@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.6.0
+Stable tag:        0.7.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,8 +11,9 @@ Some useful blocks for the WordPress Gutenberg editor.
 == Description ==
 
 WP Usefull Blocks provides practical Gutenberg blocks. This release includes **UB Gallery**
-(eBay-style focus image + thumbnails), **UB Link** (URL with live status), and **UB File**
-(file URL with optional local media mirror via “Download now”).
+(eBay-style focus image + thumbnails), **UB Link** (URL with live status), **UB File**
+(file URL with optional local media mirror via “Download now”), **UB FAQ** (Q&A accordion),
+and **UB Reading Time** (estimated minutes from post word count).
 
 Under the top-level **Useful** menu: Broken Links (list + edit URLs) and Settings.
 When enabled, every normal WordPress link in post/page content gets a traffic-light status
@@ -78,6 +79,13 @@ settings under Useful → Settings.
 sidebar. On the front end, headings get stable `id`s so TOC links jump correctly. In the
 editor, core Heading blocks also get **− / +** toolbar buttons to change the level quickly.
 
+= How do UB FAQ and Reading Time work? =
+
+**UB FAQ** uses a Question / Answer table in the editor. On the front end, each question
+toggles its answer independently (same Interactivity pattern as UB Timeline).
+**UB Reading Time** estimates minutes from this post’s word count (default 200 words/minute).
+Optional prefix label and word-count display are in the block sidebar.
+
 == Screenshots ==
 
 1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
@@ -87,6 +95,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.7.0 =
+* Add UB FAQ block: Question/Answer table editor with click-to-expand answers.
+* Add UB Reading Time block: estimated minutes from post word count (configurable WPM).
 
 = 0.6.0 =
 * Add UB Callout block (info / tip / warning / success notes).

@@ -24,13 +24,15 @@ Implementation + plan data live together on branch **`cursor/local-continue-579b
 | **`ub-callout`** | Info/tip/warning/success callout (`daily-helpers.md`) |
 | **`ub-toc`** | Auto table of contents from post headings (`daily-helpers.md`) |
 | Heading ± toolbar | − / + on `core/heading` in the editor |
+| **`ub-faq`** | Q&A accordion; Interactivity toggle (`daily-helpers.md`) |
+| **`ub-reading-time`** | Estimated minutes from post word count (`daily-helpers.md`) |
 | License decision | GPL “AS IS”; **no** activation disclaimer gate (`legal-disclaimer.md`) |
 
 ### Still planned (not implemented)
 
 | Item | Plan doc |
 |------|----------|
-| More daily helpers (FAQ, reading time, …) | `daily-helpers.md` |
+| More daily helpers (back-to-top, breadcrumbs, …) | `daily-helpers.md` |
 | Link data layer → `ub-link` CPT / `ub-link-list` | `link-blocks.md` |
 | Full Link Checker admin tool (beyond Broken Links) | `link-checker.md` |
 | Heading tools + Headings Converter | `admin-settings-and-headings.md` |
@@ -59,7 +61,7 @@ conditional asset loading. Details in `conventions.md` / `timeline-block.md`.
 
 ## Recommended next work
 
-1. More daily helpers from `daily-helpers.md` (FAQ, reading time, back-to-top, …)
+1. More daily helpers from `daily-helpers.md` (back-to-top, breadcrumbs, related, …)
 2. Link data layer / `ub-link-list` — `link-blocks.md` (may evolve the current inline `ub-link`)
 3. Headings Converter admin tool — `admin-settings-and-headings.md`
 4. Expand Link Checker toward the full plan — `link-checker.md`

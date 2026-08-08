@@ -1,0 +1,61 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-reading-time",
+	"version": "0.7.0",
+	"title": "UB Reading Time",
+	"category": "widgets",
+	"icon": "clock",
+	"description": "Shows an estimated reading time based on this post’s word count.",
+	"keywords": [
+		"reading time",
+		"minutes",
+		"word count",
+		"lesezeit",
+		"dauer"
+	],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"wordsPerMinute": {
+			"type": "number",
+			"default": 200
+		},
+		"showWordCount": {
+			"type": "boolean",
+			"default": false
+		},
+		"prefix": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"usesContext": [ "postId", "postType" ],
+	"supports": {
+		"anchor": true,
+		"align": [ "wide" ],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"color": {
+			"text": true,
+			"background": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"example": {
+		"attributes": {
+			"wordsPerMinute": 200,
+			"showWordCount": true,
+			"prefix": ""
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}
