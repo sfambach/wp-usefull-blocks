@@ -55,9 +55,11 @@ Top-level menu **Useful**:
 
 These settings apply to **all normal WordPress links** in post/page content site-wide.
 
-## Development
+## Localization
 
-Install dependencies:
+Source strings are English (WordPress convention). A German translation (`de_DE`) ships in
+`languages/` (`wp-usefull-blocks-de_DE.po` / `.mo` plus block-editor JSON). Set the site language
+to **Deutsch** under Settings → General to use it.
 
 ```bash
 npm install

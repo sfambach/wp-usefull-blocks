@@ -1,0 +1,600 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Usefull Blocks 0.7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-08 12:55+0000\n"
+"PO-Revision-Date: 2026-08-08 12:55+0000\n"
+"Last-Translator: Cursor Agent\n"
+"Language-Team: German\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "(local copy available)"
+msgstr "(lokale Kopie verfügbar)"
+
+msgid "A normal WordPress-style link with optional traffic-light status (global setting)."
+msgstr "Ein normaler WordPress-Link mit optionalem Ampel-Status (globale Einstellung)."
+
+msgid "A question-and-answer accordion. Click a question to reveal its answer."
+msgstr "Frage-Antwort-Akkordeon. Klick auf eine Frage zeigt die Antwort."
+
+msgid "A timeline of titled entries with click-to-expand descriptions. Choose horizontal or vertical layout."
+msgstr "Zeitleiste mit betitelten Einträgen und aufklappbaren Beschreibungen. Horizontal oder vertikal."
+
+msgid "Add"
+msgstr "Hinzufügen"
+
+msgid "Add a title or message to preview the callout."
+msgstr "Titel oder Nachricht hinzufügen, um den Hinweis zu sehen."
+
+msgid "Add at least one entry to see the front-end preview."
+msgstr "Mindestens einen Eintrag hinzufügen, um die Frontend-Vorschau zu sehen."
+
+msgid "Add at least one question to see the front-end preview."
+msgstr "Mindestens eine Frage hinzufügen, um die Frontend-Vorschau zu sehen."
+
+msgid "Add entry"
+msgstr "Eintrag hinzufügen"
+
+msgid "Add question"
+msgstr "Frage hinzufügen"
+
+msgid "After the link"
+msgstr "Nach dem Link"
+
+msgid "Answer"
+msgstr "Antwort"
+
+msgid "Answer…"
+msgstr "Antwort…"
+
+msgid "Auto-check URLs"
+msgstr "URLs automatisch prüfen"
+
+msgid "Automatically lists this post’s headings as an on-page table of contents."
+msgstr "Listet die Überschriften dieses Beitrags automatisch als Inhaltsverzeichnis."
+
+msgid "Average adult reading speed is about 200–250 WPM."
+msgstr "Die durchschnittliche Lesegeschwindigkeit Erwachsener liegt bei etwa 200–250 WPM."
+
+msgid "Before the link"
+msgstr "Vor dem Link"
+
+msgid "Broken"
+msgstr "Kaputt"
+
+msgid "Broken Links"
+msgstr "Kaputte Links"
+
+msgid "Calculated from this post’s content. Add body text, then the preview updates."
+msgstr "Berechnet aus dem Inhalt dieses Beitrags. Text hinzufügen, dann aktualisiert sich die Vorschau."
+
+msgid "Captions are shown in the full-size (lightbox) view only."
+msgstr "Bildunterschriften nur in der Vollansicht (Lightbox)."
+
+msgid "Check URL now"
+msgstr "URL jetzt prüfen"
+
+msgid "Check URLs when a page is rendered (cached) and refresh them via WP-Cron."
+msgstr "URLs beim Rendern einer Seite prüfen (zwischengespeichert) und per WP-Cron aktualisieren."
+
+msgid "Close lightbox"
+msgstr "Lightbox schließen"
+
+msgid "Contents"
+msgstr "Inhalt"
+
+msgid "Could not check this URL."
+msgstr "Diese URL konnte nicht geprüft werden."
+
+msgid "Crop images to fit"
+msgstr "Bilder passend zuschneiden"
+
+msgid "Decrease heading level"
+msgstr "Überschriftenebene verringern"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Description…"
+msgstr "Beschreibung…"
+
+msgid "Do not link the focus image."
+msgstr "Fokusbild nicht verlinken."
+
+msgid "Download failed. Check the URL and permissions."
+msgstr "Download fehlgeschlagen. URL und Berechtigungen prüfen."
+
+msgid "Download file"
+msgstr "Datei herunterladen"
+
+msgid "Download now"
+msgstr "Jetzt herunterladen"
+
+msgid "Download now (refresh)"
+msgstr "Jetzt herunterladen (aktualisieren)"
+
+msgid "Drag images, upload new ones, or select from the media library."
+msgstr "Bilder ziehen, hochladen oder aus der Mediathek wählen."
+
+msgid "Edit gallery"
+msgstr "Galerie bearbeiten"
+
+msgid "Edit images"
+msgstr "Bilder bearbeiten"
+
+msgid "Edit link"
+msgstr "Link bearbeiten"
+
+msgid "Empty URL."
+msgstr "Leere URL."
+
+msgid "Enabled"
+msgstr "Aktiviert"
+
+msgid "Enlarge on click"
+msgstr "Bei Klick vergrößern"
+
+msgid "Enter a file URL first."
+msgstr "Zuerst eine Datei-URL eingeben."
+
+msgid "Entry %d"
+msgstr "Eintrag %d"
+
+msgid "Entry title…"
+msgstr "Eintragstitel…"
+
+msgid "Expand answers by default"
+msgstr "Antworten standardmäßig aufgeklappt"
+
+msgid "Expand descriptions by default"
+msgstr "Beschreibungen standardmäßig aufgeklappt"
+
+msgid "File URL"
+msgstr "Datei-URL"
+
+msgid "File downloaded into the media library."
+msgstr "Datei in die Mediathek heruntergeladen."
+
+msgid "File exceeds the maximum allowed size (%s MB)."
+msgstr "Datei überschreitet die maximal erlaubte Größe (%s MB)."
+
+msgid "File settings"
+msgstr "Datei-Einstellungen"
+
+msgid "Forbidden."
+msgstr "Verboten."
+
+msgid "Found in:"
+msgstr "Gefunden in:"
+
+msgid "Highlight a tip, info, warning, or success note for readers."
+msgstr "Tipp-, Info-, Warn- oder Erfolgs-Hinweis für Leser hervorheben."
+
+msgid "Horizontal"
+msgstr "Horizontal"
+
+msgid "Image lightbox"
+msgstr "Bild-Lightbox"
+
+msgid "Increase heading level"
+msgstr "Überschriftenebene erhöhen"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Internal URL could not be verified."
+msgstr "Interne URL konnte nicht verifiziert werden."
+
+msgid "Internal content exists."
+msgstr "Interner Inhalt vorhanden."
+
+msgid "Internal content is not published."
+msgstr "Interner Inhalt ist nicht veröffentlicht."
+
+msgid "Last scan: %s"
+msgstr "Letzter Scan: %s"
+
+msgid "Last status:"
+msgstr "Letzter Status:"
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Link behavior"
+msgstr "Link-Verhalten"
+
+msgid "Link images directly to media files."
+msgstr "Bilder direkt mit Mediendateien verknüpfen."
+
+msgid "Link images to attachment pages"
+msgstr "Bilder mit Anhangsseiten verknüpfen"
+
+msgid "Link images to media files"
+msgstr "Bilder mit Mediendateien verknüpfen"
+
+msgid "Link images to their attachment pages."
+msgstr "Bilder mit ihren Anhangsseiten verknüpfen."
+
+msgid "Link label"
+msgstr "Link-Beschriftung"
+
+msgid "Link status: Broken"
+msgstr "Link-Status: Kaputt"
+
+msgid "Link status: OK"
+msgstr "Link-Status: OK"
+
+msgid "Link status: Unknown"
+msgstr "Link-Status: Unbekannt"
+
+msgid "Link text…"
+msgstr "Linktext…"
+
+msgid "Link to a remote file, optionally mirror it into the media library with Download now, and show link status."
+msgstr "Auf eine Remote-Datei verlinken, optional mit „Jetzt herunterladen“ in die Mediathek spiegeln und Link-Status anzeigen."
+
+msgid "Links"
+msgstr "Links"
+
+msgid "Lists headings from this post. Add Heading blocks below, then the preview updates."
+msgstr "Listet Überschriften aus diesem Beitrag. Überschriften-Blöcke darunter einfügen, dann aktualisiert sich die Vorschau."
+
+msgid "Lists links found in published posts and pages with a traffic-light status. Update a URL to replace it everywhere it appears; only the traffic light updates until you reload the page."
+msgstr "Listet Links aus veröffentlichten Beiträgen und Seiten mit Ampel-Status. URL aktualisieren, um sie überall zu ersetzen; bis zum Neuladen aktualisiert sich nur die Ampel."
+
+msgid "Local copy only"
+msgstr "Nur lokale Kopie"
+
+msgid "Local media file exists."
+msgstr "Lokale Mediendatei vorhanden."
+
+msgid "Local media file missing."
+msgstr "Lokale Mediendatei fehlt."
+
+msgid "Maximum heading level"
+msgstr "Maximale Überschriftenebene"
+
+msgid "Media attachment ID:"
+msgstr "Medien-Anhang-ID:"
+
+msgid "Message"
+msgstr "Nachricht"
+
+msgid "Minimum heading level"
+msgstr "Minimale Überschriftenebene"
+
+msgid "Mirroring is manual. Press “Download now” to copy the file into the media library. If you change the URL later, press Download now again."
+msgstr "Spiegeln ist manuell. „Jetzt herunterladen“ drücken, um die Datei in die Mediathek zu kopieren. Bei URL-Änderung erneut „Jetzt herunterladen“ drücken."
+
+msgid "Move down"
+msgstr "Nach unten"
+
+msgid "Move up"
+msgstr "Nach oben"
+
+msgid "New URL"
+msgstr "Neue URL"
+
+msgid "New link status:"
+msgstr "Neuer Link-Status:"
+
+msgid "No entries yet. Add a title and description to build the timeline."
+msgstr "Noch keine Einträge. Titel und Beschreibung hinzufügen, um die Zeitleiste aufzubauen."
+
+msgid "No global settings yet. Orientation and expand behaviour are configured per block in the editor sidebar."
+msgstr "Noch keine globalen Einstellungen. Ausrichtung und Aufklapp-Verhalten werden pro Block in der Seitenleiste eingestellt."
+
+msgid "No global settings yet. Title and heading levels are configured per block. Heading ± buttons are always available on core Heading blocks in the editor."
+msgstr "Noch keine globalen Einstellungen. Titel und Überschriftenebenen werden pro Block eingestellt. ±-Buttons sind im Editor immer bei Kern-Überschriften verfügbar."
+
+msgid "No global settings yet. Type, title, and message are configured per block."
+msgstr "Noch keine globalen Einstellungen. Typ, Titel und Nachricht werden pro Block eingestellt."
+
+msgid "No headings found in this post for the selected levels."
+msgstr "Keine Überschriften für die gewählten Ebenen in diesem Beitrag gefunden."
+
+msgid "No links indexed yet. Run a scan to refresh."
+msgstr "Noch keine Links indexiert. Scan ausführen, um zu aktualisieren."
+
+msgid "No questions yet. Add a question and answer to build the FAQ."
+msgstr "Noch keine Fragen. Frage und Antwort hinzufügen, um die FAQ aufzubauen."
+
+msgid "No readable text found in this post yet."
+msgstr "In diesem Beitrag wurde noch kein lesbarer Text gefunden."
+
+msgid "None"
+msgstr "Keine"
+
+msgid "Not checked yet — run Scan again."
+msgstr "Noch nicht geprüft — Scan erneut ausführen."
+
+msgid "Numbered list"
+msgstr "Nummerierte Liste"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Off"
+msgstr "Aus"
+
+msgid "Old URL"
+msgstr "Alte URL"
+
+msgid "On small screens a horizontal timeline stacks vertically."
+msgstr "Auf kleinen Bildschirmen wird eine horizontale Zeitleiste vertikal gestapelt."
+
+msgid "On the front end, render broken content links with a strike-through."
+msgstr "Kaputte Inhalts-Links im Frontend durchgestrichen darstellen."
+
+msgid "Open image in lightbox"
+msgstr "Bild in Lightbox öffnen"
+
+msgid "Open images in new tab"
+msgstr "Bilder in neuem Tab öffnen"
+
+msgid "Open in new tab"
+msgstr "In neuem Tab öffnen"
+
+msgid "Optional heading above the list."
+msgstr "Optionale Überschrift über der Liste."
+
+msgid "Optional title…"
+msgstr "Optionaler Titel…"
+
+msgid "Optional, e.g. Reading time:"
+msgstr "Optional, z. B. Lesezeit:"
+
+msgid "Orientation"
+msgstr "Ausrichtung"
+
+msgid "Original only"
+msgstr "Nur Original"
+
+msgid "Original, fallback to local copy"
+msgstr "Original, Fallback auf lokale Kopie"
+
+msgid "Please enter a new URL."
+msgstr "Bitte eine neue URL eingeben."
+
+msgid "Please provide a file URL."
+msgstr "Bitte eine Datei-URL angeben."
+
+msgid "Post #%d"
+msgstr "Beitrag #%d"
+
+msgid "Post not found."
+msgstr "Beitrag nicht gefunden."
+
+msgid "Prefix label"
+msgstr "Vorspann-Text"
+
+msgid "Preview"
+msgstr "Vorschau"
+
+msgid "Question"
+msgstr "Frage"
+
+msgid "Question %d"
+msgstr "Frage %d"
+
+msgid "Question…"
+msgstr "Frage…"
+
+msgid "Randomize order"
+msgstr "Reihenfolge zufällig"
+
+msgid "Recheck"
+msgstr "Erneut prüfen"
+
+msgid "Remove entry"
+msgstr "Eintrag entfernen"
+
+msgid "Remove images"
+msgstr "Bilder entfernen"
+
+msgid "Resolution"
+msgstr "Auflösung"
+
+msgid "Row actions"
+msgstr "Zeilenaktionen"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Scale images with a lightbox effect."
+msgstr "Bilder mit Lightbox-Effekt vergrößern."
+
+msgid "Scan complete. Checked %1$d posts/pages, %2$d unique URLs, %3$d broken."
+msgstr "Scan abgeschlossen. %1$d Beiträge/Seiten, %2$d eindeutige URLs, %3$d kaputt geprüft."
+
+msgid "Scan now"
+msgstr "Jetzt scannen"
+
+msgid "Select the size of the source images."
+msgstr "Größe der Quellbilder wählen."
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Show icon"
+msgstr "Symbol anzeigen"
+
+msgid "Show image %d"
+msgstr "Bild %d anzeigen"
+
+msgid "Show the status indicator before or after every content link, or turn it off. Default: before."
+msgstr "Statusanzeige vor oder nach jedem Inhalts-Link anzeigen oder ausschalten. Standard: vorher."
+
+msgid "Show word count"
+msgstr "Wortanzahl anzeigen"
+
+msgid "Shown before the estimate. Leave empty for the default phrasing only."
+msgstr "Wird vor der Schätzung angezeigt. Leer lassen für nur die Standardformulierung."
+
+msgid "Shows an estimated reading time based on this post’s word count."
+msgstr "Zeigt eine geschätzte Lesezeit basierend auf der Wortanzahl dieses Beitrags."
+
+msgid "Site home URL."
+msgstr "Website-Start-URL."
+
+msgid "Some useful blocks for the WordPress Gutenberg editor."
+msgstr "Nützliche Blöcke für den WordPress-Gutenberg-Editor."
+
+msgid "Something went wrong. Please try again."
+msgstr "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Status indicators and strike-through are controlled under Settings → Usefull Blocks."
+msgstr "Statusanzeigen und Durchstreichung werden unter Einstellungen → Usefull Blocks gesteuert."
+
+msgid "Strike through broken links"
+msgstr "Kaputte Links durchstreichen"
+
+msgid "Success"
+msgstr "Erfolg"
+
+msgid "Table of contents"
+msgstr "Inhaltsverzeichnis"
+
+msgid "The URL changed since the last download. Press Download now to refresh the local copy."
+msgstr "Die URL hat sich seit dem letzten Download geändert. „Jetzt herunterladen“ drücken, um die lokale Kopie zu aktualisieren."
+
+msgid "These options apply to every normal WordPress link in post and page content site-wide. When enabled, links show a traffic-light status and optional strike-through for broken URLs."
+msgstr "Diese Optionen gelten seitenweit für alle normalen WordPress-Links in Beitrags- und Seiteninhalten. Wenn aktiviert, zeigen Links einen Ampel-Status und optional Durchstreichung bei kaputten URLs."
+
+msgid "This link appears to be broken."
+msgstr "Dieser Link scheint kaputt zu sein."
+
+msgid "Tip"
+msgstr "Tipp"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Traffic-light status"
+msgstr "Ampel-Status"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "UB Callout"
+msgstr "UB Hinweis"
+
+msgid "UB FAQ"
+msgstr "UB FAQ"
+
+msgid "UB File"
+msgstr "UB Datei"
+
+msgid "UB Gallery"
+msgstr "UB Galerie"
+
+msgid "UB Link"
+msgstr "UB Link"
+
+msgid "UB Reading Time"
+msgstr "UB Lesezeit"
+
+msgid "UB Table of Contents"
+msgstr "UB Inhaltsverzeichnis"
+
+msgid "UB Timeline"
+msgstr "UB Zeitleiste"
+
+msgid "URL looks OK."
+msgstr "URL sieht in Ordnung aus."
+
+msgid "URL looks broken."
+msgstr "URL sieht kaputt aus."
+
+msgid "URL not found in this post."
+msgstr "URL in diesem Beitrag nicht gefunden."
+
+msgid "URL rechecked."
+msgstr "URL erneut geprüft."
+
+msgid "URL rechecked. Status: %s"
+msgstr "URL erneut geprüft. Status: %s"
+
+msgid "URL status is unclear — check manually."
+msgstr "URL-Status unklar — manuell prüfen."
+
+msgid "URL updated. Traffic light refreshed; reload the page to refresh the list."
+msgstr "URL aktualisiert. Ampel aktualisiert; Seite neu laden, um die Liste zu aktualisieren."
+
+msgid "Unknown"
+msgstr "Unbekannt"
+
+msgid "Unlink"
+msgstr "Link entfernen"
+
+msgid "Updated the URL in %1$d post(s). Status: %2$s"
+msgstr "URL in %1$d Beitrag/Beiträgen aktualisiert. Status: %2$s"
+
+msgid "Updated the URL in %d post(s)."
+msgstr "URL in %d Beitrag/Beiträgen aktualisiert."
+
+msgid "Useful"
+msgstr "Useful"
+
+msgid "Useful Settings"
+msgstr "Useful-Einstellungen"
+
+msgid "Vertical"
+msgstr "Vertikal"
+
+msgid "WP Usefull Blocks"
+msgstr "WP Usefull Blocks"
+
+msgid "WP Usefull Blocks – hello from the editor!"
+msgstr "WP Usefull Blocks – Hallo aus dem Editor!"
+
+msgid "Warning"
+msgstr "Warnung"
+
+msgid "When off, visitors click a question to reveal its answer."
+msgstr "Wenn aus, öffnen Besucher die Antwort per Klick auf die Frage."
+
+msgid "When off, visitors click a title to reveal its description."
+msgstr "Wenn aus, öffnen Besucher die Beschreibung per Klick auf den Titel."
+
+msgid "Words per minute"
+msgstr "Wörter pro Minute"
+
+msgid "Write gallery caption…"
+msgstr "Galerie-Beschriftung schreiben…"
+
+msgid "Write the callout message…"
+msgstr "Hinweistext schreiben…"
+
+msgid "You are not allowed to upload files."
+msgstr "Du darfst keine Dateien hochladen."
+
+msgid "You cannot edit this post."
+msgstr "Du kannst diesen Beitrag nicht bearbeiten."
+
+msgid "checking…"
+msgstr "prüfe…"
+
+msgid "eBay-style gallery with one large focus image and a selectable thumbnail strip."
+msgstr "eBay-ähnliche Galerie mit großem Fokusbild und auswählbarer Thumbnail-Leiste."
+
+msgid "%d min read"
+msgid_plural "%d min read"
+msgstr[0] "%d Min. Lesezeit"
+msgstr[1] "%d Min. Lesezeit"
+
+msgid "(%d word)"
+msgid_plural "(%d words)"
+msgstr[0] "(%d Wort)"
+msgstr[1] "(%d Wörter)"
+
+msgctxt "Media item link option"
+msgid "None"
+msgstr "Keine"
