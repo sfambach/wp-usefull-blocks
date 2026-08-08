@@ -1,0 +1,18 @@
+/**
+ * Shared styles for the UB Reading Time block.
+ */
+
+.wp-block-wp-usefull-blocks-ub-reading-time {
+	margin: 0.5rem 0;
+	opacity: 0.85;
+	line-height: 1.4;
+
+	&.ub-reading-time--empty {
+		opacity: 0.7;
+		font-style: italic;
+	}
+
+	.ub-reading-time__label {
+		display: inline;
+	}
+}
