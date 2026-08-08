@@ -49,6 +49,7 @@ $selected_index = 0;
 $thumb_count = count( $images );
 
 $cache_payload = array(
+	'locale'        => get_locale(),
 	'images'        => $images,
 	'selectedIndex' => $selected_index,
 	'linkTo'        => $link_to,
