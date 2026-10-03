@@ -1,0 +1,71 @@
+/**
+ * Editor-only styles for the UB Timeline block.
+ */
+
+.ub-timeline-editor {
+
+	.ub-timeline-editor__table-wrap {
+		margin-bottom: 1.25rem;
+	}
+
+	.ub-timeline-editor__table {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 0 0 0.75rem;
+
+		th,
+		td {
+			padding: 0.5rem 0.4rem;
+			vertical-align: top;
+			border-bottom: 1px solid color-mix(in srgb, currentcolor 12%, transparent);
+			text-align: left;
+		}
+
+		th {
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			opacity: 0.75;
+		}
+	}
+
+	.ub-timeline-editor__actions-heading {
+		width: 7rem;
+	}
+
+	.ub-timeline-editor__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.15rem;
+		align-items: flex-start;
+	}
+
+	.ub-timeline-editor__empty {
+		margin: 0.5rem 0;
+		opacity: 0.75;
+	}
+
+	.ub-timeline-editor__add {
+		margin-top: 0.25rem;
+	}
+
+	.ub-timeline-editor__preview-label {
+		margin: 0 0 0.5rem;
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		opacity: 0.7;
+	}
+
+	.ub-timeline-editor__preview-empty {
+		margin: 0;
+		opacity: 0.7;
+	}
+
+	/* Soften interactivity affordances in the static SSR preview. */
+	.ub-timeline__title {
+		pointer-events: none;
+	}
+}

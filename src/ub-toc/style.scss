@@ -1,0 +1,50 @@
+/**
+ * Shared styles for the UB Table of Contents block.
+ */
+
+.wp-block-wp-usefull-blocks-ub-toc {
+	--ub-toc-indent: 1rem;
+	--ub-toc-border: color-mix(in srgb, currentcolor 14%, transparent);
+
+	margin: 1.25rem 0;
+	padding: 1rem 1.1rem;
+	border: 1px solid var(--ub-toc-border);
+	border-radius: 4px;
+
+	.ub-toc__title {
+		margin: 0 0 0.65rem;
+		font-weight: 650;
+		line-height: 1.3;
+	}
+
+	.ub-toc__list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.ub-toc__item {
+		margin: 0.2rem 0;
+		padding-left: calc(var(--ub-toc-depth, 0) * var(--ub-toc-indent));
+	}
+
+	.ub-toc__link {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+	}
+
+	.ub-toc__link:focus-visible {
+		outline: 2px solid currentcolor;
+		outline-offset: 2px;
+	}
+
+	.ub-toc__empty {
+		margin: 0;
+		opacity: 0.75;
+	}
+
+	&.ub-toc--empty {
+		border-style: dashed;
+	}
+}

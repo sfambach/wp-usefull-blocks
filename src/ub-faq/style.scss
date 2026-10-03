@@ -1,0 +1,91 @@
+/**
+ * Shared styles for the UB FAQ block (editor + front end).
+ */
+
+.wp-block-wp-usefull-blocks-ub-faq {
+	--ub-faq-border: color-mix(in srgb, currentcolor 16%, transparent);
+	--ub-faq-gap: 0.5rem;
+
+	.ub-faq__list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--ub-faq-gap);
+		margin: 0;
+		padding: 0;
+	}
+
+	.ub-faq__item {
+		border: 1px solid var(--ub-faq-border);
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	.ub-faq__question-heading {
+		margin: 0;
+		font-size: inherit;
+		font-weight: inherit;
+	}
+
+	.ub-faq__question {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 0.75rem;
+		width: 100%;
+		margin: 0;
+		padding: 0.75rem 0.9rem;
+		border: 0;
+		background: color-mix(in srgb, currentcolor 4%, transparent);
+		color: inherit;
+		font: inherit;
+		font-weight: 650;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.ub-faq__question:focus-visible {
+		outline: 2px solid currentcolor;
+		outline-offset: -2px;
+	}
+
+	.ub-faq__question-text {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.ub-faq__chevron {
+		flex: 0 0 auto;
+		width: 0.55rem;
+		height: 0.55rem;
+		margin-top: 0.35rem;
+		border-right: 2px solid currentcolor;
+		border-bottom: 2px solid currentcolor;
+		transform: rotate(45deg);
+		opacity: 0.7;
+		transition: transform 0.2s ease;
+	}
+
+	.ub-faq__item.is-open .ub-faq__chevron {
+		margin-top: 0.5rem;
+		transform: rotate(225deg);
+	}
+
+	.ub-faq__answer {
+		margin: 0;
+		padding: 0 0.9rem 0.85rem;
+		opacity: 0.9;
+		line-height: 1.5;
+		white-space: pre-wrap;
+	}
+
+	.ub-faq__answer[hidden] {
+		display: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+
+		.ub-faq__chevron {
+			transition: none;
+		}
+	}
+}

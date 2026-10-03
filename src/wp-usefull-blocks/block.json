@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/wp-usefull-blocks",
+	"version": "0.1.0",
+	"title": "WP Usefull Blocks",
+	"category": "widgets",
+	"icon": "smiley",
+	"description": "Some useful blocks for the WordPress Gutenberg editor.",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "wp-usefull-blocks",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}
