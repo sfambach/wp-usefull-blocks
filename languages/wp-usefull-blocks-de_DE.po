@@ -598,3 +598,12 @@ msgstr[1] "(%d Wörter)"
 msgctxt "Media item link option"
 msgid "None"
 msgstr "Keine"
+
+msgid "Copy"
+msgstr "Kopieren"
+
+msgid "Copied"
+msgstr "Kopiert"
+
+msgid "Copy code to clipboard"
+msgstr "Code in die Zwischenablage kopieren"

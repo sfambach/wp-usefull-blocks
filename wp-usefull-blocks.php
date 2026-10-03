@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       WP Usefull Blocks
  * Description:       Some useful blocks for the WordPress Gutenberg editor.
- * Version:           0.7.0
+ * Version:           0.8.0
  * Requires at least: 6.8
  * Requires PHP:      8.1
  * Author:            The WordPress Contributors
@@ -10,6 +10,9 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       wp-usefull-blocks
  * Domain Path:       /languages
+ * GitHub Plugin URI: sfambach/wp-usefull-blocks
+ * Primary Branch:    main
+ * Release Asset:     true
  *
  * @package WpUsefullBlocks
  */
@@ -18,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'WP_USEFULL_BLOCKS_VERSION', '0.7.0' );
+define( 'WP_USEFULL_BLOCKS_VERSION', '0.8.0' );
 define( 'WP_USEFULL_BLOCKS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WP_USEFULL_BLOCKS_URL', plugin_dir_url( __FILE__ ) );
 
@@ -26,6 +29,7 @@ require_once WP_USEFULL_BLOCKS_PATH . 'includes/ub-gallery.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-toc.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-reading-time.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-heading-toolbar.php';
+require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-code-copy.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-settings.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-url-status.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-file-mirror.php';

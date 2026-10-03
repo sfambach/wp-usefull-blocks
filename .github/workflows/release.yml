@@ -1,0 +1,41 @@
+name: Build and Package Plugin
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Build blocks
+        run: |
+          npm ci
+          npm run build
+
+      - name: Create ZIP Deployment Package
+        run: |
+          mkdir -p dist/wp-usefull-blocks
+          tar --exclude=./.git --exclude=./.github --exclude=./dist --exclude=./node_modules \
+            --exclude=./src --exclude=./docs --exclude=./coverage --exclude='*.zip' \
+            -cf - . | tar -xf - -C dist/wp-usefull-blocks
+          cd dist && zip -qr ../wp-usefull-blocks.zip wp-usefull-blocks
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: wp-usefull-blocks.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

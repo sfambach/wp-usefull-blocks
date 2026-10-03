@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.7.0
+Stable tag:        0.8.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.8.0 =
+* Add copy button to code blocks (core/code, incl. Code Syntax Block) on the front end.
+* Add Git Updater headers and release workflow with built plugin ZIP.
 
 = 0.7.0 =
 * Add UB FAQ block: Question/Answer table editor with click-to-expand answers.
