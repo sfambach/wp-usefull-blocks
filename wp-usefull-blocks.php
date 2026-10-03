@@ -30,6 +30,7 @@ require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-toc.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-reading-time.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-heading-toolbar.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-code-copy.php';
+require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-media-credit.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-settings.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-url-status.php';
 require_once WP_USEFULL_BLOCKS_PATH . 'includes/class-file-mirror.php';

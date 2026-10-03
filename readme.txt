@@ -98,6 +98,8 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 = 0.8.0 =
 * Add copy button to code blocks (core/code, incl. Code Syntax Block) on the front end.
+* Add media credit: source, source URL and license per media item (media library), shown below images, gallery images, file blocks and UB File.
+* Block sidebar panel "Media library & source" edits title and credit of the selected media item directly in the media library.
 * Add Git Updater headers and release workflow with built plugin ZIP.
 
 = 0.7.0 =

@@ -607,3 +607,39 @@ msgstr "Kopiert"
 
 msgid "Copy code to clipboard"
 msgstr "Code in die Zwischenablage kopieren"
+
+msgid "Source / author"
+msgstr "Quelle / Urheber"
+
+msgid "Shown as source below images and files using this media item."
+msgstr "Wird als Quelle unter Bildern und Dateien mit dieser Mediendatei angezeigt."
+
+msgid "Source URL"
+msgstr "Quell-URL"
+
+msgid "Optional link to the original."
+msgstr "Optionaler Link zum Original."
+
+msgid "License"
+msgstr "Lizenz"
+
+msgid "Optional, e.g. CC BY-SA 4.0."
+msgstr "Optional, z. B. CC BY-SA 4.0."
+
+msgid "Source:"
+msgstr "Quelle:"
+
+msgid "Saved to media library."
+msgstr "In der Mediathek gespeichert."
+
+msgid "Could not save to media library."
+msgstr "Speichern in der Mediathek fehlgeschlagen."
+
+msgid "Media library & source"
+msgstr "Mediathek & Quelle"
+
+msgid "Stored in the media library and shown wherever this file is used."
+msgstr "Wird in der Mediathek gespeichert und überall angezeigt, wo die Datei genutzt wird."
+
+msgid "Save to media library"
+msgstr "In Mediathek speichern"
