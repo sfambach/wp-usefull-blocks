@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.8.1
+Stable tag:        0.8.2
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.8.2 =
+* Git Updater: install from the version tag (built blocks included) instead of the release asset, which failed with "Forbidden".
 
 = 0.8.1 =
 * Image titles set in image blocks are copied to the media library on save; existing posts are processed once in the background.
