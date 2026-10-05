@@ -236,6 +236,13 @@ final class WP_Usefull_Blocks_Content_Links {
 			return true;
 		}
 
+		// Image links (image blocks, galleries): a status dot would break the figure layout.
+		foreach ( array( 'img', 'picture', 'video', 'svg' ) as $media_tag ) {
+			if ( $anchor->getElementsByTagName( $media_tag )->length > 0 ) {
+				return true;
+			}
+		}
+
 		$node = $anchor->parentNode;
 		while ( $node instanceof DOMElement ) {
 			$parent_class = $node->getAttribute( 'class' );
