@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.8.3
+Stable tag:        0.8.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.8.4 =
+* Media credit: source fields are shown again in the media library (field names must not start with "_").
+* Media credit: block sidebar panel no longer collapses while typing the source URL.
 
 = 0.8.3 =
 * Link status: image links (image blocks, galleries) no longer get a status dot that broke the gallery layout.
