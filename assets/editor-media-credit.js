@@ -106,7 +106,7 @@
 			PanelBody,
 			{
 				title: __( 'Media library & source', 'wp-usefull-blocks' ),
-				initialOpen: ! meta[ META_AUTHOR ] && ! meta[ META_URL ],
+				initialOpen: true,
 			},
 			el( TextControl, {
 				label: __( 'Title', 'wp-usefull-blocks' ),

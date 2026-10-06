@@ -110,6 +110,16 @@ final class WP_Usefull_Blocks_Media_Credit {
 	}
 
 	/**
+	 * Form field name for a meta key. Core renders fields starting with "_" only as hidden inputs.
+	 *
+	 * @param string $meta_key Meta key.
+	 * @return string
+	 */
+	private static function form_field_name( string $meta_key ): string {
+		return ltrim( $meta_key, '_' );
+	}
+
+	/**
 	 * Add credit fields to the media library edit screen and media modal.
 	 *
 	 * @param array<string,mixed> $form_fields Existing fields.
@@ -118,7 +128,7 @@ final class WP_Usefull_Blocks_Media_Credit {
 	 */
 	public static function fields_to_edit( array $form_fields, WP_Post $post ): array {
 		foreach ( self::field_definitions() as $key => $field ) {
-			$form_fields[ $key ] = array(
+			$form_fields[ self::form_field_name( $key ) ] = array(
 				'label' => $field['label'],
 				'input' => 'text',
 				'value' => (string) get_post_meta( $post->ID, $key, true ),
@@ -143,12 +153,13 @@ final class WP_Usefull_Blocks_Media_Credit {
 		}
 
 		foreach ( array_keys( self::field_definitions() ) as $key ) {
-			if ( ! array_key_exists( $key, $attachment ) ) {
+			$name = self::form_field_name( $key );
+			if ( ! array_key_exists( $name, $attachment ) ) {
 				continue;
 			}
 			$value = self::META_URL === $key
-				? esc_url_raw( wp_unslash( (string) $attachment[ $key ] ) )
-				: sanitize_text_field( wp_unslash( (string) $attachment[ $key ] ) );
+				? esc_url_raw( wp_unslash( (string) $attachment[ $name ] ) )
+				: sanitize_text_field( wp_unslash( (string) $attachment[ $name ] ) );
 
 			if ( '' === $value ) {
 				delete_post_meta( $post_id, $key );
