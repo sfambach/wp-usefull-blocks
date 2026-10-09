@@ -152,11 +152,19 @@ final class WP_Usefull_Blocks_Content_Links {
 		}
 
 		$href = trim( $anchor->getAttribute( 'href' ) );
-		if ( ! self::is_checkable_href( $href ) ) {
+		if ( ! self::is_checkable_href( $href ) || WP_Usefull_Blocks_Url_Status::is_excluded( $href ) ) {
 			return;
 		}
 
 		$status = self::resolve_status( $href, $settings );
+
+		// File block download button: colour the button instead of adding a second dot.
+		if ( self::has_class( $anchor, 'wp-block-file__button' ) ) {
+			if ( 'off' !== ( $settings['link_status_position'] ?? 'before' ) ) {
+				$anchor->setAttribute( 'class', trim( $anchor->getAttribute( 'class' ) . ' ub-status-button ub-status-button--' . $status ) );
+			}
+			return;
+		}
 		$position = isset( $settings['link_status_position'] )
 			? (string) $settings['link_status_position']
 			: 'before';
@@ -236,6 +244,16 @@ final class WP_Usefull_Blocks_Content_Links {
 			return true;
 		}
 
+		// File block name link: the status is shown on its download button instead.
+		$parent = $anchor->parentNode;
+		if ( $parent instanceof DOMElement && self::has_class( $parent, 'wp-block-file' ) && ! self::has_class( $anchor, 'wp-block-file__button' ) ) {
+			foreach ( $parent->getElementsByTagName( 'a' ) as $sibling ) {
+				if ( self::has_class( $sibling, 'wp-block-file__button' ) ) {
+					return true;
+				}
+			}
+		}
+
 		// Image links (image blocks, galleries): a status dot would break the figure layout.
 		foreach ( array( 'img', 'picture', 'video', 'svg' ) as $media_tag ) {
 			if ( $anchor->getElementsByTagName( $media_tag )->length > 0 ) {
@@ -259,6 +277,16 @@ final class WP_Usefull_Blocks_Content_Links {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Whether an element carries the given class.
+	 *
+	 * @param DOMElement $element Element.
+	 * @param string     $class   Class name.
+	 */
+	private static function has_class( DOMElement $element, string $class ): bool {
+		return in_array( $class, preg_split( '/\s+/', $element->getAttribute( 'class' ) ), true );
 	}
 
 	/**

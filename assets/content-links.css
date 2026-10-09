@@ -177,3 +177,14 @@
 	text-decoration: line-through solid currentcolor !important;
 	opacity: 0.75;
 }
+
+/* File block button coloured by link status (no second dot). */
+.wp-block-file a.ub-status-button--ok {
+	background-color: #1a7f37 !important;
+	color: #fff !important;
+}
+
+.wp-block-file a.ub-status-button--broken {
+	background-color: #cf222e !important;
+	color: #fff !important;
+}

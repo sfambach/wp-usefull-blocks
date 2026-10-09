@@ -174,6 +174,16 @@ final class WP_Usefull_Blocks_Url_Status {
 			return null;
 		}
 
+		// Results cached before 0.8.5 marked timeouts as broken; only an unknown host is.
+		if (
+			self::STATUS_BROKEN === $cached['status']
+			&& empty( $cached['code'] )
+			&& ! self::is_internal_url( $url )
+			&& ! self::is_unknown_host( (string) ( $cached['message'] ?? '' ) )
+		) {
+			$cached['status'] = self::STATUS_UNKNOWN;
+		}
+
 		return $cached;
 	}
 
@@ -221,6 +231,25 @@ final class WP_Usefull_Blocks_Url_Status {
 	}
 
 	/**
+	 * Whether the URL matches an entry of the "Do not check" list (Useful → Settings).
+	 *
+	 * @param string $url URL.
+	 */
+	public static function is_excluded( string $url ): bool {
+		if ( ! class_exists( 'WP_Usefull_Blocks_Settings' ) ) {
+			return false;
+		}
+
+		foreach ( WP_Usefull_Blocks_Settings::get()['link_check_exclude'] as $pattern ) {
+			if ( '' !== $pattern && false !== stripos( $url, $pattern ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Check a URL and return a normalised status payload.
 	 *
 	 * @param string $url URL to check.
@@ -234,6 +263,14 @@ final class WP_Usefull_Blocks_Url_Status {
 				'status'  => self::STATUS_BROKEN,
 				'code'    => 0,
 				'message' => __( 'Empty URL.', 'wp-usefull-blocks' ),
+			);
+		}
+
+		if ( self::is_excluded( $url ) ) {
+			return array(
+				'status'  => self::STATUS_UNKNOWN,
+				'code'    => 0,
+				'message' => __( 'Excluded from link check.', 'wp-usefull-blocks' ),
 			);
 		}
 
@@ -323,7 +360,7 @@ final class WP_Usefull_Blocks_Url_Status {
 	 */
 	private static function check_remote( string $url ): array {
 		$args = array(
-			'timeout'     => 3,
+			'timeout'     => 5,
 			'redirection' => 3,
 			'user-agent'  => 'WP-Usefull-Blocks-LinkCheck/' . WP_USEFULL_BLOCKS_VERSION,
 		);
@@ -344,10 +381,13 @@ final class WP_Usefull_Blocks_Url_Status {
 		}
 
 		if ( is_wp_error( $response ) ) {
+			// Only an unknown host is a real dead link; timeouts and refused connections are often temporary or bot protection.
+			$message = $response->get_error_message();
+
 			return array(
-				'status'  => self::STATUS_BROKEN,
+				'status'  => self::is_unknown_host( $message ) ? self::STATUS_BROKEN : self::STATUS_UNKNOWN,
 				'code'    => 0,
-				'message' => $response->get_error_message(),
+				'message' => $message,
 			);
 		}
 
@@ -369,6 +409,17 @@ final class WP_Usefull_Blocks_Url_Status {
 			'code'    => $code,
 			'message' => (string) wp_remote_retrieve_response_message( $response ),
 		);
+	}
+
+	/**
+	 * Whether a transport error message means the host does not exist.
+	 *
+	 * @param string $message Error message.
+	 */
+	private static function is_unknown_host( string $message ): bool {
+		$message = strtolower( $message );
+
+		return str_contains( $message, 'could not resolve' ) || str_contains( $message, 'curl error 6:' );
 	}
 
 	/**

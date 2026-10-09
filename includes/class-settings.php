@@ -38,13 +38,14 @@ final class WP_Usefull_Blocks_Settings {
 			'link_status_position' => 'before',
 			'strike_broken_links'  => true,
 			'auto_check_urls'      => true,
+			'link_check_exclude'   => array(),
 		);
 	}
 
 	/**
 	 * Get merged settings.
 	 *
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[]}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -72,7 +73,21 @@ final class WP_Usefull_Blocks_Settings {
 			'link_status_position' => $position,
 			'strike_broken_links'  => (bool) $merged['strike_broken_links'],
 			'auto_check_urls'      => (bool) $merged['auto_check_urls'],
+			'link_check_exclude'   => self::sanitize_patterns( $merged['link_check_exclude'] ),
 		);
+	}
+
+	/**
+	 * Normalise the "Do not check" list: one URL or URL part per entry.
+	 *
+	 * @param mixed $value Array or newline-separated string.
+	 * @return string[]
+	 */
+	private static function sanitize_patterns( $value ): array {
+		$lines = is_array( $value ) ? $value : preg_split( '/\R/', (string) $value );
+		$lines = array_map( static fn( $line ): string => trim( sanitize_text_field( (string) $line ) ), (array) $lines );
+
+		return array_values( array_unique( array_filter( $lines, 'strlen' ) ) );
 	}
 
 	/**
@@ -157,6 +172,14 @@ final class WP_Usefull_Blocks_Settings {
 			)
 		);
 
+		add_settings_field(
+			'link_check_exclude',
+			__( 'Do not check', 'wp-usefull-blocks' ),
+			array( self::class, 'render_exclude' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_links'
+		);
+
 		add_settings_section(
 			'wp_usefull_blocks_ub_timeline',
 			__( 'UB Timeline', 'wp-usefull-blocks' ),
@@ -198,7 +221,7 @@ final class WP_Usefull_Blocks_Settings {
 	 * Sanitize option array.
 	 *
 	 * @param mixed $input Raw input.
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[]}
 	 */
 	public static function sanitize( $input ): array {
 		$defaults = self::defaults();
@@ -218,7 +241,20 @@ final class WP_Usefull_Blocks_Settings {
 			'link_status_position' => $position,
 			'strike_broken_links'  => ! empty( $input['strike_broken_links'] ),
 			'auto_check_urls'      => ! empty( $input['auto_check_urls'] ),
+			'link_check_exclude'   => self::sanitize_patterns( $input['link_check_exclude'] ?? array() ),
 		);
+	}
+
+	/**
+	 * Textarea for the "Do not check" list.
+	 */
+	public static function render_exclude(): void {
+		$settings = self::get();
+		$id       = 'wp_usefull_blocks_link_check_exclude';
+		?>
+		<textarea id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( self::OPTION . '[link_check_exclude]' ); ?>" rows="5" cols="60" class="large-text code"><?php echo esc_textarea( implode( "\n", $settings['link_check_exclude'] ) ); ?></textarea>
+		<p class="description"><?php echo esc_html__( 'One URL or URL part per line, e.g. github.com. Matching links are not checked and get no status indicator.', 'wp-usefull-blocks' ); ?></p>
+		<?php
 	}
 
 	/**
