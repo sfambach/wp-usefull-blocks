@@ -96,6 +96,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
+= 0.8.7 =
+* Embedded PDFs (file block) open without the viewer sidebar.
+
 = 0.8.6 =
 * Fix: Link status text no longer appears in excerpts or feeds.
 
