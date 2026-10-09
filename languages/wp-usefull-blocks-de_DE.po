@@ -643,3 +643,12 @@ msgstr "Wird in der Mediathek gespeichert und überall angezeigt, wo die Datei g
 
 msgid "Save to media library"
 msgstr "In Mediathek speichern"
+
+msgid "Excluded from link check."
+msgstr "Von der Linkprüfung ausgenommen."
+
+msgid "Do not check"
+msgstr "Nicht prüfen"
+
+msgid "One URL or URL part per line, e.g. github.com. Matching links are not checked and get no status indicator."
+msgstr "Eine URL oder ein URL-Teil pro Zeile, z. B. github.com. Passende Links werden nicht geprüft und bekommen keine Statusanzeige."

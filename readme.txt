@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.8.4
+Stable tag:        0.8.5
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,11 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.8.5 =
+* Link status: timeouts and refused connections count as "unknown" (yellow) instead of "broken"; only unknown hosts are red.
+* Link status: new "Do not check" list in Useful → Settings (one URL or URL part per line).
+* Link status: file blocks show the status on the download button (green/red) instead of two dots.
 
 = 0.8.4 =
 * Media credit: source fields are shown again in the media library (field names must not start with "_").
