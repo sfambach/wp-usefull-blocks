@@ -96,6 +96,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
+= 0.8.6 =
+* Fix: Link status text no longer appears in excerpts or feeds.
+
 = 0.8.5 =
 * Link status: timeouts and refused connections count as "unknown" (yellow) instead of "broken"; only unknown hosts are red.
 * Link status: new "Do not check" list in Useful → Settings (one URL or URL part per line).
