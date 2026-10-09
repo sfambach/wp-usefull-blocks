@@ -70,7 +70,7 @@ final class WP_Usefull_Blocks_Content_Links {
 	 * @return string
 	 */
 	public static function filter_content( string $content ): string {
-		if ( is_admin() || ! self::is_active() ) {
+		if ( is_admin() || ! self::is_active() || is_feed() || doing_filter( 'get_the_excerpt' ) ) {
 			return $content;
 		}
 
