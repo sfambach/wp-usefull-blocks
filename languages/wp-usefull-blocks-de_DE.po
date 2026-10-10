@@ -869,3 +869,17 @@ msgid ""
 msgstr ""
 "Zeigt die Schlagwörter dieses Beitrags. Ein Klick auf ein Schlagwort listet "
 "weitere Beiträge damit."
+
+msgid "Related posts"
+msgstr "Mehr zum Thema"
+
+msgid "Show images"
+msgstr "Bilder anzeigen"
+
+msgid ""
+"Show preview images in \"UB Related Posts\" blocks and in [display-posts] "
+"lists. Off: titles only, site-wide, whatever the block or shortcode says."
+msgstr ""
+"Vorschaubilder in den Blöcken „UB Mehr zum Thema“ und in [display-"
+"posts]-Listen anzeigen. Aus: nur Titel, auf der ganzen Website, egal was "
+"Block oder Shortcode sagen."

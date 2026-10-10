@@ -30,7 +30,7 @@ final class WP_Usefull_Blocks_Settings {
 	/**
 	 * Default option values.
 	 *
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool}
 	 */
 	public static function defaults(): array {
 		return array(
@@ -39,13 +39,14 @@ final class WP_Usefull_Blocks_Settings {
 			'strike_broken_links'  => true,
 			'auto_check_urls'      => true,
 			'link_check_exclude'   => array(),
+			'related_posts_images' => false,
 		);
 	}
 
 	/**
 	 * Get merged settings.
 	 *
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[]}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -74,6 +75,7 @@ final class WP_Usefull_Blocks_Settings {
 			'strike_broken_links'  => (bool) $merged['strike_broken_links'],
 			'auto_check_urls'      => (bool) $merged['auto_check_urls'],
 			'link_check_exclude'   => self::sanitize_patterns( $merged['link_check_exclude'] ),
+			'related_posts_images' => (bool) $merged['related_posts_images'],
 		);
 	}
 
@@ -181,6 +183,28 @@ final class WP_Usefull_Blocks_Settings {
 		);
 
 		add_settings_section(
+			'wp_usefull_blocks_related_posts',
+			__( 'Related posts', 'wp-usefull-blocks' ),
+			'__return_null',
+			self::PAGE_SLUG
+		);
+
+		add_settings_field(
+			'related_posts_images',
+			__( 'Show images', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_related_posts',
+			array(
+				'key'         => 'related_posts_images',
+				'description' => __(
+					'Show preview images in "UB Related Posts" blocks and in [display-posts] lists. Off: titles only, site-wide, whatever the block or shortcode says.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_section(
 			'wp_usefull_blocks_ub_timeline',
 			__( 'UB Timeline', 'wp-usefull-blocks' ),
 			static function (): void {
@@ -221,7 +245,7 @@ final class WP_Usefull_Blocks_Settings {
 	 * Sanitize option array.
 	 *
 	 * @param mixed $input Raw input.
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[]}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool}
 	 */
 	public static function sanitize( $input ): array {
 		$defaults = self::defaults();
@@ -242,6 +266,7 @@ final class WP_Usefull_Blocks_Settings {
 			'strike_broken_links'  => ! empty( $input['strike_broken_links'] ),
 			'auto_check_urls'      => ! empty( $input['auto_check_urls'] ),
 			'link_check_exclude'   => self::sanitize_patterns( $input['link_check_exclude'] ?? array() ),
+			'related_posts_images' => ! empty( $input['related_posts_images'] ),
 		);
 	}
 
