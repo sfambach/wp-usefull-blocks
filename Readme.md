@@ -4,6 +4,10 @@ Some useful blocks for the WordPress Gutenberg (block) editor, packaged as a sta
 WordPress plugin built with [`@wordpress/scripts`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/)
 and the modern Block API (v3, `block.json` as the single source of truth).
 
+## AI disclosure
+
+This plugin was built with AI assistance: the code was written largely by Claude (Anthropic) via Claude Code, earlier parts with Cursor agents. Stefan Fambach specified, reviewed and tested it.
+
 ## Requirements
 
 - Node.js 20+ and npm (used for the block build tooling)
