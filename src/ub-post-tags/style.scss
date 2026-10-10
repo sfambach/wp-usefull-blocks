@@ -1,0 +1,53 @@
+/**
+ * Styles for the UB Post Tags block.
+ */
+
+.wp-block-wp-usefull-blocks-ub-post-tags {
+
+	&.ub-post-tags--empty {
+		font-style: italic;
+		opacity: 0.7;
+	}
+
+	.ub-post-tags__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.ub-post-tags__tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35em;
+		padding: 0.2em 0.7em;
+		border: 1px solid currentcolor;
+		border-radius: 999px;
+		font-size: 0.9em;
+		text-decoration: none;
+
+		&[aria-expanded="true"] {
+			outline: 2px solid currentcolor;
+			outline-offset: 1px;
+		}
+	}
+
+	.ub-post-tags__count {
+		font-size: 0.85em;
+		opacity: 0.7;
+	}
+
+	.ub-post-tags__panel {
+		margin-top: 0.75rem;
+	}
+
+	.ub-post-tags__posts {
+		margin: 0 0 0.5rem;
+	}
+
+	.ub-post-tags__all {
+		font-size: 0.9em;
+	}
+}

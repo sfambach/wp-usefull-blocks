@@ -96,6 +96,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
+= 0.9.0 =
+* New block "UB Related Posts" (de: "UB Mehr zum Thema"): lists posts of a category or tag, replaces the display-posts shortcode. Optional preview image, date and excerpt.
+* New block "UB Post Tags" (de: "UB Schlagwörter"): shows the post tags; a click lists other posts with that tag.
+
 = 0.8.7 =
 * Embedded PDFs (file block) open without the viewer sidebar.
 

@@ -1,0 +1,55 @@
+/**
+ * Styles for the UB Related Posts block.
+ */
+
+.wp-block-wp-usefull-blocks-ub-related-posts {
+
+	&.ub-related-posts--empty {
+		font-style: italic;
+		opacity: 0.7;
+	}
+
+	.ub-related-posts__date {
+		display: block;
+		font-size: 0.85em;
+		opacity: 0.75;
+	}
+
+	.ub-related-posts__excerpt {
+		margin: 0.25em 0 0;
+		font-size: 0.9em;
+	}
+
+	&.ub-related-posts--images {
+		display: grid;
+		gap: 1rem;
+		padding: 0;
+		list-style: none;
+
+		.ub-related-posts__image {
+			display: block;
+			margin-bottom: 0.4em;
+
+			img {
+				display: block;
+				width: 100%;
+				height: auto;
+				aspect-ratio: 4 / 3;
+				object-fit: cover;
+			}
+		}
+	}
+
+	@for $i from 1 through 4 {
+		&.ub-related-posts--cols-#{$i} {
+			grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 600px) {
+
+		&.ub-related-posts--images {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+}

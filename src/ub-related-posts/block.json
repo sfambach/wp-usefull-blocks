@@ -1,0 +1,83 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-related-posts",
+	"version": "0.9.0",
+	"title": "UB Related Posts",
+	"category": "widgets",
+	"icon": "list-view",
+	"description": "Lists other posts from a category or tag, e.g. as a replacement for the display-posts shortcode.",
+	"keywords": [
+		"related",
+		"posts",
+		"display posts",
+		"verwandte beiträge",
+		"mehr zum thema"
+	],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"taxonomy": {
+			"type": "string",
+			"enum": [ "category", "post_tag" ],
+			"default": "category"
+		},
+		"term": {
+			"type": "string",
+			"default": ""
+		},
+		"includeChildren": {
+			"type": "boolean",
+			"default": true
+		},
+		"excludeCurrent": {
+			"type": "boolean",
+			"default": true
+		},
+		"count": {
+			"type": "number",
+			"default": 10
+		},
+		"orderBy": {
+			"type": "string",
+			"enum": [ "date", "title", "modified", "rand" ],
+			"default": "date"
+		},
+		"showImage": {
+			"type": "boolean",
+			"default": false
+		},
+		"showDate": {
+			"type": "boolean",
+			"default": false
+		},
+		"showExcerpt": {
+			"type": "boolean",
+			"default": false
+		},
+		"columns": {
+			"type": "number",
+			"default": 3
+		}
+	},
+	"usesContext": [ "postId", "postType" ],
+	"supports": {
+		"anchor": true,
+		"align": [ "wide" ],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true
+		}
+	},
+	"example": {
+		"attributes": {
+			"term": "preview"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}
