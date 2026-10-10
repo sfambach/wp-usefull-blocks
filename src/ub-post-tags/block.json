@@ -1,0 +1,47 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-usefull-blocks/ub-post-tags",
+	"version": "0.9.0",
+	"title": "UB Post Tags",
+	"category": "widgets",
+	"icon": "tag",
+	"description": "Shows the tags of this post. Clicking a tag lists other posts with that tag.",
+	"keywords": [
+		"tags",
+		"schlagwörter",
+		"related",
+		"verwandte beiträge"
+	],
+	"textdomain": "wp-usefull-blocks",
+	"attributes": {
+		"expandInline": {
+			"type": "boolean",
+			"default": true
+		},
+		"postsPerTag": {
+			"type": "number",
+			"default": 10
+		},
+		"showCount": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"usesContext": [ "postId", "postType" ],
+	"supports": {
+		"anchor": true,
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

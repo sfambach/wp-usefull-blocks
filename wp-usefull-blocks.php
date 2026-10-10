@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       WP Usefull Blocks
  * Description:       Some useful blocks for the WordPress Gutenberg editor.
- * Version:           0.8.7
+ * Version:           0.9.0
  * Requires at least: 6.8
  * Requires PHP:      8.1
  * Author:            The WordPress Contributors
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'WP_USEFULL_BLOCKS_VERSION', '0.8.7' );
+define( 'WP_USEFULL_BLOCKS_VERSION', '0.9.0' );
 define( 'WP_USEFULL_BLOCKS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WP_USEFULL_BLOCKS_URL', plugin_dir_url( __FILE__ ) );
 
@@ -83,6 +83,8 @@ function wp_usefull_blocks_set_script_translations(): void {
 		'wp-usefull-blocks-ub-gallery-editor-script',
 		'wp-usefull-blocks-ub-link-editor-script',
 		'wp-usefull-blocks-ub-reading-time-editor-script',
+		'wp-usefull-blocks-ub-related-posts-editor-script',
+		'wp-usefull-blocks-ub-post-tags-editor-script',
 		'wp-usefull-blocks-ub-timeline-editor-script',
 		'wp-usefull-blocks-ub-toc-editor-script',
 		'wp-usefull-blocks-wp-usefull-blocks-editor-script',
