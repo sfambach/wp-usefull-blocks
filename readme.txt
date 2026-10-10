@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.8.5
+Stable tag:        0.9.1
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.9.1 =
+* New setting Useful → Settings → Related posts → "Show images" (default off): "UB Related Posts" blocks and [display-posts] lists show titles only, site-wide.
 
 = 0.9.0 =
 * New block "UB Related Posts" (de: "UB Mehr zum Thema"): lists posts of a category or tag, replaces the display-posts shortcode. Optional preview image, date and excerpt.

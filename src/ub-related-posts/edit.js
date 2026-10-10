@@ -13,6 +13,7 @@ import {
 import { useSelect } from '@wordpress/data';
 import { Fragment } from '@wordpress/element';
 import ServerSideRender from '@wordpress/server-side-render';
+import usePluginSettings from '../shared/use-plugin-settings';
 
 /**
  * @param {Object}   props
@@ -33,6 +34,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		showExcerpt = false,
 		columns = 3,
 	} = attributes;
+	const { related_posts_images: imagesAllowed } = usePluginSettings();
 
 	const terms = useSelect(
 		( select ) =>
@@ -170,6 +172,14 @@ export default function Edit( { attributes, setAttributes } ) {
 						checked={ !! showImage }
 						onChange={ ( value ) =>
 							setAttributes( { showImage: !! value } )
+						}
+						help={
+							imagesAllowed
+								? undefined
+								: __(
+										'Images are switched off site-wide (Useful → Settings).',
+										'wp-usefull-blocks'
+								  )
 						}
 					/>
 					{ showImage && (

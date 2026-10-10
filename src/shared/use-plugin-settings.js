@@ -10,6 +10,7 @@ const DEFAULTS = {
 	link_status_position: 'before',
 	strike_broken_links: true,
 	auto_check_urls: true,
+	related_posts_images: false,
 };
 
 /**
@@ -26,7 +27,7 @@ function normalizePosition( position ) {
 }
 
 /**
- * @return {{show_link_status:boolean,link_status_position:string,strike_broken_links:boolean,auto_check_urls:boolean}} Settings.
+ * @return {{show_link_status:boolean,link_status_position:string,strike_broken_links:boolean,auto_check_urls:boolean,related_posts_images:boolean}} Settings.
  */
 export default function usePluginSettings() {
 	return useSelect( ( select ) => {
@@ -42,6 +43,8 @@ export default function usePluginSettings() {
 			strike_broken_links:
 				plugin.strike_broken_links ?? DEFAULTS.strike_broken_links,
 			auto_check_urls: plugin.auto_check_urls ?? DEFAULTS.auto_check_urls,
+			related_posts_images:
+				plugin.related_posts_images ?? DEFAULTS.related_posts_images,
 		};
 	}, [] );
 }
