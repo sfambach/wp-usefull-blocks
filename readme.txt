@@ -10,6 +10,8 @@ Some useful blocks for the WordPress Gutenberg editor.
 
 == Description ==
 
+AI disclosure: This plugin was built with AI assistance. The code was written largely by Claude (Anthropic) via Claude Code, earlier parts with Cursor agents; Stefan Fambach specified, reviewed and tested it.
+
 WP Usefull Blocks provides practical Gutenberg blocks. This release includes **UB Gallery**
 (eBay-style focus image + thumbnails), **UB Link** (URL with live status), **UB File**
 (file URL with optional local media mirror via “Download now”), **UB FAQ** (Q&A accordion),
