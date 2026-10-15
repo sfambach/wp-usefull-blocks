@@ -1,0 +1,1 @@
+import{getContext as s,store as t}from"@wordpress/interactivity";t("wp-usefull-blocks/ub-faq",{actions:{toggle(){const t=s();t.isOpen=!t.isOpen}}});
