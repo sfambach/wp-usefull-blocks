@@ -29,12 +29,13 @@ export default function Edit( { attributes, setAttributes } ) {
 		excludeCurrent = true,
 		count = 10,
 		orderBy = 'date',
-		showImage = false,
+		showImage: savedShowImage,
 		showDate = false,
 		showExcerpt = false,
 		columns = 3,
 	} = attributes;
-	const { related_posts_images: imagesAllowed } = usePluginSettings();
+	const { related_posts_images: imagesByDefault } = usePluginSettings();
+	const showImage = savedShowImage ?? !! imagesByDefault;
 
 	const terms = useSelect(
 		( select ) =>
@@ -174,12 +175,12 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { showImage: !! value } )
 						}
 						help={
-							imagesAllowed
-								? undefined
-								: __(
-										'Images are switched off site-wide (Useful → Settings).',
+							savedShowImage === undefined
+								? __(
+										'Default from Useful → Settings.',
 										'wp-usefull-blocks'
 								  )
+								: undefined
 						}
 					/>
 					{ showImage && (

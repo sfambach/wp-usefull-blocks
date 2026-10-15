@@ -198,7 +198,7 @@ final class WP_Usefull_Blocks_Settings {
 			array(
 				'key'         => 'related_posts_images',
 				'description' => __(
-					'Show preview images in "UB Related Posts" blocks and in [display-posts] lists. Off: titles only, site-wide, whatever the block or shortcode says.',
+					'Default for the "Show preview image" switch in "UB Related Posts" blocks; a block can override it. [display-posts] lists always follow this setting.',
 					'wp-usefull-blocks'
 				),
 			)
