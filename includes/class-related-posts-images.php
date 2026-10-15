@@ -1,6 +1,6 @@
 <?php
 /**
- * Site-wide switch for preview images in related-posts lists.
+ * Site-wide switch for preview images in [display-posts] lists.
  *
  * @package WpUsefullBlocks
  */
@@ -12,37 +12,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Drops thumbnails from "UB Related Posts" blocks and [display-posts] lists unless the setting allows them.
+ * Drops thumbnails from [display-posts] lists unless the setting allows them; the block reads the setting as its default in render.php.
  */
 final class WP_Usefull_Blocks_Related_Posts_Images {
-
-	private const BLOCK = 'wp-usefull-blocks/ub-related-posts';
 
 	/**
 	 * Hook registration.
 	 */
 	public static function init(): void {
-		/** @see https://developer.wordpress.org/reference/hooks/render_block_data/ */
-		add_filter( 'render_block_data', array( self::class, 'block_without_image' ) );
-
 		/** @see https://developer.wordpress.org/reference/hooks/shortcode_atts_shortcode/ */
 		add_filter( 'shortcode_atts_display-posts', array( self::class, 'shortcode_without_image' ) );
-	}
-
-	/**
-	 * Turn off showImage on the related-posts block.
-	 *
-	 * @param array<string, mixed> $parsed_block Parsed block.
-	 * @return array<string, mixed>
-	 */
-	public static function block_without_image( array $parsed_block ): array {
-		if ( self::BLOCK !== ( $parsed_block['blockName'] ?? '' ) || self::images_allowed() ) {
-			return $parsed_block;
-		}
-
-		$parsed_block['attrs']['showImage'] = false;
-
-		return $parsed_block;
 	}
 
 	/**
