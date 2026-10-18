@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.9.2
+Stable tag:        0.9.3
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.9.3 =
+* Link status: no traffic light on links inside headings and tables of contents, so TOC entries stay clean.
 
 = 0.9.2 =
 * "Show images" setting is now the default for the "Show preview image" switch in "UB Related Posts"; a block can override it. [display-posts] lists still follow the setting.
