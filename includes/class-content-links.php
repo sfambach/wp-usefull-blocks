@@ -263,9 +263,15 @@ final class WP_Usefull_Blocks_Content_Links {
 
 		$node = $anchor->parentNode;
 		while ( $node instanceof DOMElement ) {
+			// Headings feed tables of contents, which would copy the status text along.
+			if ( in_array( strtolower( $node->nodeName ), array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'nav' ), true ) ) {
+				return true;
+			}
 			$parent_class = $node->getAttribute( 'class' );
 			if (
-				str_contains( $parent_class, 'ub-content-link' )
+				str_contains( $parent_class, 'ez-toc' )
+				|| str_contains( $parent_class, 'ub-toc' )
+				|| str_contains( $parent_class, 'ub-content-link' )
 				|| str_contains( $parent_class, 'ub-link' )
 				|| str_contains( $parent_class, 'ub-file' )
 				|| str_contains( $parent_class, 'wp-block-wp-usefull-blocks-ub-link' )
