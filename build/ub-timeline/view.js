@@ -1,0 +1,1 @@
+import{getContext as t,store as e}from"@wordpress/interactivity";e("wp-usefull-blocks/ub-timeline",{actions:{toggle(){const e=t();e.isOpen=!e.isOpen}}});
