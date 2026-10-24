@@ -2,7 +2,7 @@
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.9.3
+Stable tag:        0.9.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.9.4 =
+* Security: the link check no longer requests private or local network addresses (SSRF hardening).
 
 = 0.9.3 =
 * Link status: no traffic light on links inside headings and tables of contents, so TOC entries stay clean.

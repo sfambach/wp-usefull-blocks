@@ -360,9 +360,11 @@ final class WP_Usefull_Blocks_Url_Status {
 	 */
 	private static function check_remote( string $url ): array {
 		$args = array(
-			'timeout'     => 5,
-			'redirection' => 3,
-			'user-agent'  => 'WP-Usefull-Blocks-LinkCheck/' . WP_USEFULL_BLOCKS_VERSION,
+			'timeout'            => 5,
+			'redirection'        => 3,
+			// Any author may ask for a check; the server must not knock on private addresses for them.
+			'reject_unsafe_urls' => true,
+			'user-agent'         => 'WP-Usefull-Blocks-LinkCheck/' . WP_USEFULL_BLOCKS_VERSION,
 		);
 
 		$response = wp_remote_head( $url, $args );
