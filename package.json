@@ -2,7 +2,7 @@
 	"name": "wp-usefull-blocks",
 	"version": "0.9.4",
 	"description": "Some useful blocks for the WordPress Gutenberg editor.",
-	"author": "The WordPress Contributors",
+	"author": "Stefan Fambach (SteFam), Claude (Anthropic AI)",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {

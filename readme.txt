@@ -1,5 +1,5 @@
 === WP Usefull Blocks ===
-Contributors:      The WordPress Contributors
+Contributors:      sfambach
 Tags:              block
 Tested up to:      6.8
 Stable tag:        0.9.4
