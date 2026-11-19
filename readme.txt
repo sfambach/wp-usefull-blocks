@@ -2,7 +2,7 @@
 Contributors:      sfambach
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.10.0
+Stable tag:        0.10.1
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.10.1 =
+* Speed: TablePress styles load only for a real table (shortcode or block), not for the word "TablePress" in a post.
 
 = 0.10.0 =
 * New settings section Useful → Settings → Speed (all on by default, each can be turned off): syntax highlighting, comment-subscription and TablePress styles load only on pages that use them; the theme font Raleway comes from this site instead of Google Fonts; no emoji script; head scripts except jQuery are deferred; small local stylesheets are written into the page.

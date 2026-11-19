@@ -113,7 +113,7 @@ final class WP_Usefull_Blocks_Speed {
 			}
 		}
 
-		if ( ! self::contains( $content, array( '[table ', 'wp:tablepress/', 'tablepress' ) ) ) {
+		if ( ! self::contains( $content, array( '[table ', 'wp:tablepress/' ) ) ) {
 			wp_dequeue_style( self::TABLE_STYLE );
 		}
 	}
