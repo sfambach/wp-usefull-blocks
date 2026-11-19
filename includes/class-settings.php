@@ -30,7 +30,7 @@ final class WP_Usefull_Blocks_Settings {
 	/**
 	 * Default option values.
 	 *
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool}
 	 */
 	public static function defaults(): array {
 		return array(
@@ -40,13 +40,18 @@ final class WP_Usefull_Blocks_Settings {
 			'auto_check_urls'      => true,
 			'link_check_exclude'   => array(),
 			'related_posts_images' => false,
+			'speed_conditional_assets' => true,
+			'speed_local_fonts' => true,
+			'speed_no_emoji' => true,
+			'speed_defer_scripts' => true,
+			'speed_inline_small_css' => true,
 		);
 	}
 
 	/**
 	 * Get merged settings.
 	 *
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -76,6 +81,11 @@ final class WP_Usefull_Blocks_Settings {
 			'auto_check_urls'      => (bool) $merged['auto_check_urls'],
 			'link_check_exclude'   => self::sanitize_patterns( $merged['link_check_exclude'] ),
 			'related_posts_images' => (bool) $merged['related_posts_images'],
+			'speed_conditional_assets' => (bool) $merged['speed_conditional_assets'],
+			'speed_local_fonts' => (bool) $merged['speed_local_fonts'],
+			'speed_no_emoji' => (bool) $merged['speed_no_emoji'],
+			'speed_defer_scripts' => (bool) $merged['speed_defer_scripts'],
+			'speed_inline_small_css' => (bool) $merged['speed_inline_small_css'],
 		);
 	}
 
@@ -205,6 +215,93 @@ final class WP_Usefull_Blocks_Settings {
 		);
 
 		add_settings_section(
+			'wp_usefull_blocks_speed',
+			__( 'Speed', 'wp-usefull-blocks' ),
+			static function (): void {
+				echo '<p>' . esc_html__(
+					'Front-end pages only. Each switch can be turned off on its own if something looks wrong; clear the page cache after a change.',
+					'wp-usefull-blocks'
+				) . '</p>';
+			},
+			self::PAGE_SLUG
+		);
+
+		add_settings_field(
+			'speed_conditional_assets',
+			__( 'Load only what a page uses', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_speed',
+			array(
+				'key'         => 'speed_conditional_assets',
+				'description' => __(
+					'Syntax highlighting only on pages with code, comment-subscription styles only where comments are open, TablePress styles only where a table is.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_field(
+			'speed_local_fonts',
+			__( 'Theme font from this site', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_speed',
+			array(
+				'key'         => 'speed_local_fonts',
+				'description' => __(
+					'Serve the theme\'s Raleway font from this site instead of Google Fonts: one server less to wait for, text shows at once, and no visitor data goes to Google.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_field(
+			'speed_no_emoji',
+			__( 'No emoji script', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_speed',
+			array(
+				'key'         => 'speed_no_emoji',
+				'description' => __(
+					'Leave out WordPress\' emoji detection script and styles; every current browser draws emoji itself.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_field(
+			'speed_defer_scripts',
+			__( 'Defer scripts', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_speed',
+			array(
+				'key'         => 'speed_defer_scripts',
+				'description' => __(
+					'Every script except jQuery waits until the page is parsed. WordPress keeps a script blocking where inline code needs it at once.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_field(
+			'speed_inline_small_css',
+			__( 'Inline small stylesheets', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_speed',
+			array(
+				'key'         => 'speed_inline_small_css',
+				'description' => __(
+					'Write stylesheets of this site up to 4 KB into the page instead of loading each as its own file.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_section(
 			'wp_usefull_blocks_ub_timeline',
 			__( 'UB Timeline', 'wp-usefull-blocks' ),
 			static function (): void {
@@ -245,7 +342,7 @@ final class WP_Usefull_Blocks_Settings {
 	 * Sanitize option array.
 	 *
 	 * @param mixed $input Raw input.
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool}
 	 */
 	public static function sanitize( $input ): array {
 		$defaults = self::defaults();
@@ -267,6 +364,11 @@ final class WP_Usefull_Blocks_Settings {
 			'auto_check_urls'      => ! empty( $input['auto_check_urls'] ),
 			'link_check_exclude'   => self::sanitize_patterns( $input['link_check_exclude'] ?? array() ),
 			'related_posts_images' => ! empty( $input['related_posts_images'] ),
+			'speed_conditional_assets' => ! empty( $input['speed_conditional_assets'] ),
+			'speed_local_fonts' => ! empty( $input['speed_local_fonts'] ),
+			'speed_no_emoji' => ! empty( $input['speed_no_emoji'] ),
+			'speed_defer_scripts' => ! empty( $input['speed_defer_scripts'] ),
+			'speed_inline_small_css' => ! empty( $input['speed_inline_small_css'] ),
 		);
 	}
 
