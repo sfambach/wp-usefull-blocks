@@ -30,7 +30,7 @@ final class WP_Usefull_Blocks_Settings {
 	/**
 	 * Default option values.
 	 *
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool,speed_gallery_sizes:bool}
 	 */
 	public static function defaults(): array {
 		return array(
@@ -45,13 +45,14 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_no_emoji' => true,
 			'speed_defer_scripts' => true,
 			'speed_inline_small_css' => true,
+			'speed_gallery_sizes'    => true,
 		);
 	}
 
 	/**
 	 * Get merged settings.
 	 *
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool,speed_gallery_sizes:bool}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -86,6 +87,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_no_emoji' => (bool) $merged['speed_no_emoji'],
 			'speed_defer_scripts' => (bool) $merged['speed_defer_scripts'],
 			'speed_inline_small_css' => (bool) $merged['speed_inline_small_css'],
+			'speed_gallery_sizes'    => (bool) $merged['speed_gallery_sizes'],
 		);
 	}
 
@@ -280,7 +282,7 @@ final class WP_Usefull_Blocks_Settings {
 			array(
 				'key'         => 'speed_defer_scripts',
 				'description' => __(
-					'Every script except jQuery waits until the page is parsed. WordPress keeps a script blocking where inline code needs it at once.',
+					'Scripts in the page head, except jQuery, wait until the page is parsed. WordPress keeps a script blocking where inline code needs it at once; footer scripts stay as they are.',
 					'wp-usefull-blocks'
 				),
 			)
@@ -296,6 +298,21 @@ final class WP_Usefull_Blocks_Settings {
 				'key'         => 'speed_inline_small_css',
 				'description' => __(
 					'Write stylesheets of this site up to 4 KB into the page instead of loading each as its own file.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_field(
+			'speed_gallery_sizes',
+			__( 'Gallery image sizes', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_speed',
+			array(
+				'key'         => 'speed_gallery_sizes',
+				'description' => __(
+					'Images in a gallery tell the browser their column width, so it loads a smaller file instead of one as wide as the whole content.',
 					'wp-usefull-blocks'
 				),
 			)
@@ -342,7 +359,7 @@ final class WP_Usefull_Blocks_Settings {
 	 * Sanitize option array.
 	 *
 	 * @param mixed $input Raw input.
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool,speed_gallery_sizes:bool}
 	 */
 	public static function sanitize( $input ): array {
 		$defaults = self::defaults();
@@ -369,6 +386,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_no_emoji' => ! empty( $input['speed_no_emoji'] ),
 			'speed_defer_scripts' => ! empty( $input['speed_defer_scripts'] ),
 			'speed_inline_small_css' => ! empty( $input['speed_inline_small_css'] ),
+			'speed_gallery_sizes'    => ! empty( $input['speed_gallery_sizes'] ),
 		);
 	}
 
