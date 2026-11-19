@@ -43,6 +43,9 @@ final class WP_Usefull_Blocks_Speed {
 		add_action( 'wp_enqueue_scripts', array( self::class, 'inline_small_styles' ), 1000 );
 		// wp_enqueue_scripts itself runs inside wp_head at priority 1; the preload follows it.
 		add_action( 'wp_head', array( self::class, 'print_font_preload' ), 2 );
+		add_filter( 'render_block_core/gallery', array( self::class, 'mark_gallery_images' ), 10, 2 );
+		// Runs after WordPress added srcset and sizes to each content image.
+		add_filter( 'wp_content_img_tag', array( self::class, 'gallery_image_sizes' ) );
 	}
 
 	/** Set once the local font replaced the theme's Google font on this page. */
@@ -218,6 +221,97 @@ final class WP_Usefull_Blocks_Speed {
 				wp_script_add_data( $handle, 'strategy', 'defer' );
 			}
 		}
+	}
+
+	/** Carries the column count from the gallery block to the image tag, where `sizes` is known. */
+	private const COLUMNS_ATTRIBUTE = 'data-ub-gallery-columns';
+
+	/**
+	 * A gallery image is one column wide, but WordPress announces it as wide as the content, so the browser
+	 * fetches a file two or three times too large. The gallery marks its images with its column count here;
+	 * gallery_image_sizes() divides their `sizes` once WordPress has written it.
+	 *
+	 * @param string               $html  Rendered gallery.
+	 * @param array<string, mixed> $block Parsed block.
+	 */
+	public static function mark_gallery_images( string $html, array $block ): string {
+		if ( is_admin() || ! self::on( 'speed_gallery_sizes' ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $html;
+		}
+
+		$images  = is_array( $block['innerBlocks'] ?? null ) ? count( $block['innerBlocks'] ) : 0;
+		$columns = (int) ( $block['attrs']['columns'] ?? min( max( $images, 1 ), 3 ) );
+
+		if ( $columns < 2 ) {
+			return $html;
+		}
+
+		$tags = new WP_HTML_Tag_Processor( $html );
+
+		while ( $tags->next_tag( 'img' ) ) {
+			$tags->set_attribute( self::COLUMNS_ATTRIBUTE, (string) $columns );
+		}
+
+		return $tags->get_updated_html();
+	}
+
+	/**
+	 * Each width in `sizes` of a marked image is divided by the columns that apply at that width: the gallery
+	 * shows two columns below 600 px and its own count above.
+	 *
+	 * @param string $image One content image tag.
+	 */
+	public static function gallery_image_sizes( string $image ): string {
+		if ( ! str_contains( $image, self::COLUMNS_ATTRIBUTE ) ) {
+			return $image;
+		}
+
+		$tags = new WP_HTML_Tag_Processor( $image );
+
+		if ( ! $tags->next_tag( 'img' ) ) {
+			return $image;
+		}
+
+		$columns = (int) $tags->get_attribute( self::COLUMNS_ATTRIBUTE );
+		$sizes   = $tags->get_attribute( 'sizes' );
+		$tags->remove_attribute( self::COLUMNS_ATTRIBUTE );
+
+		if ( $columns >= 2 && is_string( $sizes ) && '' !== $sizes ) {
+			$tags->set_attribute( 'sizes', self::divide_sizes( $sizes, $columns ) );
+		}
+
+		return $tags->get_updated_html();
+	}
+
+	/**
+	 * @param string $sizes   A `sizes` attribute: comma-separated "(media) width" entries, the last without media.
+	 * @param int    $columns Gallery columns from 600 px up.
+	 */
+	private static function divide_sizes( string $sizes, int $columns ): string {
+		$entries = array();
+
+		// Commas inside calc() never occur in sizes widths, so a plain split is safe.
+		foreach ( array_map( 'trim', explode( ',', $sizes ) ) as $entry ) {
+			if ( 'auto' === $entry || '' === $entry ) {
+				$entries[] = $entry;
+				continue;
+			}
+
+			$media = '';
+			$width = $entry;
+
+			if ( preg_match( '/^(\(.*\))\s+(.+)$/', $entry, $parts ) ) {
+				$media = $parts[1] . ' ';
+				$width = $parts[2];
+			}
+
+			$small   = preg_match( '/max-width:\s*(\d+)px/', $media, $max ) && (int) $max[1] < 600;
+			$divisor = $small ? 2 : $columns;
+
+			$entries[] = $media . sprintf( 'calc(%s / %d)', $width, $divisor );
+		}
+
+		return implode( ', ', $entries );
 	}
 
 	/**

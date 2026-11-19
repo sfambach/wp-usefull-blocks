@@ -2,7 +2,7 @@
 Contributors:      sfambach
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.10.1
+Stable tag:        0.10.2
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.10.2 =
+* Speed: new switch "Gallery image sizes" (on): gallery images announce their column width, so phones and high-resolution screens load a file about half as large.
+* Speed: the "Defer scripts" description now says that only head scripts are deferred.
 
 = 0.10.1 =
 * Speed: TablePress styles load only for a real table (shortcode or block), not for the word "TablePress" in a post.
