@@ -2,7 +2,7 @@
 Contributors:      sfambach
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.10.2
+Stable tag:        0.10.3
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.10.3 =
+* Speed: new switch "Page time in the admin footer" (on): every admin page shows behind the WordPress footer text what it took on the server – seconds, database queries, memory.
 
 = 0.10.2 =
 * Speed: new switch "Gallery image sizes" (on): gallery images announce their column width, so phones and high-resolution screens load a file about half as large.

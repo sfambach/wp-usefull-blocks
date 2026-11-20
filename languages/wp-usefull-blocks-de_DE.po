@@ -884,3 +884,16 @@ msgstr ""
 "Standard für den Schalter „Vorschaubild anzeigen“ im Block „UB Mehr zum "
 "Thema“; ein Block kann ihn überschreiben. [display-posts]-Listen folgen "
 "immer dieser Einstellung."
+
+msgid "Page in %1$s s · %2$s queries · %3$s MB"
+msgstr "Seite in %1$s s · %2$s Abfragen · %3$s MB"
+
+msgid "Page time in the admin footer"
+msgstr "Ladezeit im Fuß der Verwaltung"
+
+msgid ""
+"Every admin page shows in its footer what it took on the server: seconds, "
+"database queries and memory."
+msgstr ""
+"Jede Seite der Verwaltung zeigt im Fuß, was sie auf dem Server gebraucht "
+"hat: Sekunden, Datenbankabfragen und Speicher."

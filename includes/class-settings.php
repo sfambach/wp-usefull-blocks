@@ -30,7 +30,7 @@ final class WP_Usefull_Blocks_Settings {
 	/**
 	 * Default option values.
 	 *
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool,speed_gallery_sizes:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool,speed_gallery_sizes:bool,speed_admin_page_time:bool}
 	 */
 	public static function defaults(): array {
 		return array(
@@ -46,13 +46,14 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_defer_scripts' => true,
 			'speed_inline_small_css' => true,
 			'speed_gallery_sizes'    => true,
+			'speed_admin_page_time'  => true,
 		);
 	}
 
 	/**
 	 * Get merged settings.
 	 *
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool,speed_gallery_sizes:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool,speed_gallery_sizes:bool,speed_admin_page_time:bool}
 	 */
 	public static function get(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -88,6 +89,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_defer_scripts' => (bool) $merged['speed_defer_scripts'],
 			'speed_inline_small_css' => (bool) $merged['speed_inline_small_css'],
 			'speed_gallery_sizes'    => (bool) $merged['speed_gallery_sizes'],
+			'speed_admin_page_time'  => (bool) $merged['speed_admin_page_time'],
 		);
 	}
 
@@ -318,6 +320,21 @@ final class WP_Usefull_Blocks_Settings {
 			)
 		);
 
+		add_settings_field(
+			'speed_admin_page_time',
+			__( 'Page time in the admin footer', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_speed',
+			array(
+				'key'         => 'speed_admin_page_time',
+				'description' => __(
+					'Every admin page shows in its footer what it took on the server: seconds, database queries and memory.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
 		add_settings_section(
 			'wp_usefull_blocks_ub_timeline',
 			__( 'UB Timeline', 'wp-usefull-blocks' ),
@@ -359,7 +376,7 @@ final class WP_Usefull_Blocks_Settings {
 	 * Sanitize option array.
 	 *
 	 * @param mixed $input Raw input.
-	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool,speed_gallery_sizes:bool}
+	 * @return array{show_link_status:bool,link_status_position:string,strike_broken_links:bool,auto_check_urls:bool,link_check_exclude:string[],related_posts_images:bool,speed_conditional_assets:bool,speed_local_fonts:bool,speed_no_emoji:bool,speed_defer_scripts:bool,speed_inline_small_css:bool,speed_gallery_sizes:bool,speed_admin_page_time:bool}
 	 */
 	public static function sanitize( $input ): array {
 		$defaults = self::defaults();
@@ -387,6 +404,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_defer_scripts' => ! empty( $input['speed_defer_scripts'] ),
 			'speed_inline_small_css' => ! empty( $input['speed_inline_small_css'] ),
 			'speed_gallery_sizes'    => ! empty( $input['speed_gallery_sizes'] ),
+			'speed_admin_page_time'  => ! empty( $input['speed_admin_page_time'] ),
 		);
 	}
 
