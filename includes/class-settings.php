@@ -47,6 +47,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_inline_small_css' => true,
 			'speed_gallery_sizes'    => true,
 			'speed_no_jquery_migrate' => true,
+			'speed_webp_uploads'     => true,
 			'speed_admin_page_time'  => true,
 		);
 	}
@@ -91,6 +92,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_inline_small_css' => (bool) $merged['speed_inline_small_css'],
 			'speed_gallery_sizes'    => (bool) $merged['speed_gallery_sizes'],
 			'speed_no_jquery_migrate' => (bool) $merged['speed_no_jquery_migrate'],
+			'speed_webp_uploads'     => (bool) $merged['speed_webp_uploads'],
 			'speed_admin_page_time'  => (bool) $merged['speed_admin_page_time'],
 		);
 	}
@@ -338,6 +340,21 @@ final class WP_Usefull_Blocks_Settings {
 		);
 
 		add_settings_field(
+			'speed_webp_uploads',
+			__( 'WebP for new uploads', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_speed',
+			array(
+				'key'         => 'speed_webp_uploads',
+				'description' => __(
+					'The smaller copies WordPress makes of a newly uploaded JPEG or PNG are saved as WebP, about a third smaller at the same look. The original file and images uploaded before stay as they are.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_field(
 			'speed_admin_page_time',
 			__( 'Page time in the admin footer', 'wp-usefull-blocks' ),
 			array( self::class, 'render_checkbox' ),
@@ -422,6 +439,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_inline_small_css' => ! empty( $input['speed_inline_small_css'] ),
 			'speed_gallery_sizes'    => ! empty( $input['speed_gallery_sizes'] ),
 			'speed_no_jquery_migrate' => ! empty( $input['speed_no_jquery_migrate'] ),
+			'speed_webp_uploads'     => ! empty( $input['speed_webp_uploads'] ),
 			'speed_admin_page_time'  => ! empty( $input['speed_admin_page_time'] ),
 		);
 	}

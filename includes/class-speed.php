@@ -39,6 +39,7 @@ final class WP_Usefull_Blocks_Speed {
 	public static function init(): void {
 		add_action( 'init', array( self::class, 'maybe_remove_emoji' ) );
 		add_action( 'wp_default_scripts', array( self::class, 'drop_jquery_migrate' ) );
+		add_filter( 'image_editor_output_format', array( self::class, 'webp_sub_sizes' ) );
 		add_action( 'wp_enqueue_scripts', array( self::class, 'trim_assets' ), 999 );
 		// Before wp_head runs wp_maybe_inline_styles(), which does the inlining.
 		add_action( 'wp_enqueue_scripts', array( self::class, 'inline_small_styles' ), 1000 );
@@ -76,6 +77,24 @@ final class WP_Usefull_Blocks_Speed {
 		remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
 		remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
 		add_filter( 'emoji_svg_url', '__return_false' );
+	}
+
+	/**
+	 * New uploads: the generated sizes of JPEG and PNG images are written as WebP, if the server's image
+	 * library can write WebP at all.
+	 *
+	 * @param array<string, string> $formats Source MIME type => output MIME type.
+	 * @return array<string, string>
+	 */
+	public static function webp_sub_sizes( array $formats ): array {
+		if ( ! self::on( 'speed_webp_uploads' ) || ! wp_image_editor_supports( array( 'mime_type' => 'image/webp' ) ) ) {
+			return $formats;
+		}
+
+		$formats['image/jpeg'] = 'image/webp';
+		$formats['image/png']  = 'image/webp';
+
+		return $formats;
 	}
 
 	/**
