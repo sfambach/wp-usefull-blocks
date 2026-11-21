@@ -1,0 +1,1 @@
+console.log("Hello World! (from wp-usefull-blocks-wp-usefull-blocks block)");
