@@ -2,7 +2,7 @@
 Contributors:      sfambach
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.10.3
+Stable tag:        0.10.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,7 +98,7 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
-= 0.10.3 =
+= 0.10.4 =
 * Speed: new switch "Without jQuery Migrate" (on): front-end pages no longer load the compatibility layer for jQuery code older than 3.0.
 
 = 0.10.3 =
