@@ -46,6 +46,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_defer_scripts' => true,
 			'speed_inline_small_css' => true,
 			'speed_gallery_sizes'    => true,
+			'speed_no_jquery_migrate' => true,
 			'speed_admin_page_time'  => true,
 		);
 	}
@@ -89,6 +90,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_defer_scripts' => (bool) $merged['speed_defer_scripts'],
 			'speed_inline_small_css' => (bool) $merged['speed_inline_small_css'],
 			'speed_gallery_sizes'    => (bool) $merged['speed_gallery_sizes'],
+			'speed_no_jquery_migrate' => (bool) $merged['speed_no_jquery_migrate'],
 			'speed_admin_page_time'  => (bool) $merged['speed_admin_page_time'],
 		);
 	}
@@ -321,6 +323,21 @@ final class WP_Usefull_Blocks_Settings {
 		);
 
 		add_settings_field(
+			'speed_no_jquery_migrate',
+			__( 'Without jQuery Migrate', 'wp-usefull-blocks' ),
+			array( self::class, 'render_checkbox' ),
+			self::PAGE_SLUG,
+			'wp_usefull_blocks_speed',
+			array(
+				'key'         => 'speed_no_jquery_migrate',
+				'description' => __(
+					'Pages do not load the compatibility layer for old jQuery code. Turn this off if a menu, slider or other effect stops working.',
+					'wp-usefull-blocks'
+				),
+			)
+		);
+
+		add_settings_field(
 			'speed_admin_page_time',
 			__( 'Page time in the admin footer', 'wp-usefull-blocks' ),
 			array( self::class, 'render_checkbox' ),
@@ -404,6 +421,7 @@ final class WP_Usefull_Blocks_Settings {
 			'speed_defer_scripts' => ! empty( $input['speed_defer_scripts'] ),
 			'speed_inline_small_css' => ! empty( $input['speed_inline_small_css'] ),
 			'speed_gallery_sizes'    => ! empty( $input['speed_gallery_sizes'] ),
+			'speed_no_jquery_migrate' => ! empty( $input['speed_no_jquery_migrate'] ),
 			'speed_admin_page_time'  => ! empty( $input['speed_admin_page_time'] ),
 		);
 	}

@@ -99,6 +99,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 == Changelog ==
 
 = 0.10.3 =
+* Speed: new switch "Without jQuery Migrate" (on): front-end pages no longer load the compatibility layer for jQuery code older than 3.0.
+
+= 0.10.3 =
 * Speed: new switch "Page time in the admin footer" (on): every admin page shows behind the WordPress footer text what it took on the server – seconds, database queries, memory.
 
 = 0.10.2 =

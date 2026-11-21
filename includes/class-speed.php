@@ -38,6 +38,7 @@ final class WP_Usefull_Blocks_Speed {
 	 */
 	public static function init(): void {
 		add_action( 'init', array( self::class, 'maybe_remove_emoji' ) );
+		add_action( 'wp_default_scripts', array( self::class, 'drop_jquery_migrate' ) );
 		add_action( 'wp_enqueue_scripts', array( self::class, 'trim_assets' ), 999 );
 		// Before wp_head runs wp_maybe_inline_styles(), which does the inlining.
 		add_action( 'wp_enqueue_scripts', array( self::class, 'inline_small_styles' ), 1000 );
@@ -75,6 +76,20 @@ final class WP_Usefull_Blocks_Speed {
 		remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
 		remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
 		add_filter( 'emoji_svg_url', '__return_false' );
+	}
+
+	/**
+	 * jQuery Migrate only bridges code written for jQuery before 3.0; nothing on this site needs it
+	 * (tested 2026-11-21: no Migrate warning on any page type).
+	 *
+	 * @param WP_Scripts $scripts Script registry.
+	 */
+	public static function drop_jquery_migrate( WP_Scripts $scripts ): void {
+		if ( is_admin() || ! self::on( 'speed_no_jquery_migrate' ) || ! isset( $scripts->registered['jquery'] ) ) {
+			return;
+		}
+
+		$scripts->registered['jquery']->deps = array_values( array_diff( $scripts->registered['jquery']->deps, array( 'jquery-migrate' ) ) );
 	}
 
 	/**
