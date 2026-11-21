@@ -2,7 +2,7 @@
 Contributors:      sfambach
 Tags:              block
 Tested up to:      6.8
-Stable tag:        0.10.4
+Stable tag:        0.10.5
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.10.5 =
+* Speed: new switch "WebP for new uploads" (on): the generated sizes of newly uploaded JPEG and PNG images are saved as WebP, if the server can write it. Originals and older images stay unchanged.
 
 = 0.10.4 =
 * Speed: new switch "Without jQuery Migrate" (on): front-end pages no longer load the compatibility layer for jQuery code older than 3.0.
